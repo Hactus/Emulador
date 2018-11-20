@@ -1,0 +1,26 @@
+-	script	resspvp	-1,{ 
+ 
+OnPCDieEvent:
+setarray .@mapresp$[0],"pvp_n_1-5","pvp_y_1-2","guild_vs5";
+for ( set .@i, 0; .@i < getarraysize(.@mapresp$); set .@i, .@i + 1 ) {
+if ( strcharinfo(3) == .@mapresp$[.@i] ) {
+set .@pmap$,strcharinfo(3);
+sleep2 1000;
+dispbottom "Você será ressucitado em 3 segundos";
+sleep2 1000;
+dispbottom "Você será ressucitado em 2 segundos";
+sleep2 1000;
+dispbottom "Você será ressucitado em 1 segundos"; 
+sleep2 1000;
+dispbottom "Ressucitado Boa Sorte !!!";
+recovery 0;
+sc_start 32,240000, 10;
+sc_start 30,240000, 10;
+skilleffect 29,0;
+skilleffect 34,0;
+warp .@pmap$,0,0;
+end;
+}
+}
+}
+

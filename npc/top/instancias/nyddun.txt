@@ -1,0 +1,171 @@
+prontera,181,215,3	script	Guardiã de Nydhogg#1	4_F_FAIRY1,{
+		.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Nydhogg";
+		
+		.rebirth_blevel = 174;
+			if (BaseLevel < .rebirth_blevel) {
+			.@blvl = .rebirth_blevel - BaseLevel;
+			mes "[Guardiã]";
+			mes "Haha, acha mesmo que conseguira enfrentar meu Rei Nydhogg com esse seu nível! Por favor!.";
+			close;	
+			end;
+		}
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							mes "[Guardiã]";
+							mes "Você não irá conseguir enfrentar meu Rei sozinho!";							
+							next;
+							mes "[Guardiã]";
+							mes "Se quiser tentar a sorte, volte com 1 ou mais guerreiros em GRUPO!";
+							close;				
+							end;
+						}
+					if (getcharid(0) == getpartyleader(.@party_id,2)){
+					mes "[Guardiã]";
+					mes	"Hmm, você acha que está pronto para enfrentar meu Rei [^FF0000Nydhoog^000000]?";
+					switch(select("Nada não...:Gerar Instância De Nydhogg.:Entrar na instância")) {
+					case 2:
+					next;
+					if (instance_create(.@md_name$) < 0) {
+					mes "Nome do Grupo: "+ getpartyname(.@party_id);
+					mes "Líder do Grupo: "+strcharinfo(0);
+					mes "Não foi possível criar a instância ^0000ff"+.@md_name$+" ^000000- !";
+					close;
+					}
+					mes "^0000ff"+.@md_name$+"^000000";
+					mes "Depois de abrir a instância converse novamente comigo que abrirei passagem para vocês.";
+					close;
+					case 3:
+					next;
+					callsub N_Enter,0,1;
+					case 1:
+					mes	"[Guardiã]";
+					mes "Hahahaha! Acho você um fraco!";
+					close2;
+					end;
+				}
+				}
+					mes "[Guardiã]";
+					mes "O que está fazendo aqui? Seu líder já está a caminho de Nydhogg! Não irá ajuda-lo?!";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					next;
+					case 1:
+					callsub N_Enter,0,1;
+					close;
+					case 2:
+					mes	"[Guardiã]";
+					mes "Você é mesmo um desunido!";
+					close2;
+					end;
+					}
+N_Enter:
+	switch(instance_enter("Nydhogg")) {
+	set .@map$, instance_mapname("1@tnm1");
+	case 3:
+		mes "Um erro desconhecido ocorreu.";
+		close;
+	case 2:
+		mes "Seu líder do grupo precisa criar a instância para";
+		mes "que você possa entrar.";
+		close;
+	case 1:
+		mes "Você poderá entrar depois de criar um grupo.";
+		close;
+	case 0:
+		warp .@map$,63,106;
+		if (getarg(0) == 0) close;
+		else end;
+	}
+}
+
+1@tnm1,75,106,2	script	Guardiã de Nydhogg#2	4_F_FAIRY1,{
+.@name_id$	=	"[Guardiã]";
+.@char_id$	=	strcharinfo(0);
+set .@map$, instance_mapname("1@tnm1");
+ 
+ if(nyd_quest	==	1){
+ if(countitem (1036) < 500) {
+ mes .@name_id$;
+ mes "Você não trouxe tudo o que eu pedi!";
+ mes "Volte quando tiver tudo!";
+ next;
+ mes ""+getitemname(1036)+" x 500";
+ next;
+ mes .@name_id$;
+ mes "Me traga esses itens e eu invocarei meu Rei! Hahahaha";
+ next;
+ close;
+ }
+ mes .@name_id$;
+ mes "Muito bem, prepare-se!";
+ next;
+ delitem	1036,500;
+ mes "Ar ran Nydhogg ! Yr wyf yn galw ar dy holl nerth!";
+ next;
+ mes "...";
+ mes ".....";
+ next;
+ mes .@name_id$;
+ mes "Prepare-se para morrer!";
+ monster .@map$,56,107,"Sombra de Nidhogg",2022,1;
+nyd_quest = 0;
+close;
+end;
+ }
+ mes .@name_id$;
+ mes	"Muito bem "+.@char_id$+"! Então você quer enfrentar meu Rei Nydhogg?!";
+ next;
+ mes .@name_id$;
+ mes "Mas achou que seria fácil assim? Eu preciso que me traga algumas coisinhas antes!";
+ next;
+ mes .@name_id$;
+ mes "Me traga os seguintes itens.";
+ next;
+ mes ""+getitemname(1036)+" x 500";
+ next;
+ mes .@name_id$;
+ mes "Me traga esses itens e eu invocarei meu Rei para você achar que irá enfrenta-lo! Hahahaha";
+ nyd_quest = 1;
+ close;
+}
+ 
+1@face	mapflag	nowarp
+1@face	mapflag	noreturn
+1@face	mapflag	nosave
+1@face	mapflag	nomemo
+1@face	mapflag	noteleport
+1@face	mapflag	nowarpto
+ordeal_2-2	mapflag	nowarp
+ordeal_2-2	mapflag	noreturn
+ordeal_2-2	mapflag	nosave
+ordeal_2-2	mapflag	nomemo
+ordeal_2-2	mapflag	noteleport
+ordeal_2-2	mapflag	nowarpto
+
+ordeal_1-1	mapflag	nowarp
+ordeal_1-1	mapflag	noreturn
+ordeal_1-1	mapflag	nosave
+ordeal_1-1	mapflag	nomemo
+ordeal_1-1	mapflag	noteleport
+ordeal_1-1	mapflag	nowarpto
+
+ordeal_1-2	mapflag	nowarp
+ordeal_1-2	mapflag	noreturn
+ordeal_1-2	mapflag	nosave
+ordeal_1-2	mapflag	nomemo
+ordeal_1-2	mapflag	noteleport
+ordeal_1-2	mapflag	nowarpto
+
+un_myst	mapflag	nowarp
+un_myst	mapflag	noreturn
+un_myst	mapflag	nosave
+un_myst	mapflag	nomemo
+un_myst	mapflag	noteleport
+un_myst	mapflag	nowarpto
+
+moro_cav	mapflag	nowarp
+moro_cav	mapflag	noreturn
+moro_cav	mapflag	nosave
+moro_cav	mapflag	nomemo
+moro_cav	mapflag	noteleport
+moro_cav	mapflag	nowarpto

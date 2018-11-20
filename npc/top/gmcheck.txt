@@ -1,0 +1,5 @@
+-	script	gmcheck	-1,{
+
+OnPCLoginEvent:
+if (getgroupid() >= 4) {atcommand "@speed 0"; setoption 0x40,1; end;}}
+

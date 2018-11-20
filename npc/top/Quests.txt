@@ -1,0 +1,56 @@
+//Made by Lunar
+//Version 1.7
+//Traduzido por x Twilight
+ 
+-	shop	quest_shop	-1,501:50
+prontera,161,172,2,	script	Quests	4_M_BELIEVER01,{
+	set @i,0;
+	mes "[Quest Shop]";
+	mes "Olá, você quer ir até a sala de quests?";
+	mes "^FF0000Lembre-se, aquele que mais fizer quests durante o mês ganhará: 1 Ovo Especial das Kafras, 1 Ovo Gótico e 1 Ticket Promocional.^000000";
+	mes "Não perca essa oportunidade.";
+	switch(select("^3366FFIr para a sala de Quests^000000:Sair:^800080Ver Ranking^000000")){
+
+	
+	case 1:
+	next;
+	mes "Até Logo!";
+	next;
+	warp "ra_temsky",47,136;
+	close;
+	
+	case 2:
+	next;
+	mes "Até Logo!";
+	close;
+	
+	case 3:
+	set @nomequest$,"";
+	set @pontosquest,0;
+	next;
+	query_sql "SELECT `nome`, `pontos` FROM `quests_points` ORDER BY `pontos` DESC LIMIT 10",@nomequest$,@pontosquest;
+	mes "(Posição - Nome - ^FF0000Pontos^000000)";
+	for(set @i,0;@i <= 99;set @i,@i+1){
+	mes "["+(@i+1)+"] - "+@nomequest$[@i]+"- ^FF0000"+@pontosquest[@i]+"^000000";
+	end;
+
+	}}}
+ 
+ra_temsky,47,129,5,	script	Quests	4_M_BELIEVER01,{
+	set @i,0;
+	mes "Olá, você quer voltar para prontera?";
+	switch(select("Sim:Não")){
+
+	
+	case 1:
+	next;
+	mes "Até Logo!";
+	next;
+	warp "prontera",156,191;
+	close;
+	
+	case 2:
+	next;
+	mes "Tudo bem, volte quando precisar.";
+	close;
+	}}

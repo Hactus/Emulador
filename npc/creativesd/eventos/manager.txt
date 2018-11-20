@@ -1,0 +1,320 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2017 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Gerenciador de Eventos                                       .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                          Versão: 1.0    .
+  .                                                                 .
+  . Compatibilidade:                                                .
+  .    rAthena                                                      .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .  Liga e desliga eventos com suas configurações padrões.         .
+  *-----------------------------------------------------------------*/
+-	script	Event#manager	-1,{
+	set .@loop_1,1;
+	while(.@loop_1)
+	{
+		mes "^4B0082[Gerenciador de Eventos]^000000";
+		mes "Escolha um evento no qual deseja ligar ou desligar:";
+		next;
+		switch( select("- Aprendiz vs Zumbi.", "- Arena de Caça.", "- Bomb Poring.", "- Corrida Maluca.", "- Devil Square.", "- Guerra do Tesouro.", "- Lutas em Prontera.", "- PvP Advanced.", "- MvP.", "^FF0000- Cancelar.^000000") )
+		{
+			// Aprendiz vs Zumbi
+			case 1:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@NxZ_FLAG )
+						mes "Deseja desligar o Evento ^0000FFAprendiz vs Zumbi^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFAprendiz vs Zumbi^000000?";
+					next;
+					switch( select(($@NxZ_FLAG?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@NxZ_FLAG ) {
+								donpcevent "noviceVSzombie#main::OnDefaults";
+								donpcevent "noviceVSzombie#main::OnStopGM";
+							}
+							else {
+								donpcevent "noviceVSzombie#main::OnDefaults";
+								donpcevent "noviceVSzombie#main::OnStart";
+							}
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Arena de Caça
+			case 2:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@HA_FLAG )
+						mes "Deseja desligar o Evento ^0000FFArena de Caça^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFArena de Caça^000000?";
+					next;
+					switch( select(($@HA_FLAG?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@HA_FLAG ) {
+								donpcevent "hunting_arena#main::OnDefaults";
+								donpcevent "hunting_arena#main::OnStopGM";
+							}
+							else {
+								donpcevent "hunting_arena#main::OnDefaults";
+								donpcevent "hunting_arena#main::OnStart";
+							}
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Bomb Poring
+			case 3:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@ev_bombporing_flag )
+						mes "Deseja desligar o Evento ^0000FFBomb Poring^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFBomb Poring^000000?";
+					next;
+					switch( select(($@ev_bombporing_flag?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@ev_bombporing_flag )
+								donpcevent "event#ev_bombporing::OnEndGM";
+							else
+								donpcevent "event#ev_bombporing::OnStart";
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Corrida Maluca
+			case 4:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@WR_FLAG )
+						mes "Deseja desligar o Evento ^0000FFCorrida Maluca^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFCorrida Maluca^000000?";
+					next;
+					switch( select(($@WR_FLAG?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@WR_FLAG ) 
+								donpcevent "WackyRace#main::OnStopGM";
+							else
+								donpcevent "WackyRace#main::OnStart";
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Devil Square
+			case 5:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $DS_Flag )
+						mes "Deseja desligar o Evento ^0000FFDevil Square^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFDevil Square^000000?";
+					next;
+					switch( select(($DS_Flag?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $DS_Flag ) {
+								donpcevent "DevilSquare#main::OnResetCfg";
+								donpcevent "Recrutador Devil Square#1::OnStop";
+							}
+							else {
+								donpcevent "DevilSquare#main::OnResetCfg";
+								donpcevent "DevilSquare#main::OnStart";
+							}
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Guerra do Tesouro
+			case 6:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@WOT_FLAG )
+						mes "Deseja desligar o Evento ^0000FFGuerra do Tesouro^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFGuerra do Tesouro^000000?";
+					next;
+					switch( select(($@WOT_FLAG?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@WOT_FLAG ) {
+								donpcevent "wot#main::OnDefaults";
+								donpcevent "wot#main::OnStopGM";
+							}
+							else {
+								donpcevent "wot#main::OnDefaults";
+								donpcevent "wot#main::OnStart";
+							}
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Lutas em Prontera
+			case 7:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@EVSFPRT )
+						mes "Deseja desligar o Evento ^0000FFLutas em Prontera^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFLutas em Prontera^000000?";
+					next;
+					switch( select(($@EVSFPRT?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@EVSFPRT )
+								donpcevent "PvP In Cell#prt_main::OnEnd";
+							else
+								donpcevent "PvP In Cell#prt_main::OnStart";
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// PvP Advanced
+			case 8:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $pvp_adv_event_flag )
+						mes "Deseja desligar o Evento ^0000FFPvP Advanced^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFPvP Advanced^000000?";
+					next;
+					switch( select(($pvp_adv_event_flag?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $pvp_adv_event_flag )
+								donpcevent "Evento PvP Advanced#event::OnCmdEnd";
+							else
+								donpcevent "Evento PvP Advanced#event::OnStart";
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Evento MvP
+			case 9:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^4B0082[Gerenciador de Eventos]^000000";
+					if( $@ev_mvp_flag )
+						mes "Deseja desligar o Evento ^0000FFMvP^000000?";
+					else
+						mes "Deseja ligar o Evento ^0000FFMvP^000000?";
+					next;
+					switch( select(($@ev_mvp_flag?"- Desligar":"- Ligar") + " o Evento.", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							if( $@ev_mvp_flag )
+								donpcevent "Evento MvP#event::OnReset";
+							else
+								donpcevent "Evento MvP#event::OnStart";
+							break;
+						case 2:
+							set .@loop_2,0;
+							break;
+						case 3:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+					}
+				}
+				break;
+			// Cancelar
+			default:
+				set .@loop_1,0;
+				break;
+		}
+	}
+	
+	mes "^4B0082[Gerenciador de Eventos]^000000";
+	mes "Você pode ligar e desligar eventos automáticos quando desejar.";
+	close;
+}

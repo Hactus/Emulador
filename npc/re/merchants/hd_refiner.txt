@@ -1,0 +1,302 @@
+//===== Venus Script =========================================
+//= Refiner HD
+//===== Por: =================================================
+//= rAthena Dev Team / skb_ (CreativeSD Translation)
+//===== Versão atual: ========================================
+//= 1.1
+//===== Compatível com: ======================================
+//= rAthena Project / Venus-Emulator
+//===== Descrição: ===========================================
+//= [Official Conversion]
+//= Refiners that use HD ores to refine equipment. Upon
+//= failure, the equipment is not destroyed; rather, its
+//= refine level decreases by 1. The success rate is identical
+//= to that for Enriched ores.
+//= - "Blacksmith Mighty Hammer" only refines from +7~9.
+//= - "Basta" only refines from +10 and up.
+//===== Comentários Adicionais: ==============================
+//= 1.0 First version. [Euphy]
+//= 1.1 Removed re-roll behavior. [Secret]
+//============================================================
+
+// Blacksmith Mighty Hammer (+7~9) :: cash_smelting79
+//============================================================
+-	script	::MightyHammer	-1,{
+	disable_items;
+	mes "[Ferreiro Hammer]";
+	mes "Ao contrário dos outros, eu sou um ferreiro que refina um número muito limitado de itens.";
+	mes "Eu refino equipamentos em nível ^CC0000+7 até +9^000000.";
+	next;
+	mes "[Ferreiro Hammer]";
+	mes "Minha especialidade é que mesmo quando o refinamento falhar, o nível de refinamento cai 1 ponto, mas não perde o item!";
+	next;
+	mes "[Ferreiro Hammer]";
+	mes "Então vamos lá, o que me diz? Qual item você quer refinar?";
+	next;
+	setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+	for(set .@i,1; .@i<=10; set .@i,.@i+1)
+		set .@menu$, .@menu$ + ( getequipisequiped(.@indices[.@i]) ? getequipname(.@indices[.@i]) : F_getpositionname(.@indices[.@i]) +"-[Não equipado]" ) +":";
+	set .@part, .@indices[ select(.@menu$) ];
+	if (!getequipisequiped(.@part)) {
+		mes "[Ferreiro Hammer]";
+		switch(.@part) {
+		case 1:
+			mes "Sou um ferreiro, não um estilista.";
+			break;
+		case 2:
+			mes "Com meu martelo, Farei de você, uma estrela do céu.";
+			break;
+		case 3:
+		case 4:
+			mes "Fazer mãos artificiais não é minha especialidade.";
+			break;
+		case 5:
+			mes "Traga o item para que eu possa refiná-lo!";
+			break;
+		case 6:
+			mes "De onde está vindo esse cheiro estranho?";
+			break;
+		case 7:
+		case 8:
+			mes "Onde está o acessório?";
+			break;
+		case 9:
+			mes "O que quer que eu refine?";
+			break;
+		case 10:
+			mes "Huh? O que quer que eu faça?";
+			break;
+		}
+		close;
+	}
+	if (!getequipisenableref(.@part)) {
+		mes "[Ferreiro Hammer]";
+		mes "Este item não pode ser refinado.";
+		close;
+	}
+	if (getequiprefinerycnt(.@part) < 7 || getequiprefinerycnt(.@part) > 9) {
+		mes "[Ferreiro Hammer]";
+		mes "Eu só sei refinar itens com níveis de refino de +7 até +9.";
+		close;
+	}
+	
+	.@refineitemid = getequipid(.@part); // save id of the item
+	.@refinerycnt = getequiprefinerycnt(.@part); //save refinery count
+	setarray .@card[0], getequipcardid(.@part,0), getequipcardid(.@part,1), getequipcardid(.@part,2), getequipcardid(.@part,3);
+	.@price = getequiprefinecost(.@part, REFINE_COST_HD, REFINE_ZENY_COST);
+	.@material = getequiprefinecost(.@part, REFINE_COST_HD, REFINE_MATERIAL_ID);
+	
+	mes "[Ferreiro Hammer]";
+	mes "Gostaria de aperfeiçoar o equipamento que você selecionou? Você precisa de ^ff9999"+getitemname(.@material)+"^000000 e uma taxa de 20.000 zeny.";
+	mes "Você tem eles prontos?";
+	next;
+	if(select("Sim:Não") == 2) {
+		mes "[Ferreiro Hammer]";
+		mes "Vou esperar até que eles estejam prontos.";
+		close;
+	}
+	if (getequippercentrefinery(.@part) < 100) {
+		mes "[Ferreiro Hammer]";
+		mes "Parece que este item provavelmente vai deixar de ser refinado."; 
+		mes "Bem, mesmo se ele falhar, ele só diminuirá em 1 grau de refino."; 
+		mes "Gostaria de continuar o refino?";
+		next;
+		if(select("Sim:Não") == 2) {
+			mes "[Ferreiro Hammer]";
+			mes "Somente aqueles que superarem o medo do fracasso, poderão obter uma obra-prima.";
+			close;
+		}
+	}
+	if (countitem(.@material) == 0 || Zeny < .@price) {
+		mes "[Ferreiro Hammer]";
+		mes "Você não acabou de dizer que tinha tudo pronto?";
+		close;
+	}
+	delitem .@material,1;
+	set Zeny, Zeny-.@price;
+
+	// anti-hack
+	if (callfunc("F_IsEquipIDHack", .@part, .@refineitemid) || callfunc("F_IsEquipCardHack", .@part, .@card[0], .@card[1], .@card[2], .@card[3]) ||
+		callfunc("F_IsEquipRefineHack", .@part, .@refinerycnt)) {
+		mes "[Ferreiro Hammer]";
+		emotion ET_FRET;
+		mes "Espere um segundo...";
+		mes "Você acha que eu sou idiota?!";
+		mes "Você trocou o item enquanto eu não estava olhando! Saia daqui!";
+		close;
+	}
+
+	mes "[Ferreiro Hammer]";
+	mes "Tac! Tac! Tac!";
+	if (getequippercentrefinery(.@part, true) > rand(100)) {
+		successrefitem .@part;
+		next;
+		emotion ET_BEST;
+		mes "[Ferreiro Hammer]";
+		mes "O som refresca minha mente toda vez que ouço.";
+		mes "Aqui está. Consegui, o refinamento foi uma perfeição!";
+		close;
+	}
+	downrefitem .@part;
+	next;
+	emotion ET_HUK;
+	mes "[Ferreiro Hammer]";
+	mes "Oops!!";
+	next;
+	mes "[Ferreiro Hammer]";
+	mes "Hmm. Estou certo de que uma pessoa como você nunca iria me culpar por uma diminuição no nível refinar por 1.";
+	close;
+}
+prt_in,59,54,3	duplicate(MightyHammer)	Ferreiro Hammer#prt	826
+morocc_in,65,30,3	duplicate(MightyHammer)	Ferreiro Hammer#morocc	826
+payon,148,176,3	duplicate(MightyHammer)	Ferreiro Hammer#pay	826
+alberta_in,16,56,3	duplicate(MightyHammer)	Ferreiro Hammer#alb	826
+yuno_in01,171,18,3	duplicate(MightyHammer)	Ferreiro Hammer#yuno	826
+ein_in01,22,82,3	duplicate(MightyHammer)	Ferreiro Hammer#ein	826
+lhz_in02,280,19,3	duplicate(MightyHammer)	Ferreiro Hammer#lhz	826
+
+// iRO NPC locations:
+// payon,174,133,4	duplicate(MightyHammer)	Ferreiro Hammer#im	826
+
+// Basta (+10 and up) :: cash_smelting
+//============================================================
+//============================================================
+-	script	::Basta	-1,{
+
+OnMenuHD:
+
+	disable_items;
+	mes "[Refinador Perfeito]";
+	mes "Qual equipamento você deseja refinar?";
+	next;
+	setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+	for(set .@i,1; .@i<=10; set .@i,.@i+1)
+		set .@menu$, .@menu$ + ( getequipisequiped(.@indices[.@i]) ? getequipname(.@indices[.@i]) : F_getpositionname(.@indices[.@i]) +"-[Desequipado]" ) +":";
+	set .@part, .@indices[ select(.@menu$) ];
+	if (!getequipisequiped(.@part)) {
+		mes "[Refinador Perfeito]";
+		switch(.@part) {
+		case 1:
+			mes "Sua cabeça é um equipamento?";
+			break;
+		case 2:
+			mes "O que você quer que eu faça?";
+			break;
+		case 3:
+		case 4:
+			mes "Fazer mãos artificiais não é minha especialidade.";
+			break;
+		case 5:
+			mes "Você sabe mesmo o que é um manto?";
+			break;
+		case 6:
+			mes "Se você quiser refinar seus pés, não venha até mim, tente correr uma maratona.";
+			break;
+		case 7:
+		case 8:
+			mes "Cadê o seu acessório?";
+			break;
+		case 9:
+			mes "Bem ... eu não vejo nenhum equipamento que valha a pena refinar.";
+			break;
+		case 10:
+			mes "Eu não posso te fazer inteligente. Vá para a escola para isso.";
+			break;
+		}
+		close;
+	}
+	if (!getequipisenableref(.@part)) {
+		mes "[Refinador Perfeito]";
+		mes "Eu não posso refinar esse item.";
+		close;
+	}
+	if (getequiprefinerycnt(.@part) < 10) {
+		mes "[Refinador Perfeito]";
+		mes "Eu só posso refinar equipamentos +10, +11, +12, +13 e +14.";
+		close;
+	}
+	if (getequiprefinerycnt(.@part) > 15) {
+		mes "[Refinador Perfeito]";
+		mes "Eu não posso refinar esse item, procure um especialista em refinamentos a partir do +15";
+		close;
+	}
+	.@price = getequiprefinecost(.@part, REFINE_COST_OVER10_HD, REFINE_ZENY_COST);
+	.@material = getequiprefinecost(.@part, REFINE_COST_OVER10_HD, REFINE_MATERIAL_ID);
+	switch(getequipweaponlv(.@part)) {
+	default:
+	case 0:
+		set .@type$,"armor";
+		break;
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+		set .@type$,"weapon";
+		break;
+	}
+	mes "[Refinador Perfeito]";
+	mes "Hmm ... é esse que você quer refinar?";
+	mes "Para refinar este equipamento, preciso de 1 ^ff9999"+getitemname(.@material)+"^000000 e " + callfunc("F_InsertComma",.@price) + " zeny como uma taxa.";
+	mes "Você realmente quer refinar isso?";
+	next;
+	if(select("Sim:Não") == 2) {
+		mes "[Refinador Perfeito]";
+		mes "Ok. Se é isso que você quer...";
+		close;
+	}
+	if (getequippercentrefinery(.@part, true) < 100) {
+		mes "[Refinador Perfeito]";
+		mes "Este "+.@type$+" Já foi refinado bastante.";
+		mes "Se você tentar refinar mais, o nível de refinamento pode diminuir em 1.";
+		next;
+		mes "[Refinador Perfeito]";
+		mes "Você tem certeza que deseja continuar?";
+		next;
+		if(select("Sim:Não") == 2) {
+			mes "[Refinador Perfeito]";
+			mes "Bem~";
+			mes "Não arriscar também pode ser um tipo de sabedoria na vida.";
+			close;
+		}
+	}
+	if (countitem(.@material) == 0 || Zeny < .@price) {
+		mes "[Refinador Perfeito]";
+		mes "Hmm ... Você não trouxe todos os materiais necessários.";
+		mes "Volte quando você tiver todos eles.";
+		close;
+	}
+	delitem .@material,1;
+	set Zeny, Zeny-.@price;
+	mes "Pow! Pow! Pow! Pow!";
+	if (getequippercentrefinery(.@part, true) > rand(100)) {
+		successrefitem .@part;
+		next;
+		emotion ET_BEST;
+		mes "[Basta]";
+		mes "Ótimo! Ficou perfeito!!";
+		mes "Eu sou realmente o melhor ferreiro do mundo inteiro!";
+		close;
+	}
+	downrefitem .@part;
+	next;
+	emotion (!rand(5))?ET_MONEY:ET_HUK;
+	mes "[Refinador Perfeito]";
+	mes "Aaaaaaaaaaa!!!";
+	next;
+	mes "[Refinador Perfeito]";
+	mes "Droga!";
+	mes "O refinamento falhou e o nível de refinamento diminuiu!";
+	mes "Mesmo o melhor ferreiro do mundo não garante 100% de sucesso!";
+	mes "Muito ruim.";
+	next;
+	mes "[Refinador Perfeito]";
+	mes "Eu vou fazer melhor da próxima vez! Não se preocupe!";
+	close;
+}
+prt_in,57,54,3	duplicate(Basta)	Basta#prt	826
+morocc_in,68,30,3	duplicate(Basta)	Basta#morocc	826
+payon,148,174,3	duplicate(Basta)	Basta#payon	826
+alberta_in,18,56,3	duplicate(Basta)	Basta#alberta	826
+yuno_in01,173,18,3	duplicate(Basta)	Basta#yuno	826
+ein_in01,24,82,3	duplicate(Basta)	Basta#einbroch	826
+lhz_in02,280,17,3	duplicate(Basta)	Basta#lighthalzen	826

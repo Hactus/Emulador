@@ -1,0 +1,464 @@
+prontera,150,189,3	script	Sala VIP	965,{
+
+	mes "[Teleportador VIP]";
+	if (getgroupid() > 0) {
+	mes "Você quer entrar da Sala VIP?";
+	next;
+	menu "Sim",sim,"Não",cancelar;
+	sim:
+	mes "[Teleportador VIP]";
+	mes "Até Logo!";
+	next;
+	warp "vip",71,262;
+	close;
+	cancelar:
+	mes "[Teleportador VIP]";
+	mes "Tudo bem, ^5566FF"+strcharinfo(0)+"^000000, fale comigo quando quiser entrar.";
+	close;
+	end;
+	}
+	if (getgroupid() < 1) {
+	mes "Desculpe mas você não é um jogador vip.";
+	mes "Para se tornar um acesse nosso site e se informe sobre nossos pacotes vip.";
+	close;
+	}}
+
+// SALA VIP
+
+// ENCANTADOR DE ARMAS
+vip,74,270,4	script	Encantador de Armas	897,{
+
+	set .@npcencantador$,"^0000FF[Encantador]^000000";
+	set @PrecoEncantar1,100000;	// Preço para encantamentos básicos
+	set @PrecoEncantar2,200000; // Preço para encantamentos exclusivos
+
+	mes .@npcencantador$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000, bem vindo ao ^FF0000[Encantador]^000000, eu posso Encantar a sua Arma com qualquer elemento por 5 minutos!";
+	next;
+	mes "Para encantar sua arma cobrarei "+@PrecoEncantar1+"zenys em encantamentos básicos.";
+	mes " ";
+	mes "E "+@PrecoEncantar2+"zenys para encantamentos exclusivos";
+	if(select("Sim.:Não.")==2){
+	next;
+		mes .@npcencantador$;
+		mes "Volte quando precisar.";
+		close;
+	}
+	next;
+	mes .@npcencantador$;
+	mes "Qual seria o tipo de encantamento?";
+	mes "Os encantamentos básicos são: Água, Fogo, Terra e Vento.";
+	mes "Os encantamentos exclusivos são: Sagrado, Sombrio, Veneno e Fantasma.";
+	switch (select("Encantamentos Básicos.:Encantamentos Exclusivos.")){
+	next;
+	case 1:
+	if(Zeny < @PrecoEncantar1){
+		mes .@npcencantador$;
+		mes "Você não tem o dinheiro suficiente.";
+		close;
+	}
+	mes "Por gentileza escolha qual dos elementos básicos você deseja que eu utilize.";
+	mes "Isso lhe custará apenas "+@PrecoEncantar1+"zenys apenas.";
+	switch(select("Geada.:Chama.:Terremoto.:Ventania.:Sair.")){
+	next;
+	case 1:
+	mes "Pronto. Sua arma foi encantada com a propriedade Água.";
+	set Zeny,Zeny-@PrecoEncantar1;
+	mes "Até a próxima.";
+	sc_start SC_WATERWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Geada, Duração: 5 Minutos, Level 5
+		close;
+	case 2:
+	mes "Pronto. Sua arma foi encantada com a propriedade Fogo.";
+	set Zeny,Zeny-@PrecoEncantar1;
+	mes "Até a próxima.";
+		sc_start SC_FIREWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Chama, Duração: 5 Minutos, Level 5
+		close;
+	case 3:
+	mes "Pronto. Sua arma foi encantada com a propriedade Terra.";
+	set Zeny,Zeny-@PrecoEncantar1;
+	mes "Até a próxima.";
+		sc_start SC_EARTHWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Terremoto, Duração: 5 Minutos, Level 5
+		close;
+	case 4:
+	mes "Pronto. Sua arma foi encantada com a propriedade Vento.";
+	set Zeny,Zeny-@PrecoEncantar1;
+	mes "Até a próxima.";
+		sc_start SC_WINDWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Ventania, Duração: 5 Minutos, Level 5
+		close;
+	case 5:
+	mes "Tudo bem então, até a próxima.";
+	close;
+	
+	}	
+	case 2:
+	if(Zeny < @PrecoEncantar2){
+		mes .@npcencantador$;
+		mes "Você não tem o dinheiro suficiente.";
+		close;
+	}
+	mes "Por gentileza escolha qual dos elementos exclusivos você deseja que eu utilize.";
+	mes "Isso lhe custará apenas "+@PrecoEncantar2+" zenys .";
+	switch(select("Sagrado.:Sombrio.:Veneno.:Fantasma.:Sair.")){
+	next;
+	case 1:
+	mes "Pronto. Sua arma foi encantada com a propriedade Sagrada.";
+	set Zeny,Zeny-@PrecoEncantar2;
+	mes "Até a próxima.";
+		skilleffect 68,0;	sc_start SC_ASPERSIO,300000,5;				// 400000 = 1 Minuto: Encantar com Sagrado, Duração: 5 Minutos, Level 5
+		close;
+	case 2:
+	mes "Pronto. Sua arma foi encantada com a propriedade Sombria.";
+	set Zeny,Zeny-@PrecoEncantar2;
+	mes "Até a próxima.";
+		sc_start SC_SHADOWWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Maldito, Duração: 5 Minutos, Level 5
+		close;	
+	case 3:
+	mes "Pronto. Sua arma foi encantada com a propriedade Veneno.";
+	set Zeny,Zeny-@PrecoEncantar2;
+	mes "Até a próxima.";
+		skilleffect 138,0;	sc_start SC_ENCPOISON,300000,5;			// 400000 = 1 Minuto: Encantar com Geada, Duração: 5 Minutos, Level 5
+		close;
+	case 4:
+	mes "Pronto. Sua arma foi encantada com a propriedade Fantasma.";
+	set Zeny,Zeny-@PrecoEncantar2;
+	mes "Até a próxima.";
+		sc_start SC_GHOSTWEAPON,300000,5;			// 400000 = 1 Minuto: Encantar com Maldito, Duração: 5 Minutos, Level 5
+		close;	
+	case 5:
+		mes "Tudo bem então, até a próxima.";
+		close;
+	}}
+}
+// REMOVEDORA DE CARTAS
+
+vip,77,270,4	script	Removedor de Cartas	574,{	
+	set .faildestroy,0;      // should the card remover have a chance of failure that destroys items? (1=yes, 0=no)
+
+	disable_items;
+	mes "[Removedor de Cartas]";
+	mes "Olá meu jovem, eu tenho o poder de remover cartas de seus equipamentos, gostaria de utilizar deste meu serviço?";
+	next;
+	switch(select("Sim, por favor.:Quanto isto custa?:Não, obrigado.")) {
+	case 1:
+		mes "[Removedor de Cartas]";
+		mes "Muito bem, de qual item você quer remover cartas?";
+		next;
+
+		setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+		for( set .@i,1; .@i <= 10; set .@i,.@i+1 ) {
+			if( getequipisequiped(.@indices[.@i]) )
+				set .@menu$, .@menu$ + F_getpositionname(.@indices[.@i]) + "-[" + getequipname(.@indices[.@i]) + "]";
+			set .@menu$, .@menu$ + ":";
+		}
+		set .@part, .@indices[ select(.@menu$) ];
+		if(!getequipisequiped(.@part)) {
+			mes "[Removedor de Cartas]";
+			mes "Jovem, você não tem nenhum item ai.";
+			close;
+		}
+		if(getequipcardcnt(.@part) == 0) {
+			mes "[Removedor de Cartas]";
+			mes "Jovem, você não está carregando nenhuma carta neste item.";
+			close;
+		}
+		set .@cardcount,getequipcardcnt(.@part);
+		
+		if (!checkweight(1202,(.@cardcount+1))) { 
+			mes "^3355FFSó um minuto!";
+			mes "Eu não posso oferecer meus";
+			mes "serviços a você";
+			mes "porque você está carregando";
+			mes "muitas coisas. Coloque algumas";
+			mes "coisas na Kafra e volte depois~";
+			close;
+		}
+		mes "[Removedor de Cartas]";
+		mes "Este item tem " + .@cardcount + " carta (s). Tem certeza que deseja remover essa (s) carta (s)?";
+		next;
+		if(select("Sim, vamos lá.:Esqueça.") == 2) {
+			mes "[Removedora de Cartas]";
+			mes "Muito bem, volte quando quiser.";
+			close;
+		}
+
+		next;
+		mes "[Removedora de Cartas]";
+		mes "Muito bem, vamos começar.";
+		
+		// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
+		// First value = Total failure chance (item and cards destroyed)
+		// Second value = Partial failure chance (one or the other is destroyed, player decides which one is safe)
+		// Third value = Harmless failure chance (all that's lost is your investment)
+		next;
+		successremovecards .@part;
+		mes "[Removedora de Cartas]";
+		mes "O processo foi um completo sucesso. Volte sempre.";
+		close;
+	case 2:
+		mes "[Removedora de Cartas]";
+		mes "Como você é um jogador VIP, você é merecedor dos meus serviços, não posso lhe cobrar por isso.";
+		close;
+	case 3:
+		mes "[Removedora de Cartas]";
+		mes "Muito bem. Volte quando precisar de meus serviços.";
+		close;
+	}
+}
+
+
+// RESETAR
+
+vip,80,270,4	script	Resetadora VIP	575,{
+	OnReset:
+	//	 		Skills,	Stats,	Both,	Limit
+	setarray .@Reset,	1,	1,	2;
+	mes "[Resetador VIP]";
+	mes "Resetar Status: "+ callfunc("F_InsertComma",.@Reset[1]) +"z";
+	mes "Resetar Skills: "+ callfunc("F_InsertComma",.@Reset[0]) +"z";
+	mes "Resetar ambos: "+ callfunc("F_InsertComma",.@Reset[2]) +"z";
+	mes "Porém VIP não paga!";
+	mes "Por Favor escolha o serviço que deseja:";
+	next;
+	set .@i,(select("^FF3355Resetar Skills:Resetar Stats:Resetar Ambos^000000:Cancel"));
+	if(.@i > 3) close;
+	mes "[Resetadora]";
+	if (Zeny < .@Reset[.@i-1] && getgmlevel() < 1 ) {
+		mes "Desculpa, você não tem zenys o suficiente.";
+		close;
+	}
+	if (getgmlevel() == 0) {set Zeny, Zeny-.@Reset[.@i-1];}
+	if(.@i&1){
+		sc_end SC_ALL;// TODO make a sc_end current classes sc only
+		ResetSkill;
+	}
+	if(.@i&2) ResetStatus;
+	mes "Prontinho!";
+	close;
+}
+
+// TELEPORTADOR
+
+vip,63,268,5	script	Sair	965,{
+
+	mes "[Teleportador VIP]";
+	mes "Você quer sair da Sala VIP?";
+	next;
+	menu "Sim",sim,"Não",cancelar;
+
+	sim:
+	mes "[Teleportador VIP]";
+	mes "Até Logo!";
+	next;
+	warp "prontera",156,181;
+	close;
+
+	cancelar:
+	mes "[Teleportador VIP]";
+	mes "Tudo bem, ^5566FF"+strcharinfo(0)+"^000000, fale comigo quando quiser sair.";
+	close;
+	}
+	
+// GUARDAS
+
+vip,68,51,5	script	Guarda#1	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,61,51,5	script	Guarda#2	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,66,69,5	script	Guarda#3	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,85,69,5	script	Guarda#4	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,81,250,3	script	Guarda#5	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,62,272,5	script	Guarda#6	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,74,273,5	script	Guarda#7	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,279,248,1	script	Guarda#8	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,264,248,1	script	Guarda#9	966,{
+mes "[Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Estou aqui apenas para protegê-lo, não se preocupe comigo.";
+close;
+}
+
+vip,75,67,5	script	Chefe dos Guardas	991,{
+mes "[Chefe da Guarda VIP]";
+mes "Ola "+strcharinfo(0)+"!";
+mes "Eu sou o Chefe dos Guardas.";
+mes "Estamos aqui para garantir a proteção de vocês, VIP's, que são tão importantes para nós.";
+next;
+mes "Olhe ao meu lado esse pirralho que tentou entrar em nossa sala vip mesmo não sendo VIP.";
+mes "Ele vai ficar amarrado por um tempo até aprender que aqui não é lugar dele.";
+next;
+mes "Me ajude a manter esses pirralhos fora da sala VIP.";
+mes "Se pegar um de meus guardas dormindo, por favor me avise!";
+mes "Precisamos ensiná-los como é ser um guarda de verdade.";
+mes "Tenha um bom jogo!";
+close;
+}
+
+vip,77,68,3	script	Pirralho#vip	4_M_SAKRAY_TIED,{
+mes "Eii, me ajuda por favor, eu quero ser um VIP também.";
+mes "Não tenho culpa se sou pobre e não consigo comprar um Ticket VIP.";
+close;
+}
+
+// BAR
+
+vip,52,77,3	script	Dona do Bar#vip	4_F_CAVE1,{
+mes "Olá "+strcharinfo(0)+"!, tudo bem?";
+mes "Me desculpa mas não tenho nada para lhe ofecerer, tem alguns clientes que não vão embora e acabaram com nosso estoque.";
+next;
+mes "Infelizmente tem alguns monstros perigosos no caminho que está impedindo nossos mercadores de trazerem as mercadorias de Morroc para nós.";
+mes "Você bem que podia ajudar os mercadores hein, você aparentemente é o único sóbrio aqui do bar.";
+close;
+}
+
+vip,58,77,3	script	Garota do Bar#vip	4_F_KHELLY,{
+mes "Ahhhh não!! Não me venha com cantadas bestas.";
+mes "Toda hora vem um bêbado para falar asneiras no meu ouvido, estou ficando irritada com isso já.";
+mes "Dê o fora daqui, já não temos nada para vender mesmo.";
+close;
+}
+
+vip,50,55,8	script	Jovem#1	4_M_SITDOWN,{
+mes "O que foi? Me deixe beber em paz com minha garota.";
+close;
+}
+vip,50,59,4	script	Jovem#2	4_F_SITDOWN,{
+mes "Saia daqui antes que meu namorado te bata, ele fica muito agressivo quando bebe.";
+close;
+}
+vip,61,70,3	script	Homem triste	4_TOWER_12,{
+mes "Xiuuu, não conte pra minha esposa que estou aqui.";
+mes "Você não faz ideia o quanto é perigoso ser casado com uma Feiticeira.";
+mes "Quer um conselho de amigo? Não cometa o mesmo erro que eu.";
+close;
+}
+
+
+// QUARTO 
+vip,272,277,3	script	Camareira	4_F_GODEMOM,{
+mes "[Camareira VIP]";
+mes "Olá "+strcharinfo(0)+"!, tudo bem?";
+mes "Estou aqui apenas para manter o seu quarto sempre limpo para quando quiser descansar.";
+mes "Se estiver com fome ou sede é só avisar que eu providencio tudo que precisar.";
+close;
+}
+
+// COZINHEIRA
+//vip,67,258,3	script	Fada Cozinheira	441,{
+
+//set .@npccomida$,"^0000FF[Fada Cozinheira]^000000";
+//set @PrecoComida10,250000;	// Preço por cada comida +10
+//	mes .@npccomida$;
+//	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+//	mes "Eu sei fazer algumas comidas que são especialidades das Fadas.";
+//	mes "Elas podem te fortalecer bastante por 30 minutos.";
+//	next;
+//	mes "Tem interesse em saber mais a respeito?.";
+//switch(select("Sim.:Não.")){
+//next;
+//case 1:	
+//	if(Zeny < @PrecoComida){
+//		mes .@npccomida$;
+//		mes "Você não tem o dinheiro suficiente.";
+//		close;}
+//mes "Bom, posso fornercer diversas comidas diferentes, cada uma com um atributo separado.";
+//mes "Pode ser uma comida que dê +10 em um atributo de sua escolha.";
+//next;
+//mes "Lembrando que você também pode utilizar uma comida +10 e outra +20 do mesmo atributo ao mesmo tempo, somando +30, o que pode te ajudar muito nas batalhas.";
+//next;
+//mes "Mas infelizmente os ingredientes são muito caros e não podemos bancá-los.";
+//mes "Então cobrarei "+@PrecoComida10+" z (250k) por cada comida +10;";
+//next;
+//mes "Quer experimentar?";
+//switch(select("Comidas +10.:Sair")){		
+
+//case 1:
+//next;
+//if (Zeny < @PrecoComida10) {mes "Você não tem dinheiro o suficiente."; close;}
+//mes "Essas comidas dão +10 em determinado atributo.";
+//mes "Gentileza escolher qual dos atributos você deseja acrescentar?.";
+//switch(select("STR + 10:AGI + 10:VIT + 10:INT + 10:DEX + 10:LUK + 10:Sair.")){
+//next;
+//case 1:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Força conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_STR_CASH,1800000,10;        // Comida STR+10				Duração: 30 minutos.
+//close;
+//case 2:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Agilidade conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_AGI_CASH,1800000,10;        // Comida AGI+10				Duração: 30 minutos.
+//close;
+//case 3:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Vitalidade conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_VIT_CASH,1800000,10;        // Comida VIT+10				Duração: 30 minutos.
+//close;
+//case 4:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Inteligência conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_INT_CASH,1800000,10;        // Comida INT+10				Duração: 600 30 minutos.
+//close;
+//case 5:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Destreza conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_DEX_CASH,1800000,10;        // Comida DEX+10				Duração: 30 minutos.
+//close;
+//case 6:
+//mes "Pronto, aqui está a comida que lhe dará + 10 de Sorte conforme solicitado.";
+//set Zeny,Zeny-@PrecoComida10;
+//sc_start SC_FOOD_LUK_CASH,1800000,10;        // Comida LUK+10				Duração: 30 minutos.
+//close;
+//case 7:
+//mes "Tudo bem então, até a próxima.";
+//close;
+//}
+//case 2:
+//mes "Tudo bem então, até a próxima.";
+//close;
+//} } } 

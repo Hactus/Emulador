@@ -1,0 +1,500 @@
+//
+// /                                                                      \
+// |            _           _   _   _                                      |
+// |           | |__  _ __ / \ | |_| |__   ___ _ __   __ _                 |
+// |           | '_ \| '__/ _ \| __| '_ \ / _ \ '_ \ / _` |                |
+// |           | |_) | | / ___ \ |_| | | |  __/ | | | (_| |                |
+// |           |_.__/|_|/_/   \_\__|_| |_|\___|_| |_|\__,_|                |
+// |                                                                       |
+// |                         brAthena Script                               |
+// |-----------------------------------------------------------------------|
+// | Nome do Script: Sistema PvP 1.5 [SQL]                                 |
+// |-----------------------------------------------------------------------|
+// | Criado por: eA/brA Dev. Team                                          |
+// |-----------------------------------------------------------------------|
+// | Versão brA: 1.5                                                       |
+// |-----------------------------------------------------------------------|
+// | Descrição:                                                            |
+// | Um sistema PvP com várias arenas                                      |
+// |-----------------------------------------------------------------------|
+// | Changelog:                                                            |
+// | 1.0 Modificação [brAthena]                                            |
+// | [brA]Floozie [Criador]                                                |
+// 1.1 Relocorido
+// 1.2 Adicionado novos Sons
+// 1.3 Almentada Ranking
+// \_______________________________________________________________________/
+//============================================================
+-	script	PvP_InitFunc	-1,{
+OnInit:
+//= Mapas ====================================================
+set $@map$[1],"iz_battle";
+set $@map$[2],"guild_vs2";
+set $@map$[3],"guild_vs3";
+set $@map$[4],"pvp_n_2-5";
+set $@map$[5],"guild_vs1";
+//= SoundList ================================================
+//============================================================
+}
+prontera,152,196,5	script	Entrada PvP	4_M_KNIGHT_BLACK,{
+
+set .@n$, "[ ^cc0000Porteiro PvP^000000 ]";
+INICIO:
+mes .@n$;
+mes "Arena 01 : ^0000FFPvP Arena^000000";
+mes "Arena 02 : ^FF0000PvP Izlude^000000";
+mes "Arena 03 : ^33CCFFGvG Arena^000000";
+mes "Arena 04 : ^999999PvP Segundas Classes^000000";
+mes "Arena 05 : ^FF99FF Somente Babys^000000";
+mes "O que você gostaria de fazer ?";
+next;
+switch(select("^3366FFEscolher Arena^000000:^800080Visualizar Ranking^000000:^00FF00Ver Minha Posição^000000:Sair")){
+case 1:
+mes "Escolha a Arena que gostaria de entrar";
+mes "Arena 01 : ^0000FFPvP Arena^000000";
+mes "Arena 02 : ^FF0000PvP Izlude^000000";
+mes "Arena 03 : ^33CCFFGvG Arena^000000";
+mes "Arena 04 : ^999999PvP Segundas Classes^000000";
+mes "Arena 05 : ^FF99FF Somente babys^000000";
+next;
+switch(select("- ^0000FFArena 01^000000 [ "+getmapusers($@map$[1])+" ]:- ^FF0000Arena 02^000000 [ "+getmapusers($@map$[2])+" ]:- ^33CCFFArena 03^000000 [ "+getmapusers($@map$[3])+" ]:- ^999999Arena 04^000000 [ "+getmapusers($@map$[4])+" ]:- ^FF99FFArena 05^000000 ["+getmapusers($@map$[5])+" ]:- Nenhuma")){
+
+case 1:
+callfunc "_Dispel";
+warp $@map$[1],0,0;
+end;
+
+case 2:
+callfunc "_Dispel";
+warp $@map$[2],0,0;
+end;
+
+case 3:
+callfunc "_Dispel";
+warp $@map$[3],0,0;
+end;
+
+case 4:
+if((Class == 24) || (Class == 25) || (Class == 26) || (Class == 4045) || (Class == 4046) || (Class == 4047) || (Class == 4048) || (Class == 4049) || (Class == 4001) || (Class == 4002) || (Class == 4003) || (Class == 4004) || (Class == 4005) || (Class == 4006) || (Class == 4007) || (Class == 4008) || (Class == 4009) || (Class == 4010) || (Class == 4011) || (Class == 4012) || (Class == 4013) || (Class == 4014) || (Class == 4015) || (Class == 4016) || (Class == 4017) || (Class == 4018) || (Class == 4019) || (Class == 4020) || (Class == 4021)	||	(Class	==	4096)	||	(Class	==	4097)	||	(Class	==	4098)	||	(Class	==	4099) ||	(Class	==	4100)	||	(Class	==	4101)	|| (Class == 4102) || (Class == 4103) || (Class == 4104) || (Class == 4104)	||	(Class	==	4105) ||	(Class	==	4106)	||	(Class	==	4107)	|| (Class == 4108) || (Class == 4211) || (Class == 4212) || (Class == 4215)	||	(Class	==	4054) ||	(Class	==	4055)	||	(Class	==	4056)	|| (Class == 4057) || (Class == 4058) || (Class == 4059) || (Class == 4060)	||	(Class	==	4061) ||	(Class	==	4062)	||	(Class	==	4063)	|| (Class == 4064) || (Class == 4065) || (Class == 4066) || (Class == 4067)	||	(Class	==	4068) ||	(Class	==	4069)	||	(Class	==	4070)	|| (Class == 4071) || (Class == 4072) || (Class == 4073) || (Class == 4074)	||	(Class	==	4075) ||	(Class	==	4076)	||	(Class	==	4077)	|| (Class == 4078) || (Class == 4079))
+{dispbottom "^D20000Desculpe, É proibida a entrada de TransClasses, Classes Expandidas e Terceiras Classes na arena Old Times.^000000"; close;}
+else{
+setarray .@donates[0],607,608,4365,4128,4441,4433,4357,4146,4359,4132,4143,4148,4169,4198,4241,4330,4372,4374,4403,4047,4054,4135,4302,4324,4342,4363,4386,4408,4419,4121,4134,4137,4142,4147,4263,4276,4305,4318,4367,4425,4174,4123,4131,4168,4236,4290,4352,4376,4144,4145,4384,4430;
+for(set @i,0;@i < getarraysize(.@donates);set @i,@i+1){
+if(countitem(.@donates[@i]) >= 1){
+mes .@n$;
+mes "Você não pode usar donates nesse PvP !";
+close;
+}
+}
+}
+callfunc "_Dispel";
+warp $@map$[4],0,0;
+end;
+
+case 5:
+if(Class < 4023 || Class > 4045){
+mes .@n$;
+mes "Só babys podem entrar nesse PvP !";
+close;
+}
+callfunc "_Dispel";
+warp $@map$[5],128,114;
+end;
+
+case 6:
+close;
+}
+
+case 2:
+mes .@n$;
+mes "Escolha a Arena do Rank:";
+next;
+switch(select("- Rank ^00CC00Geral^000000","- Rank ^0000FFArena 01^000000","- Rank ^FF0000Arena 02^000000","- Rank ^33CCFFArena 03^000000","- Rank ^999999Arena 04^000000","- Rank ^FF99FFArena 05^000000","- Voltar")){
+
+case 1: callfunc("PvPS_Func","Ranking_Geral");close;
+case 2: callfunc("PvPS_Func","Ranking_Arena",1);close;
+case 3: callfunc("PvPS_Func","Ranking_Arena",2);close;
+case 4: callfunc("PvPS_Func","Ranking_Arena",3);close;
+case 5: callfunc("PvPS_Func","Ranking_Arena",4);close;
+case 6: callfunc("PvPS_Func","Ranking_Arena",5);close;
+case 7: goto INICIO;end;
+
+}
+
+case 3:
+mes .@n$;
+mes "Escolha o Tipo de PVP:";
+next;
+switch(select("- Rank ^0000FFArena 01^000000","- Rank ^FF0000Arena 02^000000","- Rank ^33CCFFArena 03^000000","- Rank ^999999Arena 04^000000","- Rank ^FF99FFArena 05^000000","- Voltar")){
+
+case 1: callfunc("PvPS_Func","MeuRanking",1);close;
+case 2: callfunc("PvPS_Func","MeuRanking",2);close;
+case 3: callfunc("PvPS_Func","MeuRanking",3);close;
+case 4: callfunc("PvPS_Func","MeuRanking",4);close;
+case 5: callfunc("PvPS_Func","MeuRanking",5);close;
+case 6: goto INICIO;end;
+}
+case 4:
+close;
+}
+
+}
+
+-	script	ArenaPvP#Events	-1,{
+
+OnPCKillEvent:
+getmapxy(@mapa$,@x,@y,0);
+for(set @i,1;( @i <= getarraysize($@map$)-1);set @i,@i+1)
+{
+if($@map$[@i] == @mapa$) callfunc("PvPS_Func","KillEvent",@i);
+}
+OnPCDieEvent:
+getmapxy(@mapa$,@x,@y,0);
+for(set @i,1;@i < getarraysize($@map$);set @i,@i+1)
+{
+if($@map$[@i] == @mapa$) callfunc("PvPS_Func","DieEvent",@i);
+}
+}
+
+function	script	_Dispel	{
+ sc_end SC_HALLUCINATION;
+ sc_end SC_STRIPWEAPON;
+ sc_end SC_STRIPSHIELD;
+ sc_end SC_STRIPARMOR;
+ sc_end SC_STRIPHELM;
+ sc_end SC_CP_WEAPON;
+ sc_end SC_CP_SHIELD;
+ sc_end SC_CP_ARMOR;
+ sc_end SC_CP_HELM;
+ sc_end SC_COMBO;
+ sc_end SC_DANCING;
+ sc_end SC_AUTOBERSERK;
+ sc_end SC_CARTBOOST;
+ sc_end SC_MELTDOWN;
+ sc_end SC_SAFETYWALL;
+ sc_end SC_SMA;
+ sc_end SC_SPEEDUP0;
+ sc_end SC_NOCHAT;
+ sc_end SC_ANKLE;
+ sc_end SC_SPIDERWEB;
+ sc_end SC_LIFEINSURANCE;
+ sc_end SC_BOSSMAPINFO;
+ sc_end SC_PNEUMA;
+ sc_end SC_AUTOSPELL;
+ sc_end SC_INCHITRATE;
+ sc_end SC_INCATKRATE;
+ sc_end SC_NEN;
+ sc_end SC_READYSTORM;
+ sc_end SC_READYDOWN;
+ sc_end SC_READYTURN;
+ sc_end SC_READYCOUNTER;
+ sc_end SC_DODGE;
+ sc_end SC_WARM;
+ sc_end SC_SPEEDUP1;
+ sc_end SC_CRITICALWOUND;
+ sc_end SC_INVINCIBLE;
+ sc_end SC_INVINCIBLEOFF;
+ sc_end SC_HELLPOWER;
+ sc_end SC_RICHMANKIM;
+ sc_end SC_ETERNALCHAOS;
+ sc_end SC_DRUMBATTLE;
+ sc_end SC_NIBELUNGEN;
+ sc_end SC_ROKISWEIL;
+ sc_end SC_INTOABYSS;
+ sc_end SC_SIEGFRIED;
+ sc_end SC_SEVENWIND;
+ sc_end SC_MIRACLE;
+ sc_end SC_ELECTRICSHOCKER;
+ sc_end SC_STRIPACCESSORY;
+ sc_end SC_NEUTRALBARRIER_MASTER;
+ sc_end SC_NEUTRALBARRIER;
+ sc_end SC_STEALTHFIELD_MASTER;
+ sc_end SC_STEALTHFIELD;
+ sc_end SC_GIANTGROWTH;
+ sc_end SC_MILLENNIUMSHIELD;
+ sc_end SC_REFRESH;
+ sc_end SC_FREEZE;
+ sc_end SC_STONEHARDSKIN;
+ sc_end SC_VITALITYACTIVATION;
+ sc_end SC_FIGHTINGSPIRIT;
+ sc_end SC_ABUNDANCE;
+ sc_end SC_SHADOWFORM;
+ sc_end SC_LEADERSHIP;
+ sc_end SC_GLORYWOUNDS;
+ sc_end SC_SOULCOLD;
+ sc_end SC_HAWKEYES;
+ sc_end SC_PUSH_CART;
+ sc_end SC_RAISINGDRAGON;
+ sc_end SC_REFLECTDAMAGE;
+ sc_end SC_INSPIRATION;
+ sc_end SC_EXEEDBREAK;
+ sc_end SC_FORCEOFVANGUARD;
+ sc_end SC_BANDING;
+ sc_end SC_DUPLELIGHT;
+ sc_end SC_EXPIATIO;
+ sc_end SC_LAUDAAGNUS;
+ sc_end SC_LAUDARAMUS;
+ sc_end SC_GATLINGFEVER;
+ sc_end SC_INCREASING;
+ sc_end SC_ADJUSTMENT;
+ sc_end SC_MADNESSCANCEL;
+ sc_end SC_BERSERK;
+ sc_end SC_SATURDAYNIGHTFEVER;
+ sc_end SC_POEMBRAGI;
+ sc_end SC_APPLEIDUN;
+ sc_end SC_GOSPEL;
+ sc_end SC_KAUPE;
+ sc_end SC_KAAHI;
+ sc_end SC_KAITE;
+ sc_end SC_HISS;
+ sc_end SC_NYANGGRASS;
+ sc_end SC_GROOMING;
+ sc_end SC_SHRIMPBLESSING;
+ sc_end SC_CHATTERING;
+ sc_end SC_DORAM_WALKSPEED;
+ sc_end SC_DORAM_MATK;
+ sc_end SC_DORAM_FLEE2;
+ sc_end SC_DORAM_SVSP;
+ sc_end SC_DORAM_BUF_01;
+ sc_end SC_DORAM_BUF_02;
+ sc_end SC_GEFFEN_MAGIC1;
+ sc_end SC_GEFFEN_MAGIC2;
+ sc_end SC_GEFFEN_MAGIC3;
+ sc_end SC_SUHIDE;
+ sc_end SC_SU_STOOP;
+ sc_end SC_SPRITEMABLE;
+ sc_end SC_CATNIPPOWDER;
+ sc_end SC_SV_ROOTTWIST;
+ sc_end SC_BITESCAR;
+ sc_end SC_ARCLOUSEDASH;
+ sc_end SC_TUNAPARTY;
+ sc_end SC_SHRIMP;
+ sc_end SC_FRESHSHRIMP;
+ sc_end SC_NORECOVER_STATE;
+ sc_end SC_ANGELUS;
+ sc_end SC_DECREASEAGI;
+ sc_end SC_IMPOSITIO;
+ sc_end SC_SUFFRAGIUM;
+ sc_end SC_ASPERSIO;
+ sc_end SC_KYRIE;
+ sc_end SC_MAGNIFICAT;
+ sc_end SC_GLORIA;
+ sc_end SC_AETERNA;
+ sc_end SC_ASSUMPTIO;
+ sc_end SC_ORATIO;
+ sc_end SC_LAUDAAGNUS;
+ sc_end SC_LAUDARAMUS;
+ sc_end SC_RENOVATIO;
+ sc_end SC_EXPIATIO;
+ sc_end SC_SECRAMENT;
+ sc_end SC_DUPLELIGHT;
+ sc_end SC_HARMONIZE;
+ sc_end SL_ALCHEMIST;
+ sc_end SL_MONK;
+ sc_end SL_STAR;
+ sc_end SL_SAGE;
+ sc_end SL_CRUSADER;
+ sc_end SL_SUPERNOVICE;
+ sc_end SL_KNIGHT;
+ sc_end SL_WIZARD;
+ sc_end SL_BARDDANCER;
+ sc_end SL_PRIEST;
+ sc_end SL_ROGUE;
+ sc_end SL_ASSASIN;
+ sc_end SL_BLACKSMITH;
+ sc_end SL_HUNTER;
+ sc_end SL_SOULLINKER;
+ sc_end SL_KAIZEL;
+ sc_end SL_KAAHI;
+ sc_end SL_KAUPE;
+ sc_end SL_KAITE;
+ sc_end SL_KAINA;
+ sc_end SL_STIN;
+ sc_end SL_STUN;
+ sc_end SL_SWOO;
+ sc_end SL_SKE;
+ sc_end SL_SKA;
+ sc_end ST_FULLSTRIP;
+ sc_end ALL_ODINS_POWER;
+ sc_end SO_STRIKING;
+ return 0;
+}
+
+function	script	PvPS_Func	{
+set @nome$,"";
+set @matou,0;
+set @morreu,0;
+set @pontos,0;
+if(getarg(0) == "Ranking_Geral")
+{
+
+query_sql "select `nome`, sum(`pontos`) as `total_pontos` from `pvp_arenas` group by 1 order by 2 desc",@nome$, @pontos;
+mes "(Nome - ^FF0000Pontos^000000)";
+for(set @i,0;@i <= 99;set @i,@i+1){
+mes "["+(@i+1)+"] - "+@nome$[@i]+" - ^FF0000"+@pontos[@i]+"^000000";
+}
+return;
+}
+
+if(getarg(0) == "Ranking_Arena")
+{
+query_sql "SELECT `nome`, `matou`, `morreu`, `pontos` FROM `pvp_arenas` WHERE `id`="+getarg(1)+" ORDER BY `pontos` DESC",@nome$,@matou,@morreu,@pontos;
+mes "(Nome - ^3366FFMatou^000000 - ^FF9900Morreu^000000 - ^FF0000Saldo^000000)";
+for(set @i,0;@i <= 99;set @i,@i+1){
+mes "["+(@i+1)+"] - "+@nome$[@i]+" - ^3366FF"+@matou[@i]+"^000000 - ^FF9900"+@morreu[@i]+"^000000 - ^FF0000"+@pontos[@i]+"^000000";
+}
+return;
+}
+
+if(getarg(0) == "MeuRanking")
+{
+query_sql "SELECT `nome`, `matou`, `morreu`, `pontos` FROM `pvp_arenas` WHERE `id`="+getarg(1)+" AND `nome` = '"+strcharinfo(0)+"'",@nome$,@matou,@morreu,@pontos;
+if(@nome$ == ""){
+mes .@n$;
+mes "Você nunca participou dessa arena !";
+close;
+}
+mes .@n$;
+mes "Você Matou: ^3366FF"+@matou+" ^000000Vezes";
+mes "Você Morreu: ^FF9900"+@morreu+" ^000000Vezes";
+mes "Seu Saldo: ^FF0000"+@pontos+" ^000000Pontos";
+return;
+}
+
+if(getarg(0) == "KillEvent")
+{
+set @nome$,"";
+set @PvPPoints,0;
+query_sql "SELECT `nome`,`matou` FROM `pvp_arenas` WHERE `id` = "+getarg(1)+" AND `nome` = '"+strcharinfo(0)+"'",@nome$,@PvPPoints;
+if(@nome$ == "") query_sql "INSERT INTO `pvp_arenas` (`id`, `nome`, `matou`, `pontos`) VALUES ("+getarg(1)+",'"+strcharinfo(0)+"',1,1)"; else
+query_sql "UPDATE `pvp_arenas` SET `matou` = `matou`+1, `pontos` = `pontos`+1 WHERE `id`="+getarg(1)+" AND `nome` = '"+strcharinfo(0)+"'";
+set @PvPPoints, @PvPPoints+1;
+dispbottom "Pontos: "+@PvPPoints;
+end;
+}
+
+if(getarg(0) == "DieEvent")
+{
+set @nome$,"";
+query_sql "SELECT `nome` FROM `pvp_arenas` WHERE `id`="+getarg(1)+" AND `nome` = '"+strcharinfo(0)+"'",@nome$;
+if(@nome$ == "") query_sql "INSERT INTO `pvp_arenas` (`id`, `nome`, `morreu`, `pontos`) VALUES ("+getarg(1)+",'"+strcharinfo(0)+"',1,-1)"; else
+query_sql "UPDATE `pvp_arenas` SET `morreu` = `morreu`+1, `pontos` = `pontos`-1 WHERE `id`="+getarg(1)+" AND `nome` = '"+strcharinfo(0)+"'";
+end;
+}
+}
+
+//=== MapFlags - Arenas =================================
+// Não mude isso caso não saiba o que está fazendo !
+//- Arena 01 --------------------------------------------
+guild_vs2	mapflag	gvg	off
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	nowarpto
+guild_vs2	mapflag	nobranch
+guild_vs2	mapflag	nosave	SavePoint
+guild_vs2	mapflag	nomemo
+guild_vs2	mapflag	nopenalty
+guild_vs2	mapflag	pvp
+
+//- Arena 02 --------------------------------------------
+iz_battle	mapflag	gvg	off
+iz_battle	mapflag	nowarp
+iz_battle	mapflag	noteleport
+iz_battle	mapflag	nowarpto
+iz_battle	mapflag	nobranch
+iz_battle	mapflag	nosave	SavePoint
+iz_battle	mapflag	nomemo
+iz_battle	mapflag	nopenalty
+iz_battle	mapflag	pvp
+iz_battle	mapflag	noexp
+
+
+//- Arena 03 --------------------------------------------
+guild_vs3	mapflag	gvg	on
+guild_vs3	mapflag	nowarp
+guild_vs3	mapflag	noteleport
+guild_vs3	mapflag	nowarpto
+guild_vs3	mapflag	nobranch
+guild_vs3	mapflag	nosave	SavePoint
+guild_vs3	mapflag	nomemo
+guild_vs3	mapflag	nopenalty
+guild_vs3	mapflag	noexp
+
+//- Arena 04 --------------------------------------------
+pvp_n_2-5	mapflag	gvg	off
+pvp_n_2-5	mapflag	nowarp
+pvp_n_2-5	mapflag	noteleport
+pvp_n_2-5	mapflag	nowarpto
+pvp_n_2-5	mapflag	nobranch
+pvp_n_2-5	mapflag	nosave	SavePoint
+pvp_n_2-5	mapflag	nomemo
+pvp_n_2-5	mapflag	nopenalty
+pvp_n_2-5	mapflag	pvp
+pvp_n_2-5	mapflag	noexp
+
+//- Arena 05 --------------------------------------------
+guild_vs1	mapflag	gvg	off
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	nopenalty
+guild_vs1	mapflag	pvp
+guild_vs1	mapflag	noexp
+
+
+
+
+pvp_y_1-2,65,64,2	script	Sair do PvP	4_M_KNIGHT_BLACK,{
+
+mes "[Teleportador]";
+mes "Você quer sair do PvP?";
+next;
+menu "Sim",sim,"Não",cancelar;
+
+sim:
+mes "[Teleportador]";
+mes "Até Logo!";
+next;
+warp "prontera",156,181;
+close;
+
+cancelar:
+mes "[Teleportador]";
+mes "Tudo bem, ^5566FF"+strcharinfo(0)+"^000000, fale comigo quando quiser sair.";
+close;
+
+}
+
+
+
+vip,68,250,5	duplicate(Entrada PvP)	Entrada para PvP#vip	4_M_KNIGHT_BLACK
+aldebaran,146,113,3	duplicate(Entrada PvP)	Entrada para PvP#adb	4_M_KNIGHT_BLACK
+morocc,153,100,3	duplicate(Entrada PvP)	Entrada para PvP#moc	4_M_KNIGHT_BLACK
+geffen,126,64,3	duplicate(Entrada PvP)	Entrada para PvP#gef	4_M_KNIGHT_BLACK
+payon,177,226,3	duplicate(Entrada PvP)	Entrada para PvP#pay	4_M_KNIGHT_BLACK
+izlude,125,148,3	duplicate(Entrada PvP)	Entrada para PvP#iz	4_M_KNIGHT_BLACK
+xmas,143,136,3	duplicate(Entrada PvP)	Entrada para PvP#xmas	4_M_KNIGHT_BLACK
+comodo,204,152,3	duplicate(Entrada PvP)	Entrada para PvP#cmd	4_M_KNIGHT_BLACK
+yuno,144,186,3	duplicate(Entrada PvP)	Entrada para PvP#yuno	4_M_KNIGHT_BLACK
+amatsu,199,91,3	duplicate(Entrada PvP)	Entrada para PvP#amt	4_M_KNIGHT_BLACK
+gonryun,157,122,3	duplicate(Entrada PvP)	Entrada para PvP#gr	4_M_KNIGHT_BLACK
+umbala,89,159,3	duplicate(Entrada PvP)	Entrada para PvP#umb	4_M_KNIGHT_BLACK
+ayothaya,143,111,3	duplicate(Entrada PvP)	Entrada para PvP#ay	4_M_KNIGHT_BLACK
+einbroch,74,202,3	duplicate(Entrada PvP)	Entrada para PvP#ein	4_M_KNIGHT_BLACK
+lighthalzen,150,102,3	duplicate(Entrada PvP)	Entrada para PvP#lhz	4_M_KNIGHT_BLACK
+niflheim,201,183,3	duplicate(Entrada PvP)	Entrada para PvP#nif	4_M_KNIGHT_BLACK
+einbech,186,123,3	duplicate(Entrada PvP)	Entrada para PvP#einb	4_M_KNIGHT_BLACK
+hugel,101,153,3	duplicate(Entrada PvP)	Entrada para PvP#hug	4_M_KNIGHT_BLACK
+rachel,124,117,3	duplicate(Entrada PvP)	Entrada para PvP#rac	4_M_KNIGHT_BLACK
+veins,205,128,3	duplicate(Entrada PvP)	Entrada para PvP#vein	4_M_KNIGHT_BLACK
+moscovia,228,192,3	duplicate(Entrada PvP)	Entrada para PvP#mosc	4_M_KNIGHT_BLACK
+manuk,273,147,3	duplicate(Entrada PvP)	Entrada para PvP#man	4_M_KNIGHT_BLACK
+splendide,201,153,3	duplicate(Entrada PvP)	Entrada para PvP#spl	4_M_KNIGHT_BLACK
+brasilis,184,243,3	duplicate(Entrada PvP)	Entrada para PvP#bra	4_M_KNIGHT_BLACK
+dicastes01,195,194,3	duplicate(Entrada PvP)	Entrada para PvP#disc	4_M_KNIGHT_BLACK
+dewata,204,188,3	duplicate(Entrada PvP)	Entrada para PvP#dew	4_M_KNIGHT_BLACK
+malangdo,142,116,3	duplicate(Entrada PvP)	Entrada para PvP#mala	4_M_KNIGHT_BLACK
+malaya,230,204,3	duplicate(Entrada PvP)	Entrada para PvP@mly	4_M_KNIGHT_BLACK

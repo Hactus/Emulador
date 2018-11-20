@@ -1,0 +1,224 @@
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%           _____    _____   _____   _____   _____    _   _____   _   _            %%
+//%%          |  _  \  /  _  \ |  _  \ | ____| |  _  \  | | /  ___| | | / /           %%
+//%%          | |_| |  | | | | | | | | | |__   | |_| |  | | | |     | |/ /            %%
+//%%          |  _  /  | | | | | | | | |  __|  |  _  /  | | | |     | |\ \            %%
+//%%          | | \ \  | |_| | | |_| | | |___  | | \ \  | | | |___  | | \ \           %%
+//%%          |_|  \_\ \_____/ |_____/ |_____| |_|  \_\ |_| \_____| |_|  \_\          %%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//%%==================================================================================%%
+//%% | Desenvolvido Por [ADM] Roderick | Cronus | Por Favor, Não Retire Os Créditos | %%
+//%%==================================================================================%%
+//%% INSERIR A TABELA ABAIXO NO BANCO DE DADOS SQL:    				      %%
+//%%                                                                                  %%
+//%%  DROP TABLE IF EXISTS `redlist`;						      %%
+//%%  CREATE TABLE `redlist` (			  				      %%
+//%%  `id` int(11) unsigned NOT NULL auto_increment,				      %%
+//%%  `account` int(11) unsigned NOT NULL default '0',				      %%
+//%%  `ip` varchar(100) NOT NULL default '',					      %%
+//%%  PRIMARY KEY (`id`)							      %%
+//%%  )ENGINE=MyISAM;								      %%
+//%%										      %%
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-	script	packiniciante	-1,{
+
+	OnPCLoginEvent:
+
+setarray @itens[0],13696,13990,12902,12412,19500,19848,7307,6380; //Aqui você adiciona o ID dos itens 
+setarray @qtd[0],1,1,1,5,1,1,25,20;	//Aqui você colocará a quantidade de cada um
+
+
+query_sql ("select last_ip from login where account_id='"+getcharid(3)+"'",@ip$);
+query_sql ("select ip from redlist where ip='"+@ip$+"'",@exist$);
+if (@exist$!=@ip$){
+query_sql("insert into `redlist` (account,ip) values ('"+getcharid(3)+"', '"+@ip$+"')");
+}
+else {
+set #jarecebeu,1;
+end;
+}
+if (#jarecebeu == 1) goto Negado;
+
+	
+	
+mes "^00FF00 Bem Vindo^000000 ao ^FF0000Ragnarok-GO ^000000";
+mes "";
+mes "Vejo que você é novo por aqui, então funciona assim.";
+next;
+mes "Vote nos 3 links em nosso site no painel de votação, encontre o npc em prontera Vote Por Pontos.";
+mes "E troque seus pontos por um pack com os seguintes itens:";
+next;
+for (set .@i,0; .@i<getarraysize(@itens); set .@i,.@i+1){
+	set .@nome$, .@nome$+getitemname(@itens[.@i]);
+		mes "[^FF0000"+@qtd[.@i]+"^000000] ^0000FF"+.@nome$+"^000000";
+	set .@nome$,"";
+}
+set #jarecebeu,1;
+next;
+mes "Aí pronto, estará com seu pack e é só se divertir no RagnaCrash! ^^";
+close;
+end;
+
+Negado:
+end;
+
+}
+
+
+
+//  _________________________________________________________
+// /                                                         \
+// |      ___           ___           ___           ___      |
+// |     /__/\         /  /\         /  /\         /__/|     |
+// |    |  |::\       /  /::\       /  /::\       |  |:|     |
+// |    |  |:|:\     /  /:/\:\     /  /:/\:\      |  |:|     |
+// |  __|__|:|\:\   /  /:/~/::\   /  /:/~/:/    __|  |:|     |
+// | /__/::::| \:\ /__/:/ /:/\:\ /__/:/ /:/___ /__/\_|:|____ |
+// | \  \:\~~\__\/ \  \:\/:/__\/ \  \:\/:::::/ \  \:\/:::::/ |
+// |  \  \:\        \  \::/       \  \::/~~~~   \  \::/~~~~  |
+// |   \  \:\        \  \:\        \  \:\        \  \:\      |
+// |    \  \:\        \  \:\        \  \:\        \  \:\     |
+// |     \__\/         \__\/         \__\/         \__\/     |
+// |---------------------------------------------------------|
+// | Nome do Script: Mestre do Refino                        |
+// |---------------------------------------------------------|
+// | Criado por: Mark [kenshin_rh@hotmail.com]               |
+// |---------------------------------------------------------|
+// | Versões: 1.0         Roda com: brA/eA/Cronus            |
+// |---------------------------------------------------------|
+// | Descrição:                                              |
+// |  - Npc que refina Armas e Armaduras para o player       |
+// |    que possui um Pergaminho de Refinamento.             |
+// |    Ex: Pergaminho de Arma +7 ou                         |
+// |        Pergaminho de Armadura +9                        |
+// |---------------------------------------------------------|
+// | Changelog:                                                |
+// | 1.0 Script Criado [Mark]                                |
+// \_________________________________________________________/
+ 
+prontera,149,194,5	script	Mestre do Refino	4_M_REPAIR,{
+    mes "[Mestre do Refino]";
+    mes "Olá!";
+    mes "Como vai?";
+    mes "Sou um especialista em aprimorar equipamentos mas não estou mais trabalhando com isto.";
+    next;
+    if(countitem(6228) || countitem(6229) || countitem(6230) || countitem(6231) || countitem(6456) ||
+    countitem(6232) || countitem(6233) || countitem(6234) || countitem(6235) || countitem(6457)) {
+        mes "[Mestre do Refino]";
+        mes "Veja só, você possui Pergaminhos de Refinamento.";
+        mes "Qual dos pergaminhos você deseja utilizar?";
+        next;
+        set .@pergam,select("- Pergaminho de Arma +5:- Pergaminho de Arma +6:- Pergaminho de Arma +7:- Pergaminho de Arma +8:- Pergaminho de Arma +9:- Pergaminho de Armadura +5:- Pergaminho de Armadura +6:- Pergaminho de Armadura +7:- Pergaminho de Armadura +8:- Pergaminho de Armadura +9");
+        if(!countitem(.allpergam[.@pergam])){
+            mes "[Mestre do Refino]";
+            mes "Você não possui este Pergaminho de Refinamento.";
+            mes "Está tentando me enganar?";
+            close;
+        }
+        mes "[Mestre do Refino]";
+        mes "Vejo que você possui um "+getitemname(.allpergam[.@pergam])+", deseja utilizar ele agora?";
+        next;
+        if(select("Ainda não, mudei de idéia.:Agora mesmo!") == 1) close;
+        if(.@pergam <= 5) { //Armas
+            if( getequipisequiped(4) ){
+                mes "[Mestre do Refino]";
+                mes "Você deseja refinar seu "+getequipname(4)+" para +"+(.@pergam + 4)+"?";
+                next;
+                if(select("Ainda não, mudei de idéia.:Refinar agora mesmo!") == 1) close;
+                if(!getequipisenableref(4)) {
+                    mes "[Mestre do Refino]";
+                    mes "Acho que não posso refinar este item...";
+                    close;
+                }
+                if(!getequipisidentify(4)) {
+                    mes "[Mestre do Refino]";
+                    mes "Você não pode refinar um item não identificado.";
+                    mes "Certifique-se de que ele esteja identificado antes que eu possa refiná-lo.";
+                    close;
+                }
+                if(getequiprefinerycnt(4) >= (.@pergam + 4)) {
+                    mes "[Mestre do Refino]";
+                    mes "Eu não posso refinar esse item com este pergaminho.";
+                    mes "Ele já foi refinado além do que o pergaminho lhe dará!";
+                    close;
+                }
+                delitem .allpergam[.@pergam],1;
+                for( set .@i,1; .@i <= 9; set .@i,.@i+1 ) {
+                    if(getequiprefinerycnt(4) >= (.@pergam + 4)) break;
+                    successrefitem 4;
+                }
+                mes "[Mestre do Refino]";
+                mes "Aqui está sua Arma refinada como pedido no Pergaminho.";
+                mes "Volte quando tiver outro pergaminho!";
+                close;
+               
+            } else {
+                mes "[Mestre do Refino]";
+                mes "Você não possui nenhuma arma equipada.";
+                close;
+            }
+        } else if(.@pergam > 5 && .@pergam <= 10) { //Armaduras
+            mes "[Mestre do Refino]";
+            mes "Escolha qual equipamento devo refinar.";
+            next;
+            set .@equip,select("- Cabeça(Cima) ["+((getequipisequiped(1))? getequipname(1):"Vazio")+"]:- Corpo ["+((getequipisequiped(2))? getequipname(2):"Vazio")+"]:- Escudo ["+(getequipweaponlv(EQI_HAND_L)? "Vazio":((getequipisequiped(3))? getequipname(3):"Vazio"))+"]:- Capa ["+((getequipisequiped(5))? getequipname(5):"Vazio")+"]:- Botas ["+((getequipisequiped(6))? getequipname(6):"Vazio")+"]");
+            if(.@equip >= 4) set .@equip,.@equip+1;
+            if( getequipisequiped(.@equip) && !getequipweaponlv(.@equip) ){
+                mes "[Mestre do Refino]";
+                mes "Você deseja refinar seu "+getequipname(.@equip)+" para +"+(.@pergam - 1)+"?";
+                next;
+                if(select("Ainda não, mudei de idéia.:Refinar agora mesmo!") == 1) close;
+                if(!getequipisenableref(.@equip)) {
+                    mes "[Mestre do Refino]";
+                    mes "Acho que não posso refinar este item...";
+                    close;
+                }
+                if(!getequipisidentify(.@equip)) {
+                    mes "[Mestre do Refino]";
+                    mes "Você não pode refinar um item não identificado.";
+                    mes "Certifique-se de que ele esteja identificado antes que eu possa refiná-lo.";
+                    close;
+                }
+                if(getequiprefinerycnt(.@equip) >= (.@pergam - 1)) {
+                    mes "[Mestre do Refino]";
+                    mes "Eu não posso refinar esse item com este pergaminho.";
+                    mes "Ele já foi refinado além do que o pergaminho lhe dará!";
+                    close;
+                }
+                delitem .allpergam[.@pergam],1;
+                for( set .@i,1; .@i <= 9; set .@i,.@i+1 ) {
+                    if(getequiprefinerycnt(.@equip) >= (.@pergam - 1)) break;
+                    successrefitem .@equip;
+                }
+                mes "[Mestre do Refino]";
+                mes "Aqui está seu Equipamento refinado como pedido no Pergaminho.";
+                mes "Volte quando tiver outro pergaminho!";
+                close;
+               
+            } else {
+                mes "[Mestre do Refino]";
+                mes "Você não possui nenhum equipamento neste local.";
+                close;
+            }
+       
+        }
+    } else {
+        switch(select("Vou seguir meu caminho.:Hmm.. este cara me deixou curioso.")){
+        case 1:
+            mes "[Mestre do Refino]";
+            mes "Bem... cuide-se, aventureiro.";
+            close;
+        case 2:
+            mes "[Mestre do Refino]";
+            mes "Na verdade, as vezes eu faço refinos para aventureiros.";
+            mes "Mas somente para os que possuem Pergaminhos de Refino.";
+            mes "Adeus ~!";
+            close;
+        }
+    }
+ 
+OnInit:
+    setarray .allpergam[1],6456,6231,6230,6229,6228,6457,6235,6234,6233,6232;
+    end;
+   
+}

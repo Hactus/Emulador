@@ -1,0 +1,303 @@
+//===== Venus Script =========================================
+//= Guias de Prontera
+//===== Por: =================================================
+//= L0ne_W0lf / skb_ (CreativeSD Translation)
+//===== Versão atual: ========================================
+//= 1.1
+//===== Compatível com: ======================================
+//= rAthena Project / Venus-Emulator
+//===== Descrição: ===========================================
+//= [Official Conversion]
+//= Guides for the city of Prontera.
+//===== Comentários Adicionais: ==============================
+//= 1.0 First version, Renewal guides.
+//= 1.1 Navigation system update. [Euphy]
+//=     Optimized.
+//============================================================
+
+prontera,181,216,4	script	Guia#01prontera::GuideProntera	105,{
+	cutin "prt_soldier",2;
+	mes "[Guia de Prontera]";
+	mes "Bem-vindo a ^8B4513Prontera^000000,";
+	mes "a bela capital do";
+	mes "Reino de Rune-Midgard.";
+	mes "Você precisa de ajuda para navegar na cidade?";
+	F_Navi("[Guia de Prontera]");
+	next;
+	set .@str$,"Gostaria de verificar outros locais?";
+	while (1) {
+		switch(select("[ Instalações Principais ]:[ Comerciantes e Ajudantes ]:Remover Marcas do Mini-Mapa:Cancelar")) {
+		case 1:
+			set .@loop,1;
+			while (.@loop) {
+				switch(select("[ Loja de Utilidades ]:[ Loja de Armas & Armaduras ]:[ Forja ]:[ Catedral ]:[ Cavalaria ]:[ Estalagem ]:[ Taverna ]:[ Biblioteca ]:[ Castelo de Prontera ]:[ Agência de Empregos ]:[ Prefeitura ]:Menu Anterior")) {
+				case 1:
+					callsub L_Mark, F_Navi("Loja de Utilidades","prontera,134,221","^B9062F");
+					mes .@str$;
+					viewpoint 1,134,221,0,0xFF0000;
+					next;
+					break;
+				case 2:
+					callsub L_Mark, F_Navi("Loja de Armas e Armaduras","prontera,175,220","^0000FF");
+					mes .@str$;
+					viewpoint 1,175,220,1,0x0A82FF;
+					next;
+					break;
+				case 3:
+					callsub L_Mark, F_Navi("Forja","prontera,179,184","^FF5400");
+					mes .@str$;
+					viewpoint 1,179,184,2,0xFFB400;
+					next;
+					break;
+				case 4:
+					mes "[Guia de Prontera]";
+					mes "A "+F_Navi("Catedral de Prontera","prontera,236,316","^006400")+" é";
+					mes "aonde você pode mudar sua classe para Noviço,";
+					mes "fica localizada no extremo nordeste de Prontera.";
+					mes "Deixe-me marcar a localização no seu mini-mapa.";
+					mes .@str$;
+					viewpoint 1,236,316,3,0xAAFF00;
+					next;
+					break;
+				case 5:
+					mes "[Guia de Prontera]";
+					mes "A "+F_Navi("Cavalaria","prontera,46,345")+" é";
+					mes "aonde você pode mudar sua classe para ^7F3300Cavaleiro^000000";
+					mes "ou se candidatar limpeza nos ^7F3300Esgotos^000000.";
+					mes .@str$;
+					viewpoint 1,46,345,4,0xD2691E;
+					next;
+					break;
+				case 6:
+					callsub L_Mark, F_Navi("Estalagem","prontera,203,191","^800080");
+					mes .@str$;
+					viewpoint 1,204,191,5,0xDA70D6;
+					next;
+					break;
+				case 7:
+					callsub L_Mark, "^B9062FTaverna^000000";
+					mes "Apenas a taverna do "+F_Navi("norte","prontera,208,154","^B9062F")+" está";
+					mes "aberta por enquanto.";
+					mes .@str$;
+					viewpoint 1,208,154,6,0xFF0000;
+					viewpoint 1,46,67,7,0xFF0000;
+					next;
+					break;
+				case 8:
+					mes "[Guia de Prontera]";
+					mes "A ^0000FFBiblioteca^000000 é";
+					mes "onde você pode encontrar informações úteis, como a Enciclopédia Monstros.";
+					mes "Existem atualmente duas bibliotecas disponíveis,";
+					mes "uma ao "+F_Navi("nordeste","prontera,120,264")+" e outra ao "+F_Navi("noroeste","prontera,192,264")+".";
+					mes .@str$;
+					viewpoint 1,120,264,8,0x0A82FF;
+					viewpoint 1,192,264,9,0x0A82FF;
+					next;
+					break;
+				case 9:
+					mes "[Guia de Prontera]";
+					mes "O "+F_Navi("Castelo de Prontera","prontera,156,360","^FF5400")+" fica ao norte daqui,";
+					mes "e seu portão traseiro está conectado aos";
+					mes "Campos do norte de Prontera.";
+					mes "Deixe-me marcar a localização no seu mini-mapa.";
+					mes .@str$;
+					viewpoint 1,156,360,10,0xFFB400;
+					next;
+					break;
+				case 10:
+					callsub L_Mark, F_Navi("Agência de Empregos","prontera,133,183","^006400");
+					mes .@str$;
+					viewpoint 1,133,183,11,0xAAFF00;
+					next;
+					break;
+				case 11:
+					mes "[Guia de Prontera]";
+					mes "Deixe-me marcar a localização da "+F_Navi("Prefeitura","prontera,75,91","^7F3300");
+					mes "em seu mini-mapa.";
+					mes "Há um estilista lá";
+					mes "que pode mudar a cor do seu cabelo.";
+					mes .@str$;
+					viewpoint 1,75,91,12,0xD2691E;
+					next;
+					break;
+				case 12:
+					set .@loop,0;
+					break;
+				}
+			}
+			break;
+		case 2:
+			set .@loop,1;
+			while (.@loop) {
+				switch(select("[ Oficial do Éden ]:[ Criador de Peco Peco ]:[ Domador de Feras ]:[ Mestre da Engrenagem ]:[ Removedor de Peco Peco ]:[ Comerciantes ]:[ Locador de Mercenários ]:[ Hipnotizadora ]:[ Funcionária Kafra ]:[ Leablem ]:[ Aprendiz de Artesão ]:[ Treinador de Pet ]:Menu Anterior")) {
+				case 1:
+					callsub L_Mark, F_Navi("Oficial do Éden","prontera,124,76","^800080"),1;
+					mes .@str$;
+					viewpoint 1,124,76,13,0xDA70D6;
+					next;
+					break;
+				case 2:
+					mes "[Guia de Prontera]";
+					mes "Dois ^0000FFCriadores de Peco Peco^000000 estão disponíveis,";
+					mes "um para ^0000FFCavaleiros^000000 ao "+F_Navi("noroeste","prontera,55,350","^0000FF");
+					mes "e o outro para ^0000FFTemplários^000000 ao "+F_Navi("nordeste","prontera,232,310","^0000FF")+".";
+					viewpoint 1,55,350,14,0x0A82FF;
+					viewpoint 1,232,310,15,0x0A82FF;
+					next;
+					break;
+				case 3:
+					mes "[Guia de Prontera]";
+					mes "O "+F_Navi("Domador de Feras","prontera,131,213","^FF5400")+" fornece serviços para";
+					mes "^FF5400Cavaleiros Rúnicos^000000 e ^FF5400Guardiões Reais^000000.";
+					mes "Deixe-me marcar a localização";
+					mes "no seu mini-mapa.";
+					mes .@str$;
+					viewpoint 1,131,213,16,0xFFB400;
+					next;
+					break;
+				case 4:
+					mes "[Guia de Prontera]";
+					mes "O "+F_Navi("Mestre das Engrenagem","prontera,163,178","^006400");
+					mes "fornece serviços para os";
+					mes "^006400Mecânicos^000000.";
+					mes "Deixe-me marcar a localização";
+					mes "no seu mini-mapa.";
+					mes .@str$;
+					viewpoint 1,163,178,17,0xAAFF00;
+					next;
+					break;
+				case 5:
+					mes "[Guia de Prontera]";
+					mes "Se o seu amado Peco Peco se recusar";
+					mes "a deixá-lo,";
+					mes "por favor fale com o "+F_Navi("Removedor de Peco Peco","prontera,125,208","^7F3300");
+					mes "perto da fonte central.";
+					mes .@str$;
+					viewpoint 1,125,208,18,0xD2691E;
+					next;
+					break;
+				case 6:
+					mes "[Guia de Prontera]";
+					mes "O Mercador Rúnico, Comerciante de Amatsu, e outros";
+					mes F_Navi("Comerciantes","prontera,178,244","^800080")+" foram marcados";
+					mes "em seu mini-mapa.";
+					mes .@str$;
+					viewpoint 1,178,244,19,0xDA70D6;
+					next;
+					break;
+				case 7:
+					callsub L_Mark, F_Navi("Locador de Mercenários","prontera,35,337","^0000FF"),1;
+					mes .@str$;
+					viewpoint 1,35,337,20,0x0A82FF;
+					next;
+					break;
+				case 8:
+					mes "[Guia de Prontera]";
+					mes "A ^FF5400Hipnotizadora^000000";
+					mes "ajuda os aventureiros iniciantes";
+					mes "a redefinir suas habilidades.";
+					mes "Ela se mudou para Izlude, a cidade-satélite de Prontera ao sudeste.";
+					mes "Gostaria de verificar outros locais?";
+					mes .@str$;
+					//viewpoint 1,146,232,21,0xFFB400;
+					next;
+					break;
+				case 9:
+					callsub L_Mark, "^006400Funcionária Kafra^000000",1;
+					mes .@str$;
+					viewpoint 1,152,326,22,0xAAFF00;
+					viewpoint 1,30,207,23,0xAAFF00;
+					viewpoint 1,282,200,24,0xAAFF00;
+					viewpoint 1,151,29,25,0xAAFF00;
+					viewpoint 1,146,89,26,0xAAFF00;
+					next;
+					break;
+				case 10:
+					mes "[Guia de Prontera]";
+					mes F_Navi("Leablem","prontera,244,169","^0000FF");
+					mes "é um técnico";
+					mes "em criar ^0000FFslots^000000 em armas e armaduras.";
+					mes "Por incrível que pareça,";
+					mes "não é todos os equipamentos que se encaixam.";
+					mes .@str$;
+					viewpoint 1,244,169,27,0x0A82FF;
+					next;
+					break;
+				case 11:
+					callsub L_Mark, F_Navi("Aprendiz de Artesão","prontera,165,60","^800080"),1;
+					mes .@str$;
+					viewpoint 1,165,60,28,0xDA70D6;
+					next;
+					break;
+				case 12:
+					callsub L_Mark, F_Navi("Treinador de Pet","prontera,218,211"),1;
+					mes .@str$;
+					viewpoint 1,218,211,29,0xFF0000;
+					next;
+					break;
+				case 13:
+					set .@loop,0;
+					break;
+				}
+			}
+			break;
+		case 3:
+			mes "[Guia de Prontera]";
+			mes "Claro, removerei todas as marcas do seu mini-mapa.";
+			mes "Há mais alguma coisa que eu possa fazer por você?";
+			viewpoint 2,1,1,0,0xFFFF00;
+			viewpoint 2,1,1,1,0x000000;
+			viewpoint 2,1,1,2,0xFF0000;
+			viewpoint 2,1,1,3,0xFFFF00;
+			viewpoint 2,1,1,4,0xFFFF00;
+			viewpoint 2,1,1,5,0xFFFF00;
+			viewpoint 2,1,1,6,0xFFFF00;
+			viewpoint 2,1,1,7,0xFFFF00;
+			viewpoint 2,1,1,8,0xFFFF00;
+			viewpoint 2,1,1,9,0xFFFF00;
+			viewpoint 2,1,1,10,0xFFFF00;
+			viewpoint 2,1,1,11,0xFFFF00;
+			viewpoint 2,1,1,12,0xFFFF00;
+			viewpoint 2,1,1,13,0xFFFF00;
+			viewpoint 2,1,1,14,0xFFFF00;
+			viewpoint 2,1,1,15,0xFFFF00;
+			viewpoint 2,1,1,16,0xFFFF00;
+			viewpoint 2,1,1,17,0xFFFF00;
+			viewpoint 2,1,1,18,0xFFFF00;
+			viewpoint 2,1,1,19,0xFFFF00;
+			viewpoint 2,1,1,20,0xFFFF00;
+			//viewpoint 2,1,1,21,0xFFFF00;
+			viewpoint 2,1,1,22,0xFFFF00;
+			viewpoint 2,1,1,23,0xFFFF00;
+			viewpoint 2,1,1,24,0xFFFF00;
+			viewpoint 2,1,1,25,0xFFFF00;
+			viewpoint 2,1,1,26,0xFFFF00;
+			viewpoint 2,1,1,27,0xFFFF00;
+			viewpoint 2,1,1,28,0xFFFF00;
+			viewpoint 2,1,1,29,0xFFFF00;
+			next;
+			break;
+		case 4:
+			mes "[Guia de Prontera]";
+			mes "Aproveite sua estadia.";
+			close2;
+			cutin "prt_soldier",255;
+			end;
+		}
+	}
+	end;
+L_Mark:
+	mes "[Guia de Prontera]";
+	if (getarg(1,0)) {
+		mes "Deixe-me marcar a localização do";
+		mes getarg(0);
+	} else
+		mes "Deixe-me marcar a localização do "+getarg(0);
+	mes "em seu mini-mapa.";
+	return;
+}
+prontera,282,207,2	duplicate(GuideProntera)	Guia#02prontera	105
+prontera,29,200,6	duplicate(GuideProntera)	Guia#03prontera	105
+prontera,159,29,0	duplicate(GuideProntera)	Guia#04prontera	105
+//prontera,151,330,4	duplicate(GuideProntera)	Guia#05prontera	105
+prontera,159,326,4	duplicate(GuideProntera)	Guia#05prontera	105

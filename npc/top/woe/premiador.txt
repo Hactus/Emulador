@@ -1,0 +1,38 @@
+-	script	WoEPremio	-1,{
+	OnInit:
+	setarray .map$[0],"prtg_cas01","prtg_cas02","prtg_cas03";	// -- Warp dos castelos que irão ser sorteados
+	setarray .Map2$[0],"Kriemhild","Swanhild","Fadhgridh";		// -- Nome dos Mapas
+	setarray .It[0],ID1,ID2,ID3;					// -- ID dos Prêmios
+	end;
+
+	OnAgitStart:
+	set .A,rand(getarraysize(.map$));
+	set .B,rand(getarraysize(.map$));
+	while(.B==.A){
+	set .B,rand(getarraysize(.map$));
+	}
+	set .C,rand(getarraysize(.map$));
+	while(.C==.A || .C==.B){
+	set .C,rand(getarraysize(.map$));
+	}
+	sleep2 1000;
+	announce "O 1° prêmio ( "+getitemname(.It[.A])+" ) será atribuído ao vencedor do castelo "+.Map2$[.A]+".",0;
+	sleep2 1000;
+	announce "O 2° prêmio ( "+getitemname(.It[.B])+" ) será atribuído ao vencedor do castelo "+.Map2$[.B]+".",0;
+	sleep2 1000;
+	announce "O 3° Prêmio ( "+getitemname(.It[.C])+" ) será atribuído ao vencedor do Castelo "+.Map2$[.C]+".",0;
+	end;
+
+	OnAgitEnd:
+	for(set .@a,2000000; .@a<4000000; set .@a,.@a+1) {
+	if(isloggedin(.@a)){
+	attachrid(.@a);
+	if(getcastledata(.map$[.A],1)==getcharid(2)) getitem .It[0],1;
+	if(getcastledata(.map$[.B],1)==getcharid(2)) getitem .It[1],1;
+	if(getcastledata(.map$[.C],1)==getcharid(2)) getitem .It[2],1;
+	detachrid;
+	}
+	sleep 1;
+	}
+	end;
+	}

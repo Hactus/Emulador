@@ -1,0 +1,2293 @@
+prontera,145,191,5	script	Teste Room Guard	414,{
+// == Configs ==
+Set .@Npc$,"[Teste Room Guard]";	// Nome do Npc
+Set @GmLvl,99;				// Level de GM para acessar o Menu GM
+// =============
+if(GetGMLevel()>=@GmLvl)
+	while(1){
+		Mes .@Npc$;
+		Mes "Bom Dia Mestre "+StrCharInfo(0)+"!";
+		Mes "O que deseja?";
+		next;
+		switch(select("Configurar a Teste Room","Ver Alugueis Recorrentes","Cancelar")){
+			case 1:
+				Mes .@Npc$;
+				Mes "Selecione a Configuração a ser alterada:";
+				next;
+				switch(select("Mapas da Teste Room","Preços e Tempos dos Aluguéis","Cancelar")){
+					case 1:
+						Mes .@Npc$;
+						Mes "Mapas Atuais:";
+						for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2) Mes $TesteRoom$[@i]+" ("+$TesteRoom$[@i+1]+")";
+						Mes "O que deseja fazer?";
+						next;
+						switch(select("Alterar um Mapa","Adicionar um Mapa","Apagar um Mapa","Cancelar")){
+							case 1:
+								Mes .@Npc$;
+								Mes "Escolha o mapa a ser alterado:";
+								next;
+								Set @menu$,"";
+								for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+									if(@menu$=="") Set @menu$,$TesteRoom$[@i]+" ("+$TesteRoom$[@i+1]+")";
+									else Set @menu$,@menu$+":"+$TesteRoom$[@i]+" ("+$TesteRoom$[@i+1]+")";
+								Set @menu$,@menu$+":Cancelar";
+								Set @sel,select(@menu$)-1;
+								if(@sel==GetArraySize($TesteRoom$)/2) break;
+								Mes .@Npc$;
+								Mes "O que deseja alterar?";
+								next;
+								switch(select("O Nome da Sala Teste Room","O Mapa da Sala Teste Room","Cancelar")){
+									case 1:
+										Mes .@Npc$;
+										Mes "Digite o Novo Nome da Sala Teste Room:";
+										next;
+										input @name$;
+										Mes .@Npc$;
+										Mes @name$+" Está Correto?";
+										next;
+										if(select("Sim:Não")==2) break;
+										Mes .@Npc$;
+										Mes "Nome Definido com Sucesso!";
+										SetArray $TesteRoom$[@sel*2],@name$;
+										next;
+										break;
+									case 2:
+										Mes .@Npc$;
+										Mes "Digite o nome Exato do novo mapa, sem o '.gat':";
+										next;
+										input @new$;
+										Mes .@Npc$;
+										Mes "O Mapa "+@new$+" está correto?";
+										Mes "Confira bem, pois eu não tenho como saber se este mapa existe!";
+										next;
+										if(select("Sim:Não")==2) break;
+										Mes .@Npc$;
+										Mes "Mapa configurado com sucesso!";
+										SetArray $TesteRoom$[@sel*2+1],@new$;
+										next;
+										break;
+									case 3: break;
+								}
+								break;
+							case 2:
+								Mes .@Npc$;
+								Mes "Digite o Nome da Nova Sala:";
+								next;
+								input @name$;
+								Mes .@Npc$;
+								Mes @name$+" Está Correto?";
+								next;
+								if(select("Sim:Não")==2) break;
+								Mes .@Npc$;
+								Mes "Digite o nome Exato do novo mapa, sem o '.gat':";
+								next;
+								input @new$;
+								Mes .@Npc$;
+								Mes "O Mapa "+@new$+" está correto?";
+								Mes "Confira bem, pois eu não tenho como saber se este mapa existe!";
+								next;
+								if(select("Sim:Não")==2) break;
+								Mes .@Npc$;
+								Mes "Novo Mapa adicionado com sucesso!";
+								SetArray $TesteRoom$[GetArraySize($TesteRoom$)],@name$,@new$;
+								next;
+								break;
+							case 3:
+								Mes .@Npc$;
+								Mes "Escolha o mapa a ser apagado:";
+								next;
+								Set @menu$,"";
+								for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+									if(@menu$=="") Set @menu$,$TesteRoom$[@i]+" ("+$TesteRoom$[@i+1]+")";
+									else Set @menu$,@menu$+":"+$TesteRoom$[@i]+" ("+$TesteRoom$[@i+1]+")";
+								Set @menu$,@menu$+":Cancelar";
+								Set @sel,select(@menu$)-1;
+								if(@sel==GetArraySize($TesteRoom$)/2) break;
+								Mes .@Npc$;
+								Mes "Deseja mesmo apagar a sala "+$TesteRoom$[@sel*2]+" ("+$TesteRoom$[@sel*2+1]+") ?";
+								next;
+								if(select("Sim:Não")==2) break;
+								Mes .@Npc$;
+								Mes "Sala apagada com sucesso!";
+								DeleteArray $TesteRoom$[@sel*2],2;
+								next;
+								break;
+							case 4: break;
+						}
+						break;
+					case 2:
+						Mes .@Npc$;
+						Mes "Preços Atuais:";
+						for(set @i,0; @i<=GetArraySize($TesteTax)-1; set @i,@i+2) Mes (@i/2)+" - "+$TesteTax[@i]+" Zenys por "+$TesteTax[@i+1]+" minutos.";
+						Mes "O que deseja?";
+						next;
+						switch(select("Adicionar uma Taxa","Mudar uma Taxa","Apagar uma Taxa","Cancelar")){
+							case 1:
+								Mes .@Npc$;
+								Mes "Digite o novo Tempo em Minutos:";
+								next;
+								input @time,0;
+								Mes .@Npc$;
+								Mes "Digite o valor em Zenys para alugar a sala por "+@time+" minutos:";
+								next;
+								input @price,0,1000000000;
+								Mes .@Npc$;
+								Mes "Alugar a Sala por "+@time+" minutos ao valor de "+@price+"z está correto?";
+								next;
+								if(select("Sim:Não")==2) break;
+								Mes .@Npc$;
+								Mes "Novo Tempo adicionado com sucesso!";
+								SetArray $TesteTax[GetArraySize($TesteTax)],@price,@time;
+								next;
+								break;
+							case 2:
+								Mes .@Npc$;
+								Mes "Escolha a Taxa a ser alterada:";
+								next;
+								Set @menu$,"";
+								for(Set @i,0; @i<GetArraySize($TesteTax); Set @i,@i+2)
+									if(@menu$=="") Set @menu$,$TesteTax[@i+1]+" min por "+$TesteTax[@i]+"z";
+									else Set @menu$,@menu$+":"+$TesteTax[@i+1]+" min por "+$TesteTax[@i]+"z";
+								Set @menu$,@menu$+":Cancelar";
+								Set @sel,select(@menu$)-1;
+								if(@sel==GetArraySize($TesteTax)) break;
+								Mes .@Npc$;
+								Mes "O que deseja alterar da Taxa "+$TesteTax[@sel*2+1]+" min por "+$TesteTax[@sel*2]+"z ?";
+								next;
+								switch(select("O Tempo","O Preço","Cancelar")){
+									case 1:
+										Mes .@Npc$;
+										Mes "Digite o novo Tempo em Minutos:";
+										next;
+										input @time,0;
+										Mes .@Npc$;
+										Mes "Alugar a Sala por "+@time+" minutos ao valor de "+$TesteTax[@sel*2]+"z está correto?";
+										next;
+										if(select("Sim:Não")==2) break;
+										Mes .@Npc$;
+										Mes "Tempo modificado com sucesso!";
+										SetArray $TesteTax[@sel*2+1],@time;
+										next;
+										break;
+									case 2:
+										Mes .@Npc$;
+										Mes "Digite o novo Preço em Zenys:";
+										next;
+										input @price,0;
+										Mes .@Npc$;
+										Mes "Alugar a Sala por "+$TesteTax[@sel*2+1]+" minutos ao valor de "+@price+"z está correto?";
+										next;
+										if(select("Sim:Não")==2) break;
+										Mes .@Npc$;
+										Mes "Preço modificado com sucesso!";
+										SetArray $TesteTax[@sel*2],@price;
+										next;
+										break;
+									case 3: break;
+								}
+								break;
+							case 3:
+								Mes .@Npc$;
+								Mes "Escolha a Taxa a ser apagada:";
+								next;
+								Set @menu$,"";
+								for(Set @i,0; @i<GetArraySize($TesteTax); Set @i,@i+2)
+									if(@menu$=="") Set @menu$,$TesteTax[@i+1]+" min por "+$TesteTax[@i]+"z";
+									else Set @menu$,@menu$+":"+$TesteTax[@i+1]+" min por "+$TesteTax[@i]+"z";
+								Set @menu$,@menu$+":Cancelar";
+								Set @sel,select(@menu$)-1;
+								if(@sel==GetArraySize($TesteTax)) break;
+								Mes .@Npc$;
+								Mes "Deseja mesmo apagar a Taxa "+$TesteTax[@sel*2+1]+" min por "+$TesteTax[@sel*2]+"z ?";
+								next;
+								if(select("Sim:Não")==2) break;
+								Mes .@Npc$;
+								Mes "Taxa Apagada com Sucesso!";
+								DeleteArray $TesteTax[@sel*2],2;
+								next;
+								break;
+							case 4: break;
+						}
+						break;
+					case 3: break;
+				}
+				break;
+			case 2:
+				Mes .@Npc$;
+				for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+					if($CurrTesteName$[@i/2]!="") Mes "Atualmente a "+$TesteRoom$[@i]+" está alugada para "+$CurrTesteName$[@i/2]+", por "+$CurrTeste[@i/2]+" minutos ao valor de "+$CurrTeste[@i/2+1]+"z.";
+					else Mes "A "+$TesteRoom$[@i]+" não está alugada para ninguém neste exato momento.";
+				next;
+				break;
+			case 3: close;
+		}
+	}
+else
+	while(1){
+		Mes .@Npc$;
+		Mes "Olá "+StrCharInfo(0)+"!";
+		Mes "O que deseja?";
+		next;
+		switch(select("Alugar uma Teste Room!","Ver quem está nas Teste Rooms","Entrar em uma Teste Room","Cancelar")){
+			case 1:
+				Mes .@Npc$;
+				Mes "Escolha a Sala da Teste Room:";
+				next;
+				Set @menu$,"";
+				for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+					if(@menu$=="") Set @menu$,$TesteRoom$[@i];
+					else Set @menu$,@menu$+":"+$TesteRoom$[@i];
+				Set @menu$,@menu$+":Cancelar";
+				Set @sel1,select(@menu$)-1;
+				if(@sel1==GetArraySize($TesteRoom$)/2) break;
+				Mes .@Npc$;
+				if($CurrTesteName$[@sel1*2]!=""){
+					Mes "Sinto muito, mas a sala está alugada...";
+					Mes "Aguarde mais "+$CurrTeste[@sel1*3]+" minutos para poder alugá-la.";
+					next;
+					break;
+				}
+				Mes "Escolha o Aluguel:";
+				next;
+				Set @menu$,"";
+				for(set @i,0; @i<=GetArraySize($TesteTax)-1; set @i,@i+2)
+					if(@menu$=="") Set @menu$,$TesteTax[@i+1]+" minutos = "+$TesteTax[@i]+" Zenys";
+					else Set @menu$,@menu$+":"+$TesteTax[@i+1]+" minutos = "+$TesteTax[@i]+" Zenys";
+				Set @sel,select(@menu$)-1;
+				Mes .@Npc$;
+				Mes "Deseja mesmo alugar a "+$TesteRoom$[@sel1*2]+" por "+$TesteTax[@sel*2+1]+" minutos, ao preço de "+$TesteTax[@sel*2]+"z ?";
+				next;
+				if(select("Sim:Não")==2) break;
+				Mes .@Npc$;
+				if(Zeny < $TesteTax[@sel*2]){
+					Mes "Você não possui Zenys suficientes...";
+					next;
+					break;
+				}
+				Mes "Ok, agora defina a senha para seus amigos poderem entrar na "+$TesteRoom$[@sel1*2]+" da Teste Room junto com você:";
+				next;
+				input @pass$;
+				Mes .@Npc$;
+				Mes "A Senha "+@pass$+" está correta?";
+				next;
+				if(select("Sim:Não")==2) break;
+				Mes .@Npc$;
+				Mes "Sala alugada com sucesso!";
+				Mes "Eu o levarei à Teste Room, lembre-se de dizer aos seus amigos a senha!";
+				Set $CurrTesteName$[@sel1*2],StrCharInfo(0);
+				Set $CurrTestePass$[@sel1*2],@pass$;
+				SetArray $CurrTeste[@sel1*3],$TesteTax[@sel*2+1],$TesteTax[@sel*2],GetTime(2)+$TesteTax[@sel*2+1];
+				Set Zeny,Zeny-$TesteTax[@sel*2];
+				close2;
+				KillMonsterAll $TesteRoom$[@sel1*2+1];
+				warp $TesteRoom$[@sel1*2+1],0,0;
+				AttachNpcTimer $CurrTesteName$[@sel1*2];
+				InitNpcTimer;
+				end;
+			case 2:
+				Mes .@Npc$;
+				for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+					if($CurrTesteName$[@i/2]!="") Mes "Atualmente a "+$TesteRoom$[@i]+" está alugada para "+$CurrTesteName$[@i/2]+", por "+$CurrTeste[@i/2]+" minutos ao valor de "+$CurrTeste[@i/2+1]+"z.";
+					else Mes "A "+$TesteRoom$[@i]+" não está alugada para ninguém neste exato momento.";
+				next;
+				break;
+			case 3:
+				Mes .@Npc$;
+				Mes "Escolha a Sala da Teste Room:";
+				next;
+				Set @menu$,"";
+				for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+					if(@menu$=="") Set @menu$,$TesteRoom$[@i];
+					else Set @menu$,@menu$+":"+$TesteRoom$[@i];
+				Set @menu$,@menu$+":Cancelar";
+				Set @sel1,select(@menu$)-1;
+				if(@sel1==GetArraySize($TesteRoom$)/2) break;
+				Mes .@Npc$;
+				if($CurrTesteName$[@sel1*2]==""){
+					Mes "Não há ninguém na "+$TesteRoom$[@sel1*2]+"!";
+					next;
+					break;
+				}
+				Mes "Digite a Senha que seu Amigo deve ter lhe passado:";
+				next;
+				input @pass$;
+				Mes .@Npc$;
+				if(@pass$!=$CurrTestePass$[@sel1*2]){
+					Mes "Senha Incorreta!";
+					next;
+					break;
+				}
+				Mes "Senha Correta!";
+				Mes "Prepare-se, irei o teleportar para a "+$TesteRoom$[@sel1*2]+"!";
+				close2;
+				warp $TesteRoom$[@sel1*2+1],0,0;
+				end;
+			case 4: close;
+		}
+	}
+OnTimer60000:
+for(Set .@i,0; .@i<=GetArraySize($TesteRoom$)/2; Set .@i,.@i+2)
+	if($CurrTesteName$[.@i/2]!=""){
+		Set $CurrTeste[.@i/2*3],$CurrTeste[.@i/2*3]-1;
+		if($CurrTeste[.@i/2*3]==1)
+			if(GetMapUsers($TesteRoom$[.@i+1])>1) MapAnnounce $TesteRoom$[.@i+1],"Resta 1 minuto de Aluguel, aproveitem bem!",8;
+			else MapAnnounce $TesteRoom$[.@i+1],"Resta 1 minuto de Aluguel, aproveite bem!",8;
+		if($CurrTeste[.@i/2*3]<1){
+			if(GetMapUsers($TesteRoom$[.@i+1])>1){
+				MapAnnounce $TesteRoom$[.@i+1],"Desculpem-me, mas o tempo se esgotou",8;
+				sleep 1000;
+				MapAnnounce $TesteRoom$[.@i+1],"Espero que vocês tenham se divertido!",8;
+			}else{
+				MapAnnounce $TesteRoom$[.@i+1],"Desculpe-me, mas o tempo se esgotou",8;
+				sleep 1000;
+				MapAnnounce $TesteRoom$[.@i+1],"Espero que você tenha se divertido!",8;
+			}
+			sleep 1000;
+			MapWarp $TesteRoom$[.@i+1],"prontera",155,180;
+			Set $CurrTesteName$[.@i/2],"";
+			Set $CurrTestePass$[.@i/2],"";
+			DeleteArray $CurrTeste[.@i/2*3],3;
+			KillMonsterAll $TesteRoom$[.@i+1];
+			StopNpcTimer;
+			DetachNpcTimer "Teste Room Guard";
+		}
+		AttachNpcTimer $CurrTesteName$[.@i/2];
+		InitNpcTimer;
+	}
+end;
+OnPCDieEvent:
+GetMapXY(@map$,@x,@y,0);
+	for(Set @i,0; @i<=GetArraySize($TesteRoom$)/2; Set @i,@i+2)
+		if(@map$==$TesteRoom$[@i+1] && GetMapUsers($TesteRoom$[@i+1])<1){
+			Set $CurrTesteName$[@i/2],"";
+			Set $CurrTestePass$[@i/2],"";
+			DeleteArray $CurrTeste[@i/2*3],3;
+			KillMonsterAll $TesteRoom$[@i+1];
+			StopNpcTimer;
+			DetachNpcTimer "Teste Room Guard";
+			break;
+		}
+end;
+OnInit:
+// == Config ==
+if(!GetArraySize($TesteRoom$)){
+SetArray $TesteRoom$[0],"Sala 1","pvp_n_1-5","Sala 2","pvp_n_2-5","Sala 3","pvp_n_3-5","Sala 4","pvp_n_4-5","Sala 5","pvp_n_5-5","Sala 6","pvp_n_6-5","Sala 7","pvp_n_7-5","Sala 8","pvp_n_8-5";
+SetArray $TesteTax[0],	0,5;	// Preço para alugar uma Sala,
+
+}
+// ============
+	DeleteArray $CurrTesteName$[0],GetArraySize($CurrTesteName$);
+	DeleteArray $CurrTestePass$[0],GetArraySize($CurrTestePass$);
+	DeleteArray $CurrTeste[0],GetArraySize($CurrTeste);
+	for(Set .@i,0; .@i<GetArraySize($TesteRoom$)/2; Set .@i,.@i+2){
+		KillMonsterAll $TesteRoom$[.@i+1];
+	}
+end;
+}
+
+pvp_n_1-5	mapflag	nomemo
+pvp_n_1-5	mapflag	nowarp
+pvp_n_1-5	mapflag	nowarpto
+pvp_n_1-5	mapflag	noreturn
+pvp_n_1-5	mapflag	nodrop
+pvp_n_1-5	mapflag	noloot
+pvp_n_1-5	mapflag	nomobloot
+pvp_n_1-5	mapflag	nomvploot
+pvp_n_2-5	mapflag	nomemo
+pvp_n_2-5	mapflag	nowarp
+pvp_n_2-5	mapflag	nowarpto
+pvp_n_2-5	mapflag	noreturn
+pvp_n_2-5	mapflag	nodrop
+pvp_n_2-5	mapflag	noloot
+pvp_n_2-5	mapflag	nomobloot
+pvp_n_2-5	mapflag	nomvploot
+pvp_n_3-5	mapflag	nomemo
+pvp_n_3-5	mapflag	nowarp
+pvp_n_3-5	mapflag	nowarpto
+pvp_n_3-5	mapflag	noreturn
+pvp_n_3-5	mapflag	nodrop
+pvp_n_3-5	mapflag	noloot
+pvp_n_3-5	mapflag	nomobloot
+pvp_n_3-5	mapflag	nomvploot
+pvp_n_4-5	mapflag	nomemo
+pvp_n_4-5	mapflag	nowarp
+pvp_n_4-5	mapflag	nowarpto
+pvp_n_4-5	mapflag	noreturn
+pvp_n_4-5	mapflag	nodrop
+pvp_n_4-5	mapflag	noloot
+pvp_n_4-5	mapflag	nomobloot
+pvp_n_4-5	mapflag	nomvploot
+pvp_n_5-5	mapflag	nomemo
+pvp_n_5-5	mapflag	nowarp
+pvp_n_5-5	mapflag	nowarpto
+pvp_n_5-5	mapflag	noreturn
+pvp_n_5-5	mapflag	nodrop
+pvp_n_5-5	mapflag	noloot
+pvp_n_5-5	mapflag	nomobloot
+pvp_n_5-5	mapflag	nomvploot
+pvp_n_6-5	mapflag	nomemo
+pvp_n_6-5	mapflag	nowarp
+pvp_n_6-5	mapflag	nowarpto
+pvp_n_6-5	mapflag	noreturn
+pvp_n_6-5	mapflag	nodrop
+pvp_n_6-5	mapflag	noloot
+pvp_n_6-5	mapflag	nomobloot
+pvp_n_6-5	mapflag	nomvploot
+pvp_n_7-5	mapflag	nomemo
+pvp_n_7-5	mapflag	nowarp
+pvp_n_7-5	mapflag	nowarpto
+pvp_n_7-5	mapflag	noreturn
+pvp_n_7-5	mapflag	nodrop
+pvp_n_7-5	mapflag	noloot
+pvp_n_7-5	mapflag	nomobloot
+pvp_n_7-5	mapflag	nomvploot
+pvp_n_8-5	mapflag	nomemo
+pvp_n_8-5	mapflag	nowarp
+pvp_n_8-5	mapflag	nowarpto
+pvp_n_8-5	mapflag	noreturn
+pvp_n_8-5	mapflag	nodrop
+pvp_n_8-5	mapflag	noloot
+pvp_n_8-5	mapflag	nomobloot
+pvp_n_8-5	mapflag	nomvploot
+
+pvp_n_1-5,99,101,4	script	Invocador de Monstros::Summoner	10078,{
+
+set .n$, "[ Invocador de Monstros ]";
+
+mes .n$;
+mes "Ola "+strcharinfo(0)+" , o que deseja ?";
+next;
+if(select("Invocar:Matar")==2) { atcommand "@killmonster2"; close; }
+mes .n$;
+mes "Digite o ID do mob :";
+next;
+input .@mobid, 0, 2998;
+if (.@mobid == 0 ) {
+mes .n$;
+mes "Você digitou um ID invalido.";
+mes "O ID digitado tem que estar entre 1001 e 2998.";
+close;
+}
+else if (.@mobid < 1 || .@mobid >= 2998 ) {
+mes .n$;
+mes "O ID digitado tem que estar entre 1001 e 2998.";
+close;
+}
+else {
+next;
+mes .n$;
+mes "Digite a quantidade :";
+next;
+input .@qntd, 0, 51;
+if (.@qntd < 1 || .@qntd >= 51 ) {
+mes .n$;
+mes "A quantidade digitada tem que estar entre 1 e 50.";
+close;
+}
+else {
+next;
+mes .n$;
+mes "Irei invoca-los agora.";
+atcommand "@monster "+.@mobid+" "+.@qntd+"";
+close;
+}
+}
+}
+
+pvp_n_2-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#02	10078
+pvp_n_3-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#03	10078
+pvp_n_4-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#04	10078
+pvp_n_5-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#05	10078
+pvp_n_6-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#06	10078
+pvp_n_7-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#07	10078
+pvp_n_8-5,99,101,4	duplicate(Summoner)	Invocador de Monstros#08	10078
+
+
+
+prontera,141,191,6	script	Arena de Testes	10129,{
+
+mes "[^FF8000Arena de Testes^000000]";
+mes "Olá ^0000CD"+strcharinfo(0)+"^000000";
+mes "Deseja ir até a Arena de Testes?";
+menu "Sim",-,"Não",cla;
+next;
+mes "[^FF8000Arena de Testes^000000]";
+mes "Ok, até mais!";
+warp "job_knt",143 ,56;
+close;
+
+cla:
+mes "[^FF8000Arena de Testes^000000]";
+mes "Ok, fale comigo caso queira ir!";
+close;
+}
+
+
+job_knt,124,75,5	script	Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Pequeno",3700,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3700);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,75,5	script	Humanoide Água P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Água Pequeno",3701,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3701);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Água Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,75,5	script	Humanoide Terra P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Terra Pequeno",3702,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3702);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Terra Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,75,5	script	Humanoide Fogo P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fogo Pequeno",3703,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3703);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fogo Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,75,5	script	Humanoide Vento P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Vento Pequeno",3704,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3704);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Vento Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,75,5	script	Humanoide Veneno P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Veneno Pequeno",3705,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3705);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Veneno Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,75,5	script	Humanoide Sagrado P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sagrado Pequeno",3706,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3706);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sagrado Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,75,5	script	Humanoide Sombrio P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sombrio Pequeno",3707,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3707);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sombrio Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,75,5	script	Humanoide Fantasma P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fantasma Pequeno",3708,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3708);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fantasma Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+
+job_knt,160,75,5	script	Humanoide Maldito P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Maldito Pequeno",3709,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3709);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Maldito Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,124,36,5	script	Amorfo Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Amorfo Neutro Pequeno",3710,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3710);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Amorfo Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,36,5	script	Morto Vivo Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Morto Vivo Neutro Pequeno",3711,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3711);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Morto Vivo Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,36,5	script	Bruto Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Bruto Neutro Pequeno",3712,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3712);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Bruto Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,36,5	script	Planta Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Planta Neutro Pequeno",3713,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3713);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Planta Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,36,5	script	Inseto Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Inseto Neutro Pequeno",3720,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3720);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Inseto Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,36,5	script	Peixe Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Peixe Neutro Pequeno",3714,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3714);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Peixe Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,36,5	script	Demonio Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Demonio Neutro Pequeno",3715,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3715);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Demonio Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,36,5	script	Humanoide Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Pequeno",3716,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3716);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,36,5	script	Anjo Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Pequeno",3717,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3717);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Anjo Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,160,36,5	script	Dragão Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Pequeno",3718,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3718);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Dragão Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,163,36,5	script	MvP Neutro P	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"MvP Neutro Pequeno",3719,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3719);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "MvP Neutro Pequeno: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,124,67,5	script	Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Médio",3721,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3721);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,67,5	script	Humanoide Água M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Água Médio",3722,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3722);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Água Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,67,5	script	Humanoide Terra M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Terra Médio",3723,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3723);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Terra Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,67,5	script	Humanoide Fogo M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fogo Médio",3724,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3724);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fogo Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,67,5	script	Humanoide Vento M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Vento Médio",3725,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3725);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Vento Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,67,5	script	Humanoide Veneno M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Veneno Médio",3726,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3726);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Veneno Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,67,5	script	Humanoide Sagrado M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sagrado Médio",3727,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3727);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sagrado Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,67,5	script	Humanoide Sombrio M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sombrio Médio",3728,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3728);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sombrio Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,67,5	script	Humanoide Fantasma M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fantasma Médio",3729,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3729);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fantasma Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+
+job_knt,160,67,5	script	Humanoide Maldito M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Maldito Médio",3730,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3730);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Maldito Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,124,44,5	script	Amorfo Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Amorfo Neutro Médio",3731,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3731);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Amorfo Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,44,5	script	Morto Vivo Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Morto Vivo Neutro Médio",3732,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3732);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Morto Vivo Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,44,5	script	Bruto Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Bruto Neutro Médio",3733,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3733);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Bruto Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,44,5	script	Planta Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Planta Neutro Médio",3734,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3734);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Planta Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,44,5	script	Inseto Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Inseto Neutro Médio",3735,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3735);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Inseto Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,44,5	script	Peixe Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Peixe Neutro Médio",3736,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3736);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Peixe Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,44,5	script	Demonio Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Demonio Neutro Médio",3737,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3737);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Demonio Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,44,5	script	Humanoide Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Médio",3738,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3738);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,44,5	script	Anjo Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Médio",3739,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3739);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Anjo Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,160,44,5	script	Dragão Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Médio",3740,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3740);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Dragão Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,163,44,5	script	MvP Neutro M	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"MvP Neutro Médio",3741,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3741);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "MvP Neutro Médio: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,124,59,5	script	Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Grande",3742,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3742);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,59,5	script	Humanoide Água G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Água Grande",3743,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3743);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Água Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,59,5	script	Humanoide Terra G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Terra Grande",3744,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3744);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Terra Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,59,5	script	Humanoide Fogo G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fogo Grande",3745,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3745);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fogo Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,59,5	script	Humanoide Vento G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Vento Grande",3746,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3746);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Vento Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,59,5	script	Humanoide Veneno G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Veneno Grande",3747,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3747);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Veneno Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,59,5	script	Humanoide Sagrado G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sagrado Grande",3748,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3748);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sagrado Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,59,5	script	Humanoide Sombrio G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Sombrio Grande",3749,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3749);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Sombrio Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,59,5	script	Humanoide Fantasma G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Fantasma Grande",3750,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3750);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Fantasma Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+
+job_knt,160,59,5	script	Humanoide Maldito G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Maldito Grande",3751,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3751);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Maldito Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,124,52,5	script	Amorfo Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Amorfo Neutro Grande",3752,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3752);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Amorfo Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,128,52,5	script	Morto Vivo Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Morto Vivo Neutro Grande",3753,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3753);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Morto Vivo Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,132,52,5	script	Bruto Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Bruto Neutro Grande",3754,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3754);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Bruto Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,136,52,5	script	Planta Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Planta Neutro Grande",3755,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3755);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Planta Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,140,52,5	script	Inseto Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Inseto Neutro Grande",3756,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3756);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Inseto Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,144,52,5	script	Peixe Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Peixe Neutro Grande",3757,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3757);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Peixe Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,148,52,5	script	Demonio Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Demonio Neutro Grande",3758,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3758);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Demonio Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,152,52,5	script	Humanoide Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Humanoide Neutro Grande",3759,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3759);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Humanoide Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,156,52,5	script	Anjo Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Grande",3760,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3760);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Anjo Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,160,52,5	script	Dragão Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"Anjo Neutro Grande",3761,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3761);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "Dragão Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,163,52,5	script	MvP Neutro G	111,{
+	end;
+	
+OnMyMobDead:
+OnInit:
+	getunitdata(getnpcid(0), .@d);
+	monster strnpcinfo(4),.@d[UNPC_X],.@d[UNPC_Y],"MvP Neutro Grande",3762,1,strnpcinfo(0)+"::OnMyMobDead";
+	.@dupid = atoi(strnpcinfo(2));
+	.gid[.@dupid] = $@mobid[0];
+	.mhp[.@dupid] = strmobinfo(4,3762);
+	setunitdata .gid[.@dupid],UMOB_MODE,.@d[UMOB_MODE]|0x4000000|0x0200000; 
+	initnpctimer;
+	end;
+	
+OnTimer5000:
+	.@dupid = atoi(strnpcinfo(2));
+	if(unitexists(.gid[.@dupid])){
+		getunitdata(.gid[.@dupid],.@d);
+		.@diff = (.mhp[.@dupid] - .@d[UMOB_HP]);
+		if(.@diff > 0){
+			npctalk "MvP Neutro Grande: Sua média foi de " + (.@diff/5) + " DPS em 10 segundos.";
+			setunitdata .gid[.@dupid],UMOB_HP,.mhp[.@dupid];
+			specialeffect EF_HEAL;
+		}
+	}
+	initnpctimer;
+}
+
+job_knt,165,56,0	warp	Saida1	2,2,prontera,156,191

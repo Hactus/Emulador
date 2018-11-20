@@ -1,0 +1,1333 @@
+// 				CRIADO POR : RapiiDz													\\
+//				Adição de 3ª Classe : Ivar									   			\\
+//				Facebook: facebook.com/bielbomfim		 								\\
+//_______________________________________________________________________________________\\
+//																						 \\
+//				Direitos autorais : Ivar												 \\
+//_______________________________________________________________________________________\\
+//																						 \\
+//				Nao divulgue em qualquer outro Forum/site 								 \\
+//																						 \\
+//______________As Configurações do NPC está no Final____________________________________\\
+
+
+prontera,169,198,3	script	Mestra das Classes	4_F_SARAH,{
+
+	if(Class == 4218 || Class == 4220){
+	mes $@nome$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+	mes "Gostaria de mudar de classe?";
+	next;
+	menu "Sim, por favor.",-,"Não, obrigado.",nao;
+	next;
+	mes $@nome$;
+	mes "Tudo bem.";
+	mes "Escolha qual classe deseja se tornar:";
+	next;
+	menu "- Summoner.",Summoner,"- Summoner Baby",bSummoner,"- Nada, obrigado",nao;
+
+			}
+
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+	mes "Gostaria de mudar de classe?";
+	next;
+	menu "Sim, por favor.",-,"Não, obrigado.",nao;
+	next;
+	mes $@nome$;
+	mes "Tudo bem.";
+	mes "Escolha qual o tipo de classe deseja se tornar:";
+	next;
+	switch(select("- Classes Normais:- Classes Expandidas:- Baby's:- Nenhuma, obrigado"))
+	{
+	
+// Classes Normais
+case 1:
+mes $@nome$;
+mes "Tudo bem.";
+mes "Escolha qual a classe pretendida:";
+next;
+switch(select("- Espadachim:- Mago:- Arqueiro:- Mercador:- Gatuno:- Noviço:- Nenhuma, obrigado")) {
+				
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Espadadchim você deseja:";
+				menu "- Cavaleiro Rúnico",rcavaleiro,"- Guardião Real",guardiao,"- Lorde",lorde,"- Paladino",paladino,"- Cavaleiro",cavaleiro,"- Templário",templario,"- Espadachim",swordman,"- Nenhuma, obrigado.",nao;
+
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mago você deseja:";
+				menu "- Arcano",arcano,"- Feiticeiro",feiticeiro,"- Arquimago",arquimago,"- Professor",professor,"- Bruxo",bruxo,"- Sábio",sabio,"- Mago",Magician,"- Nenhuma, obrigado.",nao;
+				
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Arqueiro você deseja:";
+				menu "- Sentinela",sentinela,"- Trovador e Musa",trovador,"- Atirador de Elite",atirador,"- Menestrel e Cigana",menestrel,"- Caçador",cacador,"- Bardo e Odalisca",bardo,"- Arqueiro",Archer,"- Nenhuma, obrigado.",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mercador você deseja:";
+				menu "- Mecânico",mecanico,"- Bioquímico",bio,"- Mestre-ferreiro",mestreferreiro,"- Criador",criador,"- Ferreiro",ferreiro,"- Alquimista",alquimista,"- Mercador",Merchant,"- Nenhuma, obrigado.",nao;
+				
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Gatuno você deseja:";
+				menu "- Guillotine Cross",cross,"- Renegado",renegado,"- Algoz",algoz,"- Desordeiro",desordeiro,"- Mercenário",mercenario,"- Arruaceiro",arruaceiro,"- Gatuno",Thief,"- Nenhuma, obrigado.",nao;
+			
+				case 6:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Noviço você deseja:";
+				menu "- Shura",shura,"- Arcebispo",arcebispo,"- Mestre",mestre,"- Sumo Sacerdote",sumo,"- Monge",monge,"- Sacerdote",sacerdote,"- Noviço",Acolyte,"- Nenhuma, obrigado.",nao;
+									
+				case 7:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+// Classes Expandidas
+case 2:
+next;
+mes $@nome$;
+mes "Tudo bem, agora escolha qual das Classes Expandidas você deseja:";
+switch(select("- Super Aprendiz:- Justiceiro:- Ninja:- Taekwon:- Nenhuma, obrigado")) {
+
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Você tem certeza que quer se tornar um Super Aprendiz?";
+				menu "- Sim.",superaprendiz,"- Vou pensar melhor...",nao;
+						
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Justiceiro você deseja:";
+				menu "- Rebelde",rebellion,"- Justiceiro",justiceiro,"- Nenhuma, obrigado",nao;
+								
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Ninja você deseja:";
+				menu "- Kagerou e Oboro",kagerou,"- Ninja",ninja,"- Nenhuma, obrigado",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Taekwon você deseja:";
+				menu "- Mestre Taekwon",mestretaekwon,"- Espiritualista",espiritualista,"- Taekwon",taekwon,"- Nenhuma, obrigado",nao;
+
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+// Baby's
+case 3:
+mes "Tudo bem.";
+mes "Escolha qual o tipo de classe deseja se tornar Baby:";
+next;
+switch(select("- Classes Normais:- Classes Expandidas:- Nenhuma, obrigado")) {
+	
+// Classes normais baby
+	case 1:
+	mes $@nome$;
+	mes "Tudo bem.";
+	mes "Escolha qual a classe pretendida para se tornar um Baby:";
+	switch(select("- Espadachim:- Mago:- Arqueiro:- Mercador:- Gatuno:- Noviço:- Nenhuma, obrigado")){
+				
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Espadachim você deseja se tornar um Baby:";
+				menu "- Cavaleiro Baby",brune,"- Guardião Real Baby",bguardiao,"- Templário Baby",babytemplario,"- Cavaleiro Baby",babycavaleiro,"- Espadachim Baby",babyespadachim,"- Nenhuma, obrigado.",nao;
+				
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mago você deseja se tornar um Baby:";
+				menu "- Arcano Baby",barcano,"- Feiticeiro Baby",bfeiticeiro,"- Bruxo Baby",babybruxo,"- Sábio Baby",babysabio,"- Mago Baby",babymago,"- Nenhuma, obrigado.",nao;
+				
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Arqueiro você deseja se tornar um Baby:";
+				menu "- Sentinela Baby",bsentinela,"- Trovador Baby e Musa Baby",btrovador,"- Caçador Baby",babycacador,"- Bardo Baby e Odalisca Baby",babybardo,"- Arqueiro Baby",babyarqueiro,"- Nenhuma, obrigado.",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mercador você deseja se tornar um Baby:";
+				menu "- Mecânico Baby",bmecanico,"- Bioquímico Baby",bbio,"- Ferreiro Baby",babyferreiro,"- Alquimista Baby",babyalquimista,"- Mercador Baby",babymercador,"- Nenhuma, obrigado.",nao;
+						
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Gatuno você deseja se tornar um Baby:";
+				menu "- Sicário Baby",bcross,"- Renegado Baby",brenegado,"- Mercenário Baby",babymercenario,"- Arruaceiro Baby",babyarruaceiro,"- Gatuno Baby",babygatuno,"- Nenhuma, obrigado.",nao;
+			
+				case 6:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Noviço você deseja se tornar um Baby:";
+				menu "- Shura Baby",bshura,"- Arcebispo Baby",barcebispo,"- Monge Baby",babymonge,"- Sacerdote Baby",babysacerdote,"- Noviço Baby",babynovico,"- Nenhuma, obrigado.",nao;
+
+				case 7:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+				}
+
+// Classes Expansivas Baby
+
+	case 2:
+	next;
+	mes $@nome$;
+	mes "Tudo bem, agora escolha qual das Classes Expandidas você deseja se tornar baby:";
+	switch(select("- Aprendiz Baby:- Justiceiro Baby:- Ninja Baby:- Taekwon Baby:- Nenhuma, obrigado")) {
+
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Você tem certeza que quer se tornar um Aprendiz Baby?";
+				menu "- Sim.",babyaprendiz,"- Vou pensar melhor...",nao;
+					
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Justiceiro você deseja:";
+				menu "- Rebelde",brebellion,"- Justiceiro",babyjusticeiro,"- Nenhuma, obrigado",nao;
+
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Ninja você deseja se tornar baby:";
+				menu "- Kagerou Baby e Oboro Baby",bkagerou,"- Ninja Baby",babyninja,"- Nenhuma, obrigado",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Taekwon você deseja se tornar baby:";
+				menu "- Mestre Taekwon Baby",bmestretaekwon,"- Espiritualista Baby",bespiritualista,"- Taekwon Baby",babytaekwon,"- Nenhuma, obrigado",nao;
+				
+				case 5:
+				next;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+	case 3:
+	next;
+	mes "Tudo bem,";
+	mes "Estarei esperando.";
+	close;
+}
+
+case 4:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando.";
+close;
+}
+
+// -----------------------------CLASSES----------------------------- //
+
+// Doram
+						Summoner:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Summoner Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Summoner Baby!";
+						jobchange 4220;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bSummoner:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Summoner Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Summoner Baby!";
+						jobchange 4220;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+// Classes Normais	
+					
+			// Espadachim
+						rcavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro!";
+						jobchange 4054;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						guardiao:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guardiã Real!";
+						if(sex == 1)mes "Parabéns, você agora é um Guardião Real!";
+						jobchange 4066;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+						lorde:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Lady!";
+						if(sex == 1)mes "Parabéns, você agora é um Lorde!";
+						jobchange 4008;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						paladino:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Paladina!";
+						if(sex == 1)mes "Parabéns, você agora é um Paladino!";
+						jobchange 4015;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						templario:
+						next;
+						if(sex == 0)mes "Parabéns, você agora é uma Templária!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro!";
+						jobchange 14;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1002,1,0;
+						close;
+
+						cavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro!";
+						jobchange 7;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1001,1,0;
+						close;
+
+						swordman:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espadachim!";
+						if(sex == 1)mes "Parabéns, você agora é um Espadachim!";
+						jobchange 1;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+			// Mago
+						arcano:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcana!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcano!";
+						jobchange 4055;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						feiticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Feiticeira!";
+						if(sex == 1)mes "Parabéns, você agora é um Feiticeiro!";
+						jobchange 4067;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						arquimago:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arquimaga!";
+						if(sex == 1)mes "Parabéns, você agora é um Arquimago!";
+						jobchange 4010;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						professor:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Professora!";
+						if(sex == 1)mes "Parabéns, você agora é um Professor!";
+						jobchange 4017;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bruxo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bruxa!";
+						if(sex == 1)mes "Parabéns, você agora é um Bruxo!";
+						jobchange 9;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1006,1,0;
+						close;
+
+						sabio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sábia!";
+						if(sex == 1)mes "Parabéns, você agora é um Sábio!";
+						jobchange 16;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1007,1,0;
+						close;
+
+						Magician:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Maga!";
+						if(sex == 1)mes "Parabéns, você agora é um Mago!";
+						jobchange 2;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+			// Arqueiro
+						sentinela:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sentinela!";
+						if(sex == 1)mes "Parabéns, você agora é um Sentinela!";
+						jobchange 4056;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						trovador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Musa!";
+						if(sex == 1)mes "Parabéns, você agora é um Trovador!";
+						jobchange 4068;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						atirador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Atidarora de Elite!";
+						if(sex == 1)mes "Parabéns, você agora é um Atirador de Elite!";
+						jobchange 4012;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						menestrel:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cigana!";
+						if(sex == 1)mes "Parabéns, você agora é um Menestrel!";
+						jobchange 4021;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						cacador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caçadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Caçador!";
+						jobchange 11;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1009,1,0;
+						close;
+
+						bardo:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Odalisca!";
+						jobchange 20;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close; }
+						mes "Parabéns, você agora é um Bardo!";
+						jobchange 19;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close;
+
+						Archer:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arqueira!";
+						if(sex == 1)mes "Parabéns, você agora é um Arqueiro!";
+						jobchange 3;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Mercador
+						mecanico:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mecânica!";
+						if(sex == 1)mes "Parabéns, você agora é um Mecânico!";
+						jobchange 4058;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bioquimica!";
+						if(sex == 1)mes "Parabéns, você agora é um Bioquimico!";
+						jobchange 4071;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						mestreferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestre-Ferreira!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre-Ferreiro!";
+						jobchange 4011;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						criador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Criadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Criador!";
+						jobchange 4019;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						ferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ferreira!";
+						if(sex == 1)mes "Parabéns, você agora é um Ferreiro!";
+						jobchange 10;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1012,1,0;
+						skill 1013,1,0;
+						close;
+
+						alquimista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Alquimista!";
+						if(sex == 1)mes "Parabéns, você agora é um Alquimista!";
+						jobchange 18;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 238,1,0;
+						skill 243,1,0;
+						skill 244,1,0;
+						skill 247,1,0;
+						close;
+
+						Merchant:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercador!";
+						jobchange 5;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+			
+			// Gatuno
+						cross:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guillotine Cross!";
+						if(sex == 1)mes "Parabéns, você agora é um Guillotine Cross!";
+						jobchange 4059;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						renegado:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Renegada!";
+						if(sex == 1)mes "Parabéns, você agora é um Renegado!";
+						jobchange 4072;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						algoz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Algoz!";
+						if(sex == 1)mes "Parabéns, você agora é um Algoz!";
+						jobchange 4013;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						desordeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Desordeira!";
+						if(sex == 1)mes "Parabéns, você agora é um Desordeiro!";
+						jobchange 4018;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						mercenario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercenária!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercenário!";
+						jobchange 12;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1003,1,0;
+						skill 1004,1,0;
+						close;
+
+						arruaceiro:
+						next;
+						if(sex == 0)mes "Parabéns, você agora é uma Arruaceira!";
+						if(sex == 1)mes "Parabéns, você agora é um Arruaceiro!";
+						jobchange 17;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1005,1,0;
+						close;
+
+						Thief:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Gatuna!";
+						if(sex == 1)mes "Parabéns, você agora é um Gatuno!";
+						jobchange 6;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Noviço
+
+						shura:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Shura!";
+						if(sex == 1)mes "Parabéns, você agora é um Shura!";
+						jobchange 4070;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						arcebispo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcebispa!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcebispo!";
+						jobchange 4057;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						mestre:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestra!";
+						jobchange 4016;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						sumo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sumo-Sacerdotiza!";
+						if(sex == 1)mes "Parabéns, você agora é um Sumo-Sacerdote!";
+						jobchange 4009;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						monge:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Monja!";
+						if(sex == 1)mes "Parabéns, você agora é um Monge!";
+						jobchange 15;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1015,1,0;
+						skill 1016,1,0;
+						close;
+
+						sacerdote:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sacerdotisa!";
+						if(sex == 1)mes "Parabéns, você agora é um Sacerdote!";
+						jobchange 8;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1014,1,0;
+						close;
+
+						Acolyte:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Noviça!";
+						if(sex == 1)mes "Parabéns, você agora é um Noviço!";
+						jobchange 4;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+// Classes Expansivas
+
+			// Super Aprendiz
+
+						superaprendiz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Super Aprendiz!";
+						if(sex == 1)mes "Parabéns, você agora é um Super Aprendiz!";
+						jobchange 4190;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+			
+			// Justiceiro						
+						rebellion:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Rebelde!";
+						if(sex == 1)mes "Parabéns, você agora é um Rebelde!";
+						jobchange 4215;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+								
+						justiceiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro!";
+						jobchange 24;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Ninja
+						ninja:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ninja!";
+						if(sex == 1)mes "Parabéns, você agora é um Ninja!";
+						jobchange 25;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						kagerou:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Oboro!";
+						jobchange 4212;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close; }
+						
+						mes "Parabéns, você agora é um Kagerou!";
+						jobchange 4211;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+			// Taekwon
+						mestretaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra Taekwon!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre Taekwon!";
+						jobchange 4047;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						espiritualista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espiritualista!";
+						if(sex == 1)mes "Parabéns, você agora é um Espiritualista!";
+						jobchange 4049;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+						taekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Taekwon!";
+						if(sex == 1)mes "Parabéns, você agora é um Taekwon!";
+						jobchange 4046;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+// Babys
+			// Espadachim
+						brune:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caveleira Rúnica Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro Rúnico Baby!";
+						jobchange 4096;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bguardiao:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guardiã Real Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Guardião Real Baby!";
+						jobchange 4102;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babytemplario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Templária Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Templário Baby!";
+						jobchange 4037;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babycavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro Baby!";
+						jobchange 4030;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babyespadachim:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espadashim Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Espadashim Baby!";
+						jobchange 2024;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+			
+			// Mago
+						barcano:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcana Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcano Baby!";
+						jobchange 4097;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bfeiticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Feiticeira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Feiticeiro Baby!";
+						jobchange 4103;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babybruxo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bruxa Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Bruxo Baby!";
+						jobchange 4032;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close;
+
+						babysabio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sábia Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sábio Baby!";
+						jobchange 4039;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babymago:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Maga Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mago Baby!";
+						jobchange 4025;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close;
+			
+			// Arqueiro
+						bsentinela:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sentinela Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sentinela Baby!";
+						jobchange 4098;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						btrovador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Musa Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Trovador Baby!";
+						jobchange 4104;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babycacador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caçadora Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Caçador Baby!";
+						jobchange 4034;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babybardo:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Odalisca Baby!";
+						jobchange 4043;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close; }
+						mes "Parabéns, você agora é um Bardo Baby!";
+						jobchange 4042;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+							
+						babyarqueiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arqueira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arqueiro Baby!";
+						jobchange 4026;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+			
+			// Mercador
+						bmecanico:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mecânica Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mecânico Baby!";
+						jobchange 4100;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bbio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bioquimica Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Bioquimico Baby!";
+						jobchange 4107;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babyferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ferreira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Ferreiro Baby!";
+						jobchange 4033;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+							
+						babyalquimista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Alquimista Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Alquimista Baby!";
+						jobchange 4041;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babymercador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercadora Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercador Baby!";
+						jobchange 4028;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close;
+						
+			// Gatuno
+						bcross:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sicária Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sicário Baby!";
+						jobchange 4101;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						brenegado:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Renegada Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Renegado Baby!";
+						jobchange 4108;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+							
+						babymercenario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercenaria Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercenario Baby!";
+						jobchange 4035;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill 1010,1,0;
+						close;
+
+						babyarruaceiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arruaceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arruaceiro Baby!";
+						jobchange 4040;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+							
+						babygatuno:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Gatuna Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Gatuno Baby!";
+						jobchange 4029;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+			// Noviço
+						bshura:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Shura Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Shura Baby!";
+						jobchange 4106;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						barcebispo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcebispa Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcebispa Baby!";
+						jobchange 4099;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+						babymonge:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Monja Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Monge Baby!";
+						jobchange 4038;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babysacerdote:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sacerdotiza Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sacerdote Baby!";
+						jobchange 4031;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babynovico:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Noviça Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Noviço Baby!";
+						jobchange 4027;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+// Classes Expansivas Baby
+			// Aprendiz
+						babyaprendiz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Aprendiz Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Aprendiz Baby!";
+						jobchange 4023;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Justiceiro
+						brebellion:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Rebelde Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Rebelde Baby!";
+						jobchange 4229;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babyjusticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro Baby!";
+						jobchange 4228;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Ninja
+						bkagerou:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Oboro Baby!";
+						jobchange 4224;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close; }
+						mes "Parabéns, você agora é um Kagerou Baby!";
+						jobchange 4223;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						babyninja:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro Baby!";
+						jobchange 4222;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+			// Taekwon						
+						bmestretaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra Taekwon Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre Taekwon Baby!";
+						jobchange 4226;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+						bespiritualista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espiritualista Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Espiritualista Baby!";
+						jobchange 4227;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+						
+						babytaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Taekwon Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Taekwon Baby!";
+						jobchange 4225;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						close;
+
+// Não, obrigado
+nao:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando.";
+close;
+
+// ---------------------------------------------------------------------- //
+
+//Configurações do NPC.
+Oninit:
+set $@needpoint,0; // -- Sem Necessidade -- \\
+set $@needequip,0; // -- Sem Necessidade -- \\
+set $@needzeny,0; // -- Sem Necessidade -- \\
+set $@questskill,0; // -- Sem Necessidade -- \\
+set $@nome$,"[^FF8000Mestra das Classes^000000]"; // Nome do NPC que vai aparecer 
+set $@level,175; // Edita o Level Base do seu sever
+set $@job,60; // Edita o nivel JOB do seu sever
+end;
+}

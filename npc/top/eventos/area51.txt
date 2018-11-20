@@ -1,0 +1,667 @@
+-	script	Randomizador	-1,{
+end;
+OnRandon:
+if ($a51control = 0) {end;}
+$num = rand(49);
+if ($num == 49) {goto OnRandon; end;}
+query_sql "SELECT `var` FROM `etapas_a51` WHERE `etapas`="+$num+"",.@check;
+if (.@check == 1 ) {goto OnRandon; end;}
+$EtapaA51 = $EtapaA51 + 1;
+mapannounce "ordeal_2-1","Área 51: Round "+$EtapaA51+" começou!",bc_all,0xBDB76B;
+query_sql "UPDATE `etapas_a51` SET `var`=1 WHERE `etapas`="+$num+"";
+goto OnInvocacao;
+end;
+
+OnInvocacao:
+switch ($num) {
+case 0:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1002,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1062,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1031,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1090,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1113,10,"Randomizador::Ondsdead";
+end;
+
+case 1:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1016,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1028,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1169,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1290,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1071,10,"Randomizador::Ondsdead";
+end;
+
+case 2:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1060,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1243,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1417,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1306,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1381,8,"Randomizador::Ondsdead";
+end;
+
+case 3:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1206,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1271,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1687,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1493,8,"Randomizador::Ondsdead";
+end;
+
+case 4:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1086,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1115,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1128,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1054,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1174,14,"Randomizador::Ondsdead";
+end;
+
+case 5:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1781,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1118,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1780,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1162,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1410,8,"Randomizador::Ondsdead";
+end;
+
+case 6:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1108,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1264,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1158,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1069,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1065,10,"Randomizador::Ondsdead";
+end;
+
+case 7:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1040,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1278,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1366,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1497,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2024,6,"Randomizador::Ondsdead";
+end;
+
+case 8:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1248,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1403,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1092,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1106,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1013,10,"Randomizador::Ondsdead";
+end;
+
+case 9:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1159,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1147,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1095,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1105,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1160,14,"Randomizador::Ondsdead";
+end;
+
+case 10:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1209,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1175,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1101,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1199,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1378,8,"Randomizador::Ondsdead";
+end;
+
+case 11:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1188,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1026,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1512,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1068,12,"Randomizador::Ondsdead";
+end;
+
+case 12:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1307,4,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1586,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1180,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1001,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1212,12,"Randomizador::Ondsdead";
+end;
+
+case 13:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1030,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1025,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1256,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1255,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1194,12,"Randomizador::Ondsdead";
+end;
+
+case 14:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1087,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1190,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1213,17,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1273,17,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1023,10,"Randomizador::Ondsdead";
+end;
+
+case 15:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1304,14,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2132,14,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1100,17,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1388,1,"Randomizador::Ondsdead";
+end;
+
+case 16:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1073,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1066,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1371,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1391,12,"Randomizador::Ondsdead";
+end;
+
+case 17:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1613,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1784,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1836,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1096,1,"Randomizador::Ondsdead";
+end;
+
+case 18:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1633,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1774,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1037,17,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1297,11,"Randomizador::Ondsdead";
+end;
+
+case 19:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1098,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1041,20,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1178,18,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1157,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1038,1,"Randomizador::Ondsdead";
+end;
+
+case 20:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1015,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1197,11,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1198,11,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1865,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1153,6,"Randomizador::Ondsdead";
+end;
+
+case 21:
+set $mobs,56;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1257,14,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1200,14,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1374,14,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1268,14,"Randomizador::Ondsdead";
+end;
+
+case 22:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1163,25,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1276,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1219,6,"Randomizador::Ondsdead";
+end;
+
+case 23:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1382,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1292,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1109,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1582,1,"Randomizador::Ondsdead";
+end;
+
+case 24:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1630,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1312,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1314,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1412,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1520,14,"Randomizador::Ondsdead";
+end;
+
+case 25:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1777,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1775,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1776,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1778,8,"Randomizador::Ondsdead";
+end;
+
+case 26:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1202,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1201,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1196,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1257,10,"Randomizador::Ondsdead";
+end;
+
+case 27:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1132,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1208,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1283,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1195,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1219,6,"Randomizador::Ondsdead";
+end;
+
+case 28:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1275,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1735,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1737,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1736,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1738,6,"Randomizador::Ondsdead";
+end;
+
+case 29:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1252,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1515,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1777,14,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1251,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1242,15,"Randomizador::Ondsdead";
+end;
+
+case 30:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1102,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1131,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1267,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1130,7,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1244,7,"Randomizador::Ondsdead";
+end;
+
+case 31:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1769,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1772,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1770,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1771,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1773,6,"Randomizador::Ondsdead";
+end;
+
+case 32:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1713,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1716,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1717,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1714,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1720,6,"Randomizador::Ondsdead";
+end;
+
+case 33:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1262,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1155,16,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1156,15,"Randomizador::Ondsdead";
+end;
+
+case 34:
+set $mobs,46;
+monster "ordeal_2-1",266,161,"--ja--",1785,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1623,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1783,22,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1617,22,"Randomizador::Ondsdead";
+end;
+
+case 35:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1203,16,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1204,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1205,15,"Randomizador::Ondsdead";
+end;
+
+case 36:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1700,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1371,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1702,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1701,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1703,9,"Randomizador::Ondsdead";
+end;
+
+case 37:
+set $mobs,36;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1670,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1672,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1676,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1678,9,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1668,6,"Randomizador::Ondsdead";
+end;
+
+case 38:
+set $mobs,30;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1918,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1919,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1920,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1921,6,"Randomizador::Ondsdead";
+end;
+
+case 39:
+set $mobs,30;
+monster "ordeal_2-1",266,161,"--ja--",1272,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1039,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1302,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1101,20,"Randomizador::Ondsdead";
+end;
+
+case 40:
+set $mobs,46;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1379,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1219,10,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1268,12,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1061,12,"Randomizador::Ondsdead";
+end;
+
+case 41:
+set $mobs,26;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1829,4,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1830,4,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1831,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1833,6,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1837,6,"Randomizador::Ondsdead";
+end;
+
+case 42:
+set $mobs,8;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1704,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1705,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1706,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1707,2,"Randomizador::Ondsdead";
+end;
+
+case 43:
+set $mobs,15;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2916,3,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2917,3,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2918,3,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2919,3,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2920,3,"Randomizador::Ondsdead";
+end;
+
+case 44:
+set $mobs,8;
+monster "ordeal_2-1",266,161,"--ja--",1734,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",1685,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2549,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2550,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2566,2,"Randomizador::Ondsdead";
+end;
+
+case 45:
+set $mobs,9;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1637,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2227,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1639,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2225,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2565,1,"Randomizador::Ondsdead";
+end;
+
+case 46:
+set $mobs,20;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1636,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2222,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2221,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1754,7,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1755,7,"Randomizador::Ondsdead";
+end;
+
+case 47:
+set $mobs,10;
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2224,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1634,3,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",2223,2,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1635,3,"Randomizador::Ondsdead";
+end;
+
+case 48:
+set $mobs,39;
+monster "ordeal_2-1",266,161,"--ja--",1832,1,"Randomizador::Ondsdead";
+monster "ordeal_2-1",266,137,"--ja--",2022,1,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1833,15,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1831,7,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",1837,15,"Randomizador::Ondsdead";
+end;
+
+case 49:
+set $mobs,30;
+$mvpfinal = rand(5);
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",3506,8,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",3507,7,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",3503,7,"Randomizador::Ondsdead";
+areamonster "ordeal_2-1",197,154,278,145,"--ja--",3502,7,"Randomizador::Ondsdead";
+switch ($mvpfinal) {
+case 0:
+monster "ordeal_2-1",273,149,"--ja--",1650,1,"Randomizador::Ondsdead";
+end;
+
+case 1:
+monster "ordeal_2-1",273,149,"--ja--",1751,1,"Randomizador::Ondsdead";
+end;
+
+case 2:
+monster "ordeal_2-1",273,149,"--ja--",1874,1,"Randomizador::Ondsdead";
+end;
+
+case 3:
+monster "ordeal_2-1",273,149,"--ja--",1916,1,"Randomizador::Ondsdead";
+end;
+
+case 4:
+monster "ordeal_2-1",273,149,"--ja--",1708,1,"Randomizador::Ondsdead";
+end;
+
+case 5:
+monster "ordeal_2-1",273,149,"--ja--",1956,5,"Randomizador::Ondsdead";
+end;
+}
+end;
+}
+Ondsdead:
+set $mobs,$mobs-1;
+if ($mobs <= 5 && $mobs > 0) { mapannounce "ordeal_2-1","Área 51: "+$mobs+" monstros restantes!",bc_all,0xBDB76B; end;}
+if ($mobs == 0 && $EtapaA51 < 49) {
+goto OnRandon;
+end;
+}
+if ($mobs == 0 && $EtapaA51 == 49) {
+$EtapaA51 = 50;
+$num = 49;
+mapannounce "ordeal_2-1","Área 51: Round 50 começou!",bc_all,0xBDB76B;
+goto OnInvocacao;
+end;
+}
+if ($mobs == 0 && $EtapaA51 == 50) {
+atcommand "@skilloff";
+sleep 1000;
+announce "Área 51: 8 Caixas do Tesouro surgiram! Corram para destruir-las...",bc_all,0xBDB76B; 
+mapwarp "ordeal_2-1","ordeal_2-1",150,150;
+goto Ondsbox;
+end;
+}
+end;
+
+Ondsbox:
+//enablenpc "a51-2";
+sleep2 7000;
+set $mobs,8;
+monster "ordeal_2-1",145,145,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",142,149,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",143,154,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",147,155,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",152,156,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",156,151,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",156,146,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+monster "ordeal_2-1",150,143,"Caixa do Tesouro",1334,1,"Randomizador::Ondsboxdead";
+end;
+
+Ondsboxdead:
+set $mobs,$mobs-1;
+announce "Área 51: O jogador ["+ strcharinfo(0)+"] abriu uma das Caixas do Tesouro.",bc_all,0xBDB76B;
+getitem 20673,5;
+getitem 20675,1;
+if($mobs == 0){ announce "Área 51: A última Caixa do Tesouro foi destruída!",bc_all,0xBDB76B;
+announce "Área 51: Obrigado a todos que participaram.",bc_all,0xBDB76B;
+atcommand "@skillon";
+mapwarp "ordeal_2-1","prontera",156,177;}
+end;
+OnPCDieEvent:
+if (getmapusers("ordeal_2-1") == 1) { mapannounce "ordeal_2-1","Todos os players foram derrotados na Área 51!!",bc_all,0xBDB76B;
+$a51control = 0;
+killmonsterall "ordeal_2-1";
+end;
+}
+}
+
+-	script	init51	-1,{
+
+OnInit:
+set $abertoarea51,0;
+$EtapaA51 = 0;
+end;
+}
+
+-	script	Area 51	-1,{
+
+OnMenuArea51:
+	mes	"["+strnpcinfo(1)+"]";
+	mes "Bem-vindo aventureiro.";
+	mes "Eu tenho um desafio para você";
+	mes "deseja aceitar?";
+	next;
+		switch(select("Sim, eu aceito:Não, volto depois:Quero informações")){
+		
+			case 1:
+			if($abertoarea51 == 0){
+			mes	"["+strnpcinfo(1)+"]";
+			mes "A Área 51 está fechada";
+			mes "no momento, volte mais tarde.";
+			close;
+			}
+			
+			percentheal 100,100;
+			warp "ordeal_2-1",204,150;
+			announce strcharinfo(0)+" entrou na Área 51.",bc_all,0xBDB76B;
+			end;
+			
+			case 2:
+			mes	"["+strnpcinfo(1)+"]";
+			mes "Estarei aqui quando precisar";
+			mes "de um desafio.";
+			close;
+			
+			case 3:
+			mes	"["+strnpcinfo(1)+"]";
+			mes "A Área 51 é um evento";
+			mes "automático onde surgem mvp's";
+			mes "e para poder progredir";
+			mes "você precisa matar os mvp's.";
+			next;
+			mes	"["+strnpcinfo(1)+"]";
+			mes "O Objetivo final é chegar ao último mvp";
+			mes "onde surgem as";
+			mes "Caixas do Tesouro.";
+			next;
+			mes	"["+strnpcinfo(1)+"]";
+			mes "A cada monstro que você mata";
+			mes "você recebe ^FF0000"+getitemname($@id)+"^000000";
+			mes "a quantidade é aleatória.";
+			mes "As Caixas do Tesouro dão uma";
+			mes "quantidade mais alta de ^FF0000"+getitemname($@id)+"^000000.";
+			next;
+			mes	"["+strnpcinfo(1)+"]";
+			mes "Mas para chegar até a rodada das";
+			mes "Caixas do Tesouro você precisar";
+			mes "matar muitos monstros, porque";
+			mes "somente os 5 jogadores que";
+			mes "mais matarem monstros irão";
+			mes "chegar a rodada Final.";
+			next;
+			mes "["+strnpcinfo(1)+"]";
+			mes "Os demais serão teletransportados";
+			mes "para prontera, os jogadores que";
+			mes "continuarem no evento irão correr";
+			mes "atrás das Caixas do Tesouro.";
+			close;
+		}
+		
+		OnInit:
+		// Configurações 
+		set $@id,7621; // Id do item que será recebido ao matar os monstros e as caixas do tesouro. Padrão: [7539 = Moeda Poring].
+		setarray $@p[0],1; // Quantidade de itens que serão sorteados ao matar os monstros. Padrão: [Entre 1 e 2].
+		setarray $@b[0],0; // Quantidade de itens que serão sorteados ao destruir as Caixas do Tesouro. Padrão: [Entre 20,30,40 e 50];
+		setarray $@l[0],607,608,678,7135,7136,7139; // Id dos itens que poderão ser trocados.
+		setarray $@y[0],10,5,8,5,5,6; // Preço dos itens que poderão ser trocados.
+		end;
+}
+
+-	script	DS2	-1,{
+
+OnTimer30000:
+if (getmapusers("ordeal_2-1") == 0){ $a51control = 0; killmonsterall "ordeal_2-1"; end; }
+end;
+OnTimer3300000:
+$a51control = 0;
+killmonsterall "ordeal_2-1";
+mapannounce "ordeal_2-1","Área 51: O tempo de evento expirou.",bc_all,0xBDB76B;
+mapwarp "ordeal_2-1","prontera",156,177;
+stopnpctimer;
+end;
+
+}
+
+-	script	DS3	-1,{
+OnHour11:
+OnHour23:
+announce "O Evento 'Área 51' irá começar em 5 minutos!",bc_all,0xBDB76B;
+initnpctimer;
+killmonsterall "ordeal_2-1";
+set $abertoarea51,1;
+query_sql "UPDATE `etapas_a51` SET `var`=0 WHERE `var`=1";
+set $EtapaA51,0;
+end;
+
+OnTimer60000:
+announce "O Evento 'Área 51' irá começar em 4 minutos!",bc_all,0xBDB76B; end;
+
+OnTimer120000:
+announce "O Evento 'Área 51' irá começar em 3 minutos!",bc_all,0xBDB76B; end;
+
+OnTimer180000:
+announce "O Evento 'Área 51' irá começar em 2 minutos!",bc_all,0xBDB76B; end;
+
+OnTimer240000:
+announce "O Evento 'Área 51' irá começar em 1 minutos!",bc_all,0xBDB76B; end;
+OnTimer300000:
+announce "O Evento 'Área 51' começou!",bc_all,0xBDB76B;
+initnpctimer "DS2";
+$abertoarea51 = 0;
+$a51control = 1;
+donpcevent "Randomizador::OnRandon";
+end;
+}
+	
+// MapFlags ~
+ordeal_2-1	mapflag	nowarp
+ordeal_2-1	mapflag	nowarpto
+ordeal_2-1	mapflag	noteleport
+ordeal_2-1	mapflag	nosave
+ordeal_2-1	mapflag	nomemo
+ordeal_2-1	mapflag	nobranch
+ordeal_2-1	mapflag	nopenalty
+ordeal_2-1	mapflag	pvp	off
+ordeal_2-1	mapflag	gvg	offg	nopenalty
+ordeal_2-1	mapflag	pvp	off
+ordeal_2-1	mapflag	gvg	off
+ordeal_2-1	mapflag	monster_noteleport
+ordeal_2-1	mapflag	noicewall

@@ -1,0 +1,234 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2018 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Pet Evolution                                                .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                          Versão: 1.0    .
+  .                                                                 .
+  . Compatibilidade:                                                .
+  .    rAthena                                                      .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .  - Cuida da evolução de um Pet.                                 .
+  *-----------------------------------------------------------------*/
+prontera,185,216,4	script	Domadora de Pet#pet_evo	1_F_GYPSY,{
+	// Configurações
+	//
+	// Habilitar Evolução do Pet?
+	// Requer também está habilitado em conf/battle/creativesd/feature.conf
+	set .@EvolutionEnable, 1;
+	
+	// Quanto será cobrado para evoluir um Pet?
+	// 0 desativa esta função
+	set .@EvolutionZenyCost, 1000;
+	
+	// Habilitar Auto Feed?
+	// Requer também está habilitado em conf/battle/creativesd/feature.conf
+	set .@AutoFeedEnable, 1;
+	
+	// Quanto será cobrado para Ligar a alimentação de Pet?
+	// Requer também está habilitado em conf/battle/creativesd/feature.conf
+	set .@AutoFeedZenyCost, 1000;
+	
+	// Get Pet Class and Name
+	set .@petID, getpetinfo(PETINFO_ID);
+	set .@petclass1, getpetinfo(PETINFO_CLASS);
+	set .@petclass2, getpetinfo(PETINFO_EVOCLASS);
+	set .@petname$, getpetinfo(PETINFO_NAME);
+	
+	// Checagem de Configurações
+	set .@Evolution, (!.@EvolutionEnable || !getbattleflag("feature.petevolution") || .@petclass2 <= 0) ? 0 : 1;
+	set .@AutoFeed, (!.@AutoFeedEnable || !getbattleflag("feature.petautofeed") || (!getpetinfo(PETINFO_AUTOFFED) && !getbattleflag("feature.petautofeedforce"))) ? 0 : 1;
+	
+	mes "^0000CD[Leyla]^000000";
+	mes "Olá! Sou Leyla, a anos venho treinando e descobri como evoluir um animal de estimação.";
+	mes "Veja a ^0000FFAmy^000000, ela era só um ^FF0000Poring^000000 quando a encontrei, deis de então somos melhores amigas!";
+	if( !.@Evolution && !.@AutoFeed  ) close;
+	next;
+	mes "^0000CD[Leyla]^000000"; 
+	if( .@petID <= 0 ) {
+		mes "Hmmm? Você não gosta de animais de estimação?";
+		mes "Quando tiver um e querer evoluí-lo, basta falar comigo!";
+		close;
+	}
+	if( .@petclass2 <= 0 ) {
+		mes "Hmmm... este bichinho não pode mais evoluir.";
+		mes "Seria surpreendente se pudesse, não acha?";
+	}
+	else {
+		mes "O seu ^0000FF" + getmonsterinfo(.@petclass1, MOB_NAME) + "^000000 pode evoluir para um ^0000FF" + getmonsterinfo(.@petclass2,MOB_NAME) + "^000000.";
+	}
+	next;
+	switch( select((.@Evolution ? "- Legal! Desejo evoluir o meu ^0000FF" + .@petname$ + "^000000." : ""), (.@AutoFeed ? "- Sobre a auto alimentação de Pet." : ""), "^FF0000- Não obrigado, gosto dele assim mesmo.^000000") )
+	{
+		case 1:
+			mes "^0000CD[Leyla]^000000";
+			if( .@EvolutionZenyCost ) {
+				mes "Ah, meus serviços não são de graça, para isso eu cobro ^FF0000" + .@EvolutionZenyCost + " Zenys^000000.";
+				mes "Tudo bem para você?";
+				next;
+				if( select("- Sim, continue.", "^FF0000- Pensando bem... não obrigado.^000000") == 2 )
+					break;
+					
+				mes "^0000CD[Leyla]^000000";
+				if( Zeny < .@EvolutionZenyCost ) {
+					mes "Hmmm... você não tem Zeny suficiente...";
+					mes "Volte assim que conseguir juntar essa quantia, estarei te esperando!";
+					close;
+				}
+			}
+			if( getpetinfo(PETINFO_INTIMATE) < 910 ) {
+				mes "Me desculpe, a lealdade dele está um pouco baixa.";
+				mes "Aumente a lealdade do seu amiguinho, e farei o que puder.";
+				close;
+			}
+			
+			set .@equip_id, getpetinfo(PETINFO_EQUIPID); 
+			if( .@equip_id ) {
+				mes "Hmmm... seu amiguinho está com algum item equipado.";
+				mes "Retire o equipamento ^FF0000" + getitemname(.@equip_id) + "^000000 dele para pode evoluir.";
+				close;
+			}
+			
+			set .@req, 0;
+			getpetinfo(PETINFO_EVOREQ);
+			if( @petevolutionreq_count ) {
+				mes "Ahh! O nome do seu bichinho é ^0000FF" + .@petname$ + "^000000?";
+				mes "Para evoluir seu amiguinho, você deve me trazer:";
+				for( set .@i,0; .@i < @petevolutionreq_count; set .@i,.@i+1 )
+				{
+					mes @petevolutionreq_amount[.@i] + "x ^0000FF" + getitemname(@petevolutionreq_id[.@i]) + "^000000.";
+					if( countitem(@petevolutionreq_id[.@i]) < @petevolutionreq_amount[.@i] )
+						set .@req,1;
+				}
+			}
+			else {
+				mes "Ahh! O nome do seu bichinho é ^0000FF" + .@petname$ + "^000000?";
+				mes "Que animalzinho fofo!";
+			}
+			next;
+			if( .@req ) {
+				mes "^0000CD[Leyla]^000000";
+				mes "Depois que estiver com todos esses itens, eu posso ajudar a evoluir seu amiguinho.";
+				close;
+			}
+			mes "^0000CD[Leyla]^000000";
+			mes "Tem certeza que deseja evoluir seu amiguinho?";
+			next;
+			if( select("- Sim, vamos logo!", "^FF0000- Não quero mais evoluir meu amiguinho...^000000") == 2 ) {
+				mes "^0000CD[Leyla]^000000";
+				mes "Entendo... cuide bem dele!";
+				mes "Pets são seus verdadeiros amigos.";
+				close;
+			}
+			
+			if( .@petID != getpetinfo(PETINFO_ID) ) {
+				mes "^0000CD[Leyla]^000000";
+				mes "Ei! Espere!! Aonde ele foi??";
+				mes "Ele deve ter voltado para o Ovo, não consigo fazer ele evoluir dentro do ovo.";
+				close;
+			}
+			
+			specialeffect EF_HO_UP,AREA,strnpcinfo(0);
+			mes "^0000CD[Leyla]^000000";
+			mes "Vamos lá ^0000FF" + .@petname$ + "^000000, agora você vai se tornar um belo ^FF0000" + getmonsterinfo(.@petclass2,MOB_NAME) + "^000000...";
+			set .@progress, pet_evolution();
+			switch( .@progress ) {
+				default:
+					mes "^FF0000O que? Eu nunca falho...";
+					mes "Não sei o que houve, mais tente novamente.";
+					mes "Aqui estão os seus itens necessário de volta.^000000";
+					break;
+				case 1:
+					mes "^FF0000Espere! Espere!! Aonde está seu amiguinho?";
+					mes "Ele deve ter voltado para o Ovo, não consigo fazer ele evoluir dentro do ovo.^000000";
+					break;
+				case 2:
+					mes "^FF0000Não estou conseguindo encontrar o Ovo do seu amiguinho...";
+					mes "Não posso evoluir um Pet sem Ovo!^000000";
+					break;
+				case 4:
+					mes "^FF0000Ah... está faltando algum item para evoluir seu amiguinho!";
+					mes "Cheque seu inventário para tentarmos novamente.^000000";
+					break;
+				case 5:
+					mes "^FF0000Me desculpe, a lealdade dele está um pouco baixa.";
+					mes "Aumente a lealdade do seu amiguinho, e farei o que puder.^000000";
+					break;
+				case 6:
+					if( .@EvolutionZenyCost ) set Zeny, Zeny - .@EvolutionZenyCost;
+					mes "Muito bem, ele conseguiu!!";
+					mes "Cuide bem do ^0000FF" + .@petname$ + "^000000, ele irá te trazer muitas alegrias.";
+					break;
+			}
+			close;
+		case 2:
+			mes "^0000CD[Leyla]^000000";
+			if( pet_get_autofeed() ) {
+				set .@flag, 0;
+				mes "Hmmm... seu amiguinho anda comendo um bocado neh?";
+				mes "Eu posso ensinar a ele uma dieta rigorosa, que nem fiz com a ^0000FFAmy^000000.";
+				mes "Sabe, ela andava comendo demais e não teve outro jeito.";
+			}
+			else {
+				set .@flag, 1;
+				mes "Ah sim! Eu ensinei a ^0000FFAmy^000000 de quando ela estiver com fome, se alimentar sozinha.";
+				mes "Para isso tenho que ter sempre que ter algumas ^0000FF" + getitemname(537) + "^000000 guardado em minha mochila.";
+			}
+			next;
+			if( .@AutoFeedZenyCost ) {
+				mes "^0000CD[Leyla]^000000";
+				mes "Eu posso te ensinar também, mais vou te cobrar ^FF0000" + .@AutoFeedZenyCost + " Zenys^000000.";
+				next;
+			}
+			if( select("- Sim, me ensine!", "^FF0000- Pensando bem... não obrigado!^000000") == 2 )
+				break;
+				
+			if( .@AutoFeedZenyCost ) {
+				if( Zeny < .@AutoFeedZenyCost ) {
+					mes "^0000CD[Leyla]^000000";
+					mes "Me parece que você não tem isso tudo de dinheiro.";
+					mes "Volte assim que conseguir ajuntar tudo, combinado?";
+					close;
+				}
+				set Zeny, Zeny - .@AutoFeedZenyCost;
+			}
+			pet_set_autofeed .@flag;
+			set PetAutoFeed, .@flag;
+			set .@itemname$, getitemname(getpetinfo(PETINFO_FOODID));
+			mes "^0000CD[Leyla]^000000";
+			if( .@flag ) {
+				mes "Muito bem, agora seu amiguinho está disciplinado!";
+				mes "Basta você ter ^0000FF" + .@itemname$ + "^000000 em sua mochila, e quando ele tiver fome ele irá se alimentar.";
+			}
+			else {
+				mes "Muito bem, agora seu amiguinho está disciplinado!";
+				mes "Ele não vai comer mais ^0000FF" + .@itemname$ + "^000000 da sua mochila.";
+			}
+			close;
+		case 3:
+			break;
+	}
+	mes "^0000CD[Leyla]^000000";
+	mes "Entendo... cuide bem dele!";
+	mes "Pets são seus verdadeiros amigos.";
+	close;
+}
+
+// Pet
+prontera,186,215,4	script	Angeling Amy#pet_evo	1096,{
+	mes "^FF1493[Amy]^000000";
+	mes "Monstros e Humanos também pode ser amigos, veja eu e a ^FF0000Leyla^000000.";
+	mes "Deis de quando eu era um ^0000FFPoring^000000 ela vem cuidando de mim... deis desse dia nunca mais nos separamos.";
+	close;
+}

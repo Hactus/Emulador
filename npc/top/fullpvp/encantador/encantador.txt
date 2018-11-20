@@ -1,0 +1,1233 @@
+prontera,168,170,3	script	Encantador::prt	4_F_NYDHOG,{
+
+	deletearray @nome$[0],1; deletearray @encanto[0],1; deletearray @enc_type[0],14;
+	deletearray @parte[0],1; deletearray @equip_id[0],1; deletearray @tipo[0],1;
+	set @part,0;
+	set @Type,0;
+	set @typ$,"";
+	disable_items;
+	set @nome$,"[^0000FF Encantador ^000000]"; //Salva no personagem para passar pelas funções sem perde-la...
+	mes @nome$;
+	if ( checkweight(1201,1) == 0 ){
+		mes "Me desculpe, mas seu inventário está muito cheio, tente reduzir um pouco e retornar aqui.";
+		close;
+	}
+	if ( MaxWeight - Weight < 1000 ){
+		mes "Você está muito pesado, volte quando esvaziar seu inventário.";
+		close;
+	}
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!, eu posso encantar alguns equipamentos.","Selecione o tipo de encantamento desejado:";
+	menu "- Encantamentos Comuns",-,"- Encantamentos Especiais",especiais;
+	next;
+	callfunc "F_EncSelItem";
+	mes @nome$;
+	if (!@tipo)
+		mes ""+getitemname(@equip_id)+" foi encantado(a) com ^FF00CC"+getitemname(@encanto)+"^000000";
+	else
+		mes ""+getitemname(@equip_id)+" foi resetado(a) com sucesso."; 
+	
+	if ( countitem(@equip_id) == 1 && ( @parte == EQI_HAND_L && getiteminfo(@equip_id,5) == 2 ) == 0 ) {
+		equip @equip_id;
+	 
+	}
+ close;
+ 
+ 
+OldHat:
+
+	mes @nome$;
+	set @part,EQI_HEAD_TOP;
+	
+	if(getequipname(@part) == "")
+	{
+		mes "Você não possui nenhum item equipado!";
+		close;
+	}
+	
+	switch(getequipid(@part))
+	{
+		case 18971: case 18983: case 18978: case 18980:  case 18984: case 18976: case 18981: case 18973: case 18974: case 18977: case 18982: case 18975: case 18972: case 18979: break;
+		
+		default:			
+			mes "Este item não pode ser encatado, por favor retorne quando tiver certeza do que está fazendo.";
+			close;
+	}
+	
+	setarray .@carta[0],getequipcardid( @part,0 ),getequipcardid( @part,1 ),getequipcardid( @part,2 ),getequipcardid( @part,3 );
+	
+		 if ( !.@carta[3] ) set .@card,3;
+	else if ( !.@carta[2] ) set .@card,2;
+	else if ( !.@carta[1] || .@carta[1] ) set .@card,1;
+	else set .@card,4;
+	
+	.@select = select((!.@carta[3] || !.@carta[2] || !.@carta[1] || .@carta[1])?"Encantar":"",(.@carta[3])?"Resetar":"" );
+	if(.@carta[1] == 29070 || .@carta[1] == 29080 || .@carta[1] == 29100 || .@carta[1] == 29110 || .@carta[1] == 29120 || .@carta[1] ==  29090)
+	{
+		mes "Encantamento no máximo!";
+		if(select("Cancelar:Resetar")==1) { close; }
+		.@select = 2;
+	}
+	if(.@select == 2)
+	{
+		.@cardcnt = getiteminfo(getequipid(@part),10);
+		for (.@i=4; .@i>.@cardcnt; .@i--)
+			.@carta[.@i-1] = 0;
+		specialeffect2 EF_REPAIRWEAPON;
+		.@refino = getequiprefinerycnt(@part);
+		set .@iditem,getequipid(@part);	
+		delequip @part;
+		getitem2 .@iditem,1,1,.@refino,0,.@carta[0],.@carta[1],.@carta[2],.@carta[3];
+		equip .@iditem;
+		close;
+	}
+
+	switch(.@carta[1])
+	{
+		//Mettle
+		case 29061:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29062)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29062; break;
+		case 29062:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29063)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29061; break; }
+					set @encanto, 29063; break;
+		case 29063:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29064)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29062; break; }
+					set @encanto, 29064; break;
+		case 29064:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29065)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29063; break; }
+					set @encanto, 29065; break;
+		case 29065:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29066)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29064; break; }
+					set @encanto, 29066; break;
+		case 29066:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29067)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29065; break; }
+					set @encanto, 29067; break;
+		case 29067:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29068)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29066; break; }
+					set @encanto, 29068; break;
+		case 29068:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29069)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29067; break; }
+					set @encanto, 29069; break;
+		case 29069:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29070)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29068; break; }
+					set @encanto, 29070; break;
+		
+		
+		//Magic Essence
+		case 29071:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29072)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29072; break;
+		case 29072:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29073)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29071; break; }
+					set @encanto, 29073; break;
+		case 29073:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29074)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29072; break; }
+					set @encanto, 29074; break;
+		case 29074:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29075)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29073; break; }
+					set @encanto, 29075; break;
+		case 29075:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29076)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29074; break; }
+					set @encanto, 29076; break;
+		case 29076:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29077)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29075; break; }
+					set @encanto, 29077; break;
+		case 29077:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29078)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29076; break; }
+					set @encanto, 29078; break;
+		case 29078:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29079)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29077; break; }
+					set @encanto, 29079; break;
+		case 29079:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29080)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29078; break; }
+					set @encanto, 29080; break;
+		
+		
+		//Master Archer
+		case 29091:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29092)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29092; break;
+		case 29092:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29093)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29091; break; }
+					set @encanto, 29093; break;
+		case 29093:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29094)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29092; break; }
+					set @encanto, 29094; break;
+		case 29094:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29095)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29093; break; }
+					set @encanto, 29095; break;
+		case 29095:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29096)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29094; break; }
+					set @encanto, 29096; break;
+		case 29096:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29097)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29095; break; }
+					set @encanto, 29097; break;
+		case 29097:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29098)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29096; break; }
+					set @encanto, 29098; break;
+		case 29098:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29099)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29097; break; }
+					set @encanto, 29099; break;
+		case 29099:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29100)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29098; break; }
+					set @encanto, 29100; break;
+		
+		
+		//Adamantine
+		case 29101:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29102)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29102; break;
+		case 29102:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29103)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29101; break; }
+					set @encanto, 29103; break;
+		case 29103:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29104)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29102; break; }
+					set @encanto, 29104; break;
+		case 29104:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29105)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29103; break; }
+					set @encanto, 29105; break;
+		case 29105:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29106)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29104; break; }
+					set @encanto, 29106; break;
+		case 29106:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29107)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29105; break; }
+					set @encanto, 29107; break;
+		case 29107:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29108)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29106; break; }
+					set @encanto, 29108; break;
+		case 29108:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29109)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29107; break; }
+					set @encanto, 29109; break;
+		case 29109:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29110)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29108; break; }
+					set @encanto, 29110; break;
+		
+		
+		//Affection
+		case 29111:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29112)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29112; break;
+		case 29112:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29113)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29111; break; }
+					set @encanto, 29113; break;
+		case 29113:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29114)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29112; break; }
+					set @encanto, 29114; break;
+		case 29114:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29115)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29113; break; }
+					set @encanto, 29115; break;
+		case 29115:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29116)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29114; break; }
+					set @encanto, 29116; break;
+		case 29116:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29117)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29115; break; }
+					set @encanto, 29117; break;
+		case 29117:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29118)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29116; break; }
+					set @encanto, 29118; break;
+		case 29118:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29119)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29117; break; }
+					set @encanto, 29119; break;
+		case 29119:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29120)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29118; break; }
+					set @encanto, 29120; break;
+		
+		
+		//Acute
+		case 29081:
+					mes "Sua chance é de [90%] para tentar encantar o próximo nível "+getitemname(29082)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 90){ mes " ","Infelizmente você não teve sorte!"; close; }
+					set @encanto,29082; break;
+		case 29082:
+					mes "Sua chance é de [80%] para tentar encantar o próximo nível "+getitemname(29083)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 80){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29081; break; }
+					set @encanto, 29083; break;
+		case 29083:
+					mes "Sua chance é de [70%] para tentar encantar o próximo nível "+getitemname(29084)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 70){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29082; break; }
+					set @encanto, 29084; break;
+		case 29084:
+					mes "Sua chance é de [60%] para tentar encantar o próximo nível "+getitemname(29085)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 60){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29083; break; }
+					set @encanto, 29085; break;
+		case 29085:
+					mes "Sua chance é de [50%] para tentar encantar o próximo nível "+getitemname(29086)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 50){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29084; break; }
+					set @encanto, 29086; break;
+		case 29086:
+					mes "Sua chance é de [40%] para tentar encantar o próximo nível "+getitemname(29087)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 40){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29085; break; }
+					set @encanto, 29087; break;
+		case 29087:
+					mes "Sua chance é de [30%] para tentar encantar o próximo nível "+getitemname(29088)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 30){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29086; break; }
+					set @encanto, 29088; break;
+		case 29088:
+					mes "Sua chance é de [20%] para tentar encantar o próximo nível "+getitemname(29089)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 20){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29087; break; }
+					set @encanto, 29089; break;
+		case 29089:
+					mes "Sua chance é de [10%] para tentar encantar o próximo nível "+getitemname(29090)+"!";
+					if(select("Prosseguir:Cancelar")==2){ close; }
+					if(countitem(20679) < 50){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes. Você precisará de ^FF00CC50 Emblemas da Batalha Campal^000000"; close; } delitem 20679,50;
+					if(rand(1,100) > 10){ mes " ","Infelizmente você não teve sorte!"; set @encanto, 29088; break; }
+					set @encanto, 29090; break;
+	}
+
+
+	if(!.@carta[1])
+	{
+		mes "Selecione o encantamento desejado.";
+		next;
+		
+		menu ""+(.@carta[2] == 0 ? "Status Comum":"")+"",-,""+(.@carta[2] != 0 ? "Mettle":"")+"",-,""+(.@carta[2] != 0 ? "Magic Essence":"")+"",-,""+(.@carta[2] != 0 ? "Master Archer":"")+"",-,""+(.@carta[2] != 0 ? "Adamantine":"")+"",-,""+(.@carta[2] != 0 ? "Affection":"")+"",-,""+(.@carta[2] != 0 ? "Acute":"")+"",-;
+		
+		switch(@menu)
+		{
+			case 1:
+					switch( select("Força:Agilidade:Vitalidade:Inteligência:Destreza:Sorte") )
+					{
+						case 1: set @encanto, 4704; break;	//Encanto STR		
+						case 2: set @encanto, 4734; break;	//Encanto AGI
+						case 3:	set @encanto, 4744; break;	//Encanto VIT
+						case 4: set @encanto, 4714; break;	//Encanto INT
+						case 5: set @encanto, 4724; break;	//Encanto DEX
+						case 6: set @encanto, 4754; break;	//Encanto LUK/SOR
+					}
+					break;
+					
+			case 2: set @encanto,29061; break;
+			case 3: set @encanto,29071; break;
+			case 4: set @encanto,29091; break;
+			case 5: set @encanto,29101; break;
+			case 6: set @encanto,29111; break;
+			case 7: set @encanto,29081; break;				
+		}
+	}
+	
+	.@carta[.@card] = @encanto;
+	.@cardcnt = getiteminfo(getequipid(@part),10);	
+	specialeffect2 EF_REPAIRWEAPON;
+	.@refino = getequiprefinerycnt(@part);
+	set .@iditem,getequipid(@part);	
+	delequip @part;
+	getitem2 .@iditem,1,1,.@refino,0,.@carta[0],.@carta[1],.@carta[2],.@carta[3];
+	equip .@iditem;
+	close;
+	
+BTemp:
+
+	mes @nome$;
+	set @part,EQI_SHOES;
+	
+	if(getequipname(@part) == "")
+	{
+		mes "Você não possui nenhum item equipado!";
+		close;
+	}
+	
+	switch(getequipid(@part))
+	{
+		case 22010: case 22008: case 22009: case 22011: case 22006: case 22007: break;
+		
+		default:
+			mes "Este item não pode ser encatado, por favor retorne quando tiver certeza do que está fazendo.";
+			close;
+	}	
+	
+	setarray .@carta[0],getequipcardid( @part,0 ),getequipcardid( @part,1 ),getequipcardid( @part,2 ),getequipcardid( @part,3 );
+	
+	if ( select( ( .@carta[3] != 0 && .@carta[2] != 0 )?"":"Encantar",(.@carta[3] != 0)?"Resetar":"" ) == 2 )
+	{
+		.@cardcnt = getiteminfo(getequipid(@part),10);
+	
+		for (.@i=4; .@i>.@cardcnt; .@i--)
+			.@carta[.@i-1] = 0;
+	
+		specialeffect2 EF_REPAIRWEAPON;
+		.@refino = getequiprefinerycnt(@part);
+		set .@iditem,getequipid(@part);	
+		delequip @part;
+		getitem2 .@iditem,1,1,.@refino,0,.@carta[0],.@carta[1],.@carta[2],.@carta[3];
+		equip .@iditem;
+		close;
+	}
+	
+	switch( .@carta[3] ) {
+		case 0:
+			mes "Selecione o encantamento desejado.";
+			next;
+			
+			switch( select( "Espírito do Lutador","Mira Apurada","Encantamento","Vitalidade","Anti-Atraso","Sorte" ) )
+			{
+				case 1:
+					set @encanto, 4808; break;
+				case 2:
+					set @encanto, 4832; break;
+				case 3:
+					set @encanto, 4814; break;
+				case 4:
+					set @encanto, 4741; break;
+				case 5:
+					set @encanto, 4869; break;
+				case 6:
+					set @encanto, 4752; break;
+			}
+			break;
+			
+		//Primeira tentativa de encantar o 4th slot
+		case 4808:
+			set @encanto, 4820; break;
+		case 4832:
+			set @encanto, 4833; break;
+		case 4814:
+			set @encanto, 4813; break;
+		case 4741:
+			set @encanto, 4742; break;
+		case 4869:
+			set @encanto, 4872; break;
+		case 4752:
+			set @encanto, 4753; break;
+		//Segunda tentativa de encantar o 4th slot
+		case 4820:
+			set @encanto, 4821; break;
+		case 4833:
+			set @encanto, 4834; break;
+		case 4813:
+			set @encanto, 4812; break;
+		case 4742:
+			set @encanto, 4861; break;
+		case 4872:
+			set @encanto, 4873; break;
+		case 4753:
+			set @encanto, 4754; break;
+		//Terceira tentativa de encantar o 4th slot
+		case 4821:
+			set @encanto, 4822; break;
+		case 4834:
+			set @encanto, 4835; break;
+		case 4812:
+			set @encanto, 4826; break;
+		case 4861:
+			set @encanto, 4862; break;
+		case 4873:
+			set @encanto, 4881; break;
+		case 4754:
+			set @encanto, 4755; break;
+		case 4822:
+		case 4835:
+		case 4826:
+		case 4862:
+		case 4881:
+		case 4755:
+			mes "Sua bota já está com o encantamento máximo.";
+			mes "Selecione o encantamento especial que deseja.";
+			next;
+			
+			switch( select( "Delírio","Ânimo","Histeria","Epifania","Instinto","Euforia" ) )
+			{
+				case 1:
+					set @encanto, 4875; break;
+				case 2:
+					set @encanto, 4877; break;
+				case 3:
+					set @encanto, 4878; break;
+				case 4:
+					set @encanto, 4876; break;
+				case 5:
+					set @encanto, 4879; break;
+				case 6:
+					set @encanto, 4880; break;
+			}
+			.@n = 1;
+			break;
+	}
+	
+	if(countitem(20679) < 100){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes, você precisará de ^FF00CC100 Emblemas da Batalha Campal^000000."; close; } delitem 20679,100;
+	.@carta[3 - .@n] = @encanto;
+	.@cardcnt = getiteminfo(getequipid(@part),10);	
+	specialeffect2 EF_REPAIRWEAPON;
+	.@refino = getequiprefinerycnt(@part);
+	set .@iditem,getequipid(@part);	
+	delequip @part;
+	getitem2 .@iditem,1,1,.@refino,0,.@carta[0],.@carta[1],.@carta[2],.@carta[3];
+	if(countitem(.@iditem) < 2) equip .@iditem;
+	close;
+	
+// Encantamentos Especiais
+
+especiais:
+
+	next;
+	mes @nome$;
+	mes "Por favor escolha uma das opções abaixo.";
+	next;
+	menu "Olds Hats",OldHat,"Botas Temporais",BTemp,"Vicious Weapon",-;
+
+	mes @nome$;
+	mes "Eu sou capaz encantar sua Vicious Weapon, com até 3 tipos de encantamentos.";
+	next;	
+	mes @nome$;
+	mes "O preço para cada encantamento da sua Vicious Weapon será: ^FF00CC100 Emblemas da Batalha Campal^000000.";
+	next;
+
+	set @part,EQI_HAND_R;
+	
+	if(getequipname(@part) == "")
+	{
+		mes @nome$;
+		mes "Você não possui nenhum item equipado!";
+		close;
+	}
+	
+	switch(getequipid(@part))
+	{		
+		//Mágicos
+		case 1600: case 2026: case 28605: @Type=1; @typ$="M.ATQ"; break;
+		
+		//Físicos
+		case 1400: case 1450: case 1800: case 13455: case 16041: case 21016: case 28008: case 28107: case 28706: @Type=2; @typ$="ATQ"; break;
+		
+		//Ranged
+		case 1900: case 13128: case 1996: case 13328: case 18121: @Type=3; @typ$="L.ATQ"; break;
+		
+		default:
+			mes @nome$;
+			mes "Este item não pode ser encatado, por favor retorne quando tiver certeza do que está fazendo.";
+			close;
+	}
+
+	mes @nome$;	
+	mes "Escolha qual slot deseja encantar!";
+	set .@slot,select("Slot 1:Slot 2:Slot 3");
+	next;
+
+	switch(.@slot)
+	{
+		case 1:
+				switch(getequipid(@part))
+				{
+					case 1600: //ecnt 1
+					case 2026: //ecnt 1
+					
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								if(select("Aumentar ATQM por Elemento:Aumentar ATQM %")==1)
+								{
+									next;
+									mes @nome$;	
+									mes " ","[ OBS: Chance de 1% ~ 20% ]";
+									switch(select("Aumentar ATQM em Neutro:Aumentar ATQM em Água:Aumentar ATQM em Terra:Aumentar ATQM em Fogo:Aumentar ATQM em Vento:Aumentar ATQM em Veneno:Aumentar ATQM em Sagrado:Aumentar ATQM em Sombrio:Aumentar ATQM em Fantasma:Aumentar ATQM em Maldito"))
+									{
+										case 1: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_NOTHING_TARGET,rand(1,20),0); break;
+										case 2: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_WATER_TARGET,rand(1,20),0); break;
+										case 3: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_GROUND_TARGET,rand(1,20),0); break;
+										case 4: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_FIRE_TARGET,rand(1,20),0); break;
+										case 5: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_WIND_TARGET,rand(1,20),0); break;
+										case 6: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_POISON_TARGET,rand(1,20),0); break;
+										case 7: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_SAINT_TARGET,rand(1,20),0); break;
+										case 8: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_DARKNESS_TARGET,rand(1,20),0); break;
+										case 9: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_TELEKINESIS_TARGET,rand(1,20),0); break;
+										case 10: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_MDAMAGE_PROPERTY_UNDEAD_TARGET,rand(1,20),0); break;
+									}
+									close;
+								}
+								
+								next;
+								mes @nome$;	
+								mes " ","[ OBS: Chance de 1% ~ 15% ]";
+								if(select("Encantar:Cancelar")==2){ close; }
+								callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_VAR_MAGICATQPERCENT,rand(1,15),0);
+								close;
+					
+					case 1900:  //ecnt 2
+					case 1996:  //ecnt 2
+					case 13128: //ecnt 2
+					case 18121: //ecnt 2
+								
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Aumentar ATQ por Elemento:Aumentar ATQ %:Ataque Perfeito:Indestrutível"))
+								{
+									case 1:
+											next;
+											mes @nome$;	
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											switch(select("Aumentar ATQ em Neutro:Aumentar ATQ em Água:Aumentar ATQ em Terra:Aumentar ATQ em Fogo:Aumentar ATQ em Vento:Aumentar ATQ em Veneno:Aumentar ATQ em Sagrado:Aumentar ATQ em Sombrio:Aumentar ATQ em Fantasma:Aumentar ATQ em Maldito"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_NOTHING_TARGET,rand(1,20),0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_WATER_TARGET,rand(1,20),0); break;
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_GROUND_TARGET,rand(1,20),0); break;
+												case 4: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_FIRE_TARGET,rand(1,20),0); break;
+												case 5: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_WIND_TARGET,rand(1,20),0); break;
+												case 6: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_POISON_TARGET,rand(1,20),0); break;
+												case 7: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_SAINT_TARGET,rand(1,20),0); break;
+												case 8: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_DARKNESS_TARGET,rand(1,20),0); break;
+												case 9: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_TELEKINESIS_TARGET,rand(1,20),0); break;
+												case 10: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_UNDEAD_TARGET,rand(1,20),0); break;
+											}
+											close;
+									case 2:
+											next;
+											mes @nome$;	
+											mes " ","[ OBS: Chance de 1% ~ 15% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_VAR_ATQPERCENT,rand(1,15),0);
+											close;
+									case 3:
+											next;
+											mes @nome$;	
+											mes " ","[ OBS: Não afetada pela penalidade de tamanho. ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_SIZE_PERFECT,0,0);
+											close;
+									case 4:
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Não pode ser quebrado em batalha. ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_INDESTRUCTIBLE,0,0);
+											close;
+								}
+								break;
+								
+					case 28107: //ecnt 3
+					case 16041: //ecnt 3
+					case 13455: //ecnt 3
+					case 13328: //ecnt 4
+					case 28605: //ecnt 4
+					case 28706: //ecnt 4
+					case 28008: if(getequipid(@part)==28008) set .@tp5,1;  //ecnt 5
+					case 1800:  if(getequipid(@part)==1800)  set .@tp5,1;  //ecnt 5
+					case 21016: if(getequipid(@part)==21016) set .@tp5,1;  //ecnt 5
+					case 1450:  if(getequipid(@part)==1450)  set .@tp5,1;  //ecnt 5
+					case 1400:  if(getequipid(@part)==1400)  set .@tp5,1;  //ecnt 5
+								
+								mes @nome$;
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Aumentar ATQ por Elemento:Aumentar ATQ %:Propriedade da Arma:Ataque Perfeito"+(.@tp5 ? ":Indestrutível":"")))
+								{
+									case 1:
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											switch(select("Aumentar ATQ em Neutro:Aumentar ATQ em Água:Aumentar ATQ em Terra:Aumentar ATQ em Fogo:Aumentar ATQ em Vento:Aumentar ATQ em Veneno:Aumentar ATQ em Sagrado:Aumentar ATQ em Sombrio:Aumentar ATQ em Fantasma:Aumentar ATQ em Maldito"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_NOTHING_TARGET,rand(1,20),0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_WATER_TARGET,rand(1,20),0); break;
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_GROUND_TARGET,rand(1,20),0); break;
+												case 4: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_FIRE_TARGET,rand(1,20),0); break;
+												case 5: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_WIND_TARGET,rand(1,20),0); break;
+												case 6: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_POISON_TARGET,rand(1,20),0); break;
+												case 7: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_SAINT_TARGET,rand(1,20),0); break;
+												case 8: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_DARKNESS_TARGET,rand(1,20),0); break;
+												case 9: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_TELEKINESIS_TARGET,rand(1,20),0); break;
+												case 10: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_DAMAGE_PROPERTY_UNDEAD_TARGET,rand(1,20),0); break;
+											}
+											close;
+									case 2:
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 15% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_VAR_ATQPERCENT,rand(1,15),0);
+											close;
+									case 3:
+											next;
+											mes @nome$;
+											mes "Escolha o elemento desejado para a/o "+getitemname(getequipid(@part))+"!";
+											switch(select("Água:Terra:Fogo:Vento:Sagrado:Sombrio"))
+											{									
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_WATER,0,0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_GROUND,0,0); break;
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_FIRE,0,0); break;
+												case 4: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_WIND,0,0); break;
+												case 5: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_SAINT,0,0); break;
+												case 6: callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_ATTR_DARKNESS,0,0); break;
+											}
+											close;
+									case 4:
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Não pode ser quebrado em batalha. ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_INDESTRUCTIBLE,0,0);
+											close;
+									case 5:
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Não pode ser quebrado em batalha. ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,0,RDMOPT_WEAPON_INDESTRUCTIBLE,0,0);
+											close;
+								}
+								break;
+				}
+				break;
+				
+		case 2:
+				switch(getequipid(@part))
+				{
+					case 1600: //ecnt 1
+					case 2026: //ecnt 1
+					
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								if(select("Aumentar ATQM por Raça:Ignorar DEFM por Raça")==1)
+								{
+									next;
+									mes @nome$;	
+									mes " ","[ OBS: Chance de 1% ~ 20% ]";
+									switch(select("Aumentar ATQM em Amorfo:Aumentar ATQM em Anjo:Aumentar ATQM em Bruto:Aumentar ATQM em Demônio:Aumentar ATQM em Dragão:Aumentar ATQM em Humanoide:Aumentar ATQM em Inseto:Aumentar ATQM em Morto-Vivo:Aumentar ATQM em Peixe:Aumentar ATQM em Planta:Aumentar ATQM em Normal Monster:Aumentar ATQM em MVP"))
+									{
+										case 1: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_NOTHING,rand(1,20),0); break;
+										case 2: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_ANGEL,rand(1,20),0); break;
+										case 3: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_ANIMAL,rand(1,20),0); break;
+										case 4: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_DEVIL,rand(1,20),0); break;
+										case 5: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_DRAGON,rand(1,20),0); break;
+										case 6: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_HUMAN,rand(1,20),0); break;
+										case 7: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_INSECT,rand(1,20),0); break;
+										case 8: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_UNDEAD,rand(1,20),0); break;
+										case 9: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_FISHS,rand(1,20),0); break;
+										case 10: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_MDAMAGE_PLANT,rand(1,20),0); break;
+										case 11: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_MDAMAGE_NORMAL,rand(1,20),0); break;
+										case 12: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_MDAMAGE_BOSS,rand(1,20),0); break;
+									}
+									close;
+								}
+								
+								next;
+								mes @nome$;	
+								mes " ","[ OBS: Chance de 1% ~ 30% ]";
+								switch(select("Ignorar DEFM em Amorfo:Ignorar DEFM em Anjo:Ignorar DEFM em Bruto:Ignorar DEFM em Demônio:Ignorar DEFM em Dragão:Ignorar DEFM em Humanoide:Ignorar DEFM em Inseto:Ignorar DEFM em Morto-Vivo:Ignorar DEFM em Peixe:Ignorar DEFM em Planta:Ignorar DEFM em Normal:Ignorar DEFM em MVP"))
+								{
+									case 1: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_NOTHING,rand(1,30),0); break;
+									case 2: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_ANGEL,rand(1,30),0); break;
+									case 3: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_ANIMAL,rand(1,30),0); break;
+									case 4: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_DEVIL,rand(1,30),0); break;
+									case 5: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_DRAGON,rand(1,30),0); break;
+									case 6: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_HUMAN,rand(1,30),0); break;
+									case 7: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_INSECT,rand(1,30),0); break;
+									case 8: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_UNDEAD,rand(1,30),0); break;
+									case 9: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_FISHS,rand(1,30),0); break;
+									case 10: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEFM_PERCENT_PLANT,rand(1,30),0); break;
+									case 11: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_IGNORE_DEFM_PERCENT_NORMAL,rand(1,30),0); break;
+									case 12: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_IGNORE_DEFM_PERCENT_BOSS,rand(1,30),0); break;
+								}
+								close;
+					
+					case 1900:  //ecnt 2
+					case 1996:  //ecnt 2
+					case 13128: //ecnt 2
+					case 18121: //ecnt 2
+					case 28107: //ecnt 3
+					case 16041: //ecnt 3
+					case 13455: //ecnt 3
+					case 13328: //ecnt 4
+					case 28605: //ecnt 4
+					case 28706: //ecnt 4
+					case 28008: //ecnt 5
+					case 1800:  //ecnt 5
+					case 21016: //ecnt 5
+					case 1450:  //ecnt 5
+					case 1400:  //ecnt 5
+								
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								if(select("Aumentar ATQ por Raça:Ignorar DEF por Raça")==1)
+								{
+									next;
+									mes @nome$;	
+									mes " ","[ OBS: Chance de 1% ~ 20% ]";
+									switch(select("Aumentar ATQ em Amorfo:Aumentar ATQ em Anjo:Aumentar ATQ em Bruto:Aumentar ATQ em Demônio:Aumentar ATQ em Dragão:Aumentar ATQ em Humanoide:Aumentar ATQ em Inseto:Aumentar ATQ em Morto-Vivo:Aumentar ATQ em Peixe:Aumentar ATQ em Planta:Aumentar ATQ em Normal Monster:Aumentar ATQ em MVP"))
+									{
+										case 1: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_NOTHING,rand(1,20),0); break;
+										case 2: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_ANGEL,rand(1,20),0); break;
+										case 3: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_ANIMAL,rand(1,20),0); break;
+										case 4: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_DEVIL,rand(1,20),0); break;
+										case 5: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_DRAGON,rand(1,20),0); break;
+										case 6: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_HUMAN,rand(1,20),0); break;
+										case 7: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_INSECT,rand(1,20),0); break;
+										case 8: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_UNDEAD,rand(1,20),0); break;
+										case 9: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_FISHS,rand(1,20),0); break;
+										case 10: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_DAMAGE_PLANT,rand(1,20),0); break;
+										case 11: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_DAMAGE_NORMAL_TARGET,rand(1,20),0); break;
+										case 12: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_DAMAGE_BOSS_TARGET,rand(1,20),0); break;
+									}
+									close;
+								}
+								
+								next;
+								mes @nome$;	
+								mes " ","[ OBS: Chance de 1% ~ 30% ]";
+								switch(select("Ignorar DEF em Amorfo:Ignorar DEF em Anjo:Ignorar DEF em Bruto:Ignorar DEF em Demônio:Ignorar DEF em Dragão:Ignorar DEF em Humanoide:Ignorar DEF em Inseto:Ignorar DEF em Morto-Vivo:Ignorar DEF em Peixe:Ignorar DEF em Planta:Ignorar DEF em Normal:Ignorar DEF em MVP"))
+								{
+									case 1: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_NOTHING,rand(1,30),0); break;
+									case 2: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_ANGEL,rand(1,30),0); break;
+									case 3: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_ANIMAL,rand(1,30),0); break;
+									case 4: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_DEVIL,rand(1,30),0); break;
+									case 5: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_DRAGON,rand(1,30),0); break;
+									case 6: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_HUMAN,rand(1,30),0); break;
+									case 7: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_INSECT,rand(1,30),0); break;
+									case 8: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_UNDEAD,rand(1,30),0); break;
+									case 9: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_FISHS,rand(1,30),0); break;
+									case 10: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_RACE_IGNORE_DEF_PERCENT_PLANT,rand(1,30),0); break;
+									case 11: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_IGNORE_DEF_PERCENT_NORMAL,rand(1,30),0); break;
+									case 12: callsub S_EchtSUB,1; setrandomoption(@part,1,RDMOPT_CLASS_IGNORE_DEF_PERCENT_BOSS,rand(1,30),0); break;
+								}
+								close;
+				}
+				break;
+				
+		case 3:
+				switch(getequipid(@part))
+				{
+					case 1600: //ecnt 1
+					case 2026: //ecnt 1
+					
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Status Comum:Aumentar ATQM:Tempo de Conjuração:Tempo de Recarga:Reduzir Consumo de SP:Poder de Cura"))
+								{
+									case 1:								
+											next;
+											mes @nome$;
+											mes "Escolha o atributo!";
+											mes " ","[ OBS: Chance +1 ~ +10 ]";
+											switch(select("INT:DEX"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_INTAMOUNT,rand(1,10),0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_DEXAMOUNT,rand(1,10),0); break;
+											}
+											close;
+									case 2:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +50 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTMPOWER,rand(4,50),0);
+											close;
+									case 3:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DEC_SPELL_CAST_TIME,rand(1,20),0);
+											close;
+									case 4:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DEC_SPELL_DELAY_TIME,rand(1,20),0);
+											close;
+									case 5:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Máximo -5% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DEC_SP_CONSUMPTION,5,0);
+											close;
+									case 6:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_HEAL_MODIFY_PERCENT,rand(1,20),0);
+											close;
+								}
+								break;
+					
+					case 1900:  //ecnt 2
+					case 1996:  //ecnt 2
+					case 13128: //ecnt 2
+					case 18121: //ecnt 2
+								
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Status Comum:Aumentar ATQ:Chance Crítica:Dano Crítico:Velocidade de Ataque:Dano à Distância"))
+								{
+									case 1:								
+											next;
+											mes @nome$;
+											mes "Escolha o atributo!";
+											mes " ","[ OBS: Chance +1 ~ +10 ]";
+											switch(select("AGI:DEX:LUK"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_AGIAMOUNT,rand(1,10),0); break;												
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_DEXAMOUNT,rand(1,10),0); break;
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_LUKAMOUNT,rand(1,10),0); break;
+											}
+											close;
+									case 2:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +47 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTPOWER,rand(4,47),0);
+											close;
+									case 3:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_CRITICALSUCCESSVALUE,rand(1,20),0);
+											close;
+									case 4:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DAMAGE_CRI_TARGET,rand(1,20),0);
+											close;
+									case 5:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Máximo -5% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_PLUSASPDPERCENT,5,0);
+											close;
+									case 6:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_RANGE_ATTACK_DAMAGE_TARGET,rand(1,20),0);
+											close;
+								}
+								break;
+								
+					case 28107: //ecnt 3
+					case 16041: //ecnt 3
+					case 13455: //ecnt 3
+					
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Status Comum:Aumentar ATQ:Chance Crítica:Dano Crítico:Velocidade de Ataque:Dano à Distância"))
+								{
+									case 1:								
+											next;
+											mes @nome$;
+											mes "Escolha o atributo!";
+											mes " ","[ OBS: Chance +1 ~ +10 ]";
+											switch(select("STR:AGI:DEX"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_STRAMOUNT,rand(1,10),0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_AGIAMOUNT,rand(1,10),0); break;												
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_DEXAMOUNT,rand(1,10),0); break;
+											}
+											close;
+									case 2:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +47 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTPOWER,rand(4,47),0);
+											close;
+									case 3:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_CRITICALSUCCESSVALUE,rand(1,20),0);
+											close;
+									case 4:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DAMAGE_CRI_TARGET,rand(1,20),0);
+											close;
+									case 5:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Máximo -5% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_PLUSASPDPERCENT,5,0);
+											close;
+									case 6:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_RANGE_ATTACK_DAMAGE_TARGET,rand(1,20),0);
+											close;
+								}
+								break;			
+					
+					
+					case 13328: //ecnt 4
+					case 28605: //ecnt 4
+					case 28706: //ecnt 4
+					
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Status Comum:Aumentar ATQ:Aumentar ATQM:Velocidade de Ataque:Tempo de Conjuração:Tempo de Recarga"))
+								{
+									case 1:								
+											next;
+											mes @nome$;
+											mes "Escolha o atributo!";
+											mes " ","[ OBS: Chance +1 ~ +10 ]";
+											switch(select("STR:AGI:INT"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_STRAMOUNT,rand(1,10),0); break;
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_AGIAMOUNT,rand(1,10),0); break;												
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_INTAMOUNT,rand(1,10),0); break;
+											}
+											close;
+									case 2:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +47 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTPOWER,rand(4,47),0);
+											close;
+									case 3:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +50 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTMPOWER,rand(4,50),0);
+											close;
+									case 4:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Máximo -5% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_PLUSASPDPERCENT,5,0);
+											close;
+									case 5:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DEC_SPELL_CAST_TIME,rand(1,20),0);
+											close;
+									case 6:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DEC_SPELL_DELAY_TIME,rand(1,20),0);
+											close;
+								}
+								break;
+					
+					
+					case 28008:   //ecnt 5
+					case 1800:    //ecnt 5
+					case 21016:   //ecnt 5
+					case 1450:    //ecnt 5
+					case 1400:    //ecnt 5
+								
+								mes @nome$;	
+								mes "Escolha uma opção a ser adcionada em sua/seu "+getitemname(getequipid(@part))+"!";
+								switch(select("Status Comum:Aumentar ATQ:Chance Crítica:Dano Crítico:Velocidade de Ataque"))
+								{
+									case 1:								
+											next;
+											mes @nome$;
+											mes "Escolha o atributo!";
+											mes " ","[ OBS: Chance +1 ~ +10 ]";
+											switch(select("STR:AGI:LUK"))
+											{
+												case 1: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_STRAMOUNT,rand(1,10),0); break;												
+												case 2: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_AGIAMOUNT,rand(1,10),0); break;
+												case 3: callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_LUKAMOUNT,rand(1,10),0); break;
+											}
+											close;
+									case 2:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance +4 ~ +47 ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_ATTPOWER,rand(4,47),0);
+											close;
+									case 3:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_CRITICALSUCCESSVALUE,rand(1,20),0);
+											close;
+									case 4:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Chance de 1% ~ 20% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_DAMAGE_CRI_TARGET,rand(1,20),0);
+											close;
+									case 5:								
+											next;
+											mes @nome$;
+											mes " ","[ OBS: Máximo -5% ]";
+											if(select("Encantar:Cancelar")==2){ close; }
+											callsub S_EchtSUB,1; setrandomoption(@part,2,RDMOPT_VAR_PLUSASPDPERCENT,5,0);
+											close;
+								}
+								break;
+				}
+				break;
+	}
+
+close;
+S_EchtSUB:
+
+	switch(getarg(0))
+	{
+		case 1: if(countitem(20679) < 100){ next; mes @nome$; mes "Desculpe, mas você não possui "+getitemname(20679)+" suficientes, você precisará de ^FF00CC100 Emblemas da Batalha Campal^000000."; close; } delitem 20679,100; break;
+	}
+	return;	
+}

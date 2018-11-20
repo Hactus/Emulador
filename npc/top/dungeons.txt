@@ -1,0 +1,119 @@
+prontera,164,157,3	script	Porteiro de Calabouços	4_F_HUNTER_EVIL,{
+
+mes "Sou um mago muito poderoso";
+mes "com o selo temporal posso abrir portais";
+mes "para calabouços cheios de criaturas mortais";
+mes "é só você me dizer pra onde quer ir:";
+
+mes "^F20808Consumirei um Selo Temporal para te levar até um calabouço!^000000";
+
+switch(select("Al De Baran","Geffen","Juno","Payon","Portal do Abismo","Prontera","Rachel")) {
+	case 1:
+	next;
+	mes "Para qual nível do calabouço do feudo de Al De Baran você deseja ir?";
+	switch(select("- 1º (gld_dun02):- 2º (gld_dun02_2)")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun02",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun02_2",0,0;
+	delitem 20674,1;
+	end;}
+
+	case 2:
+	next;
+	mes "Para qual nível do calabouço do feudo de Geffen você deseja ir?";
+	switch(select("- 1º (gld_dun04):- 2º (gld_dun04_2)")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun04",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun04_2",0,0;
+	delitem 20674,1;
+	end;}
+
+	case 3:
+	next;
+	mes "Deseja mesmo ir para o calabouço do feudo de Juno (schg_dun01)?";
+	switch(select("- Sim:- Não")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "schg_dun01",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	close;}
+
+	case 4:
+	next;
+	mes "Para qual nível do calabouço do feudo de Payon você deseja ir?";
+	switch(select("- 1º (gld_dun01):- 2º (gld_dun01_2)")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun01",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun01_2",0,0;
+	delitem 20674,1;
+	end;}
+	
+	case 5:
+	next;
+	mes "Qual dos Portais do Abysmo você deseja que eu abra?";
+	switch(select("Caminho do Guerreiro (gld2_prt):Colina dos Mortos (gld2_gef):Lágrimas do Herói (gld2_ald):Ventos Ancestrais (gld2_pay)")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld2_prt",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld2_gef",0,0;
+	delitem 20674,1;
+	end;
+	case 3:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld2_ald",0,0;
+	delitem 20674,1;
+	end;
+	case 4:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld2_pay",0,0;
+	delitem 20674,1;
+	end;}
+	
+	case 6:
+	next;
+	mes "Para qual nível do calabouço do feudo de Prontera você deseja ir?";
+	switch(select("- 1º (gld_dun03):- 2º (gld_dun03_2)")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun03",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "gld_dun03_2",0,0;
+	delitem 20674,1;
+	end;}
+
+	case 7:
+	next;
+	mes "Deseja mesmo ir para o calabouço do feudo de Juno (arug_dun01)?";
+	switch(select("- Sim:- Não")) {
+	case 1:
+	if(countitem(20674) < 1) {next; mes "Desculpe, sem Selos Temporais não posso fazer minha mágica!"; close;}
+	warp "arug_dun01",0,0;
+	delitem 20674,1;
+	end;
+	case 2:
+	close;}
+}}

@@ -1,0 +1,319 @@
+prontera,164,169,3	script	Set Shadow	832,{
+.@nomenpc$ = "[Emmet]";
+
+mes "Olá ^5566FF"+strcharinfo(0)+"^000000! Eu me chamo Emmet, e aprendi recentemente uma nova técnica para construir equipamentos Shadows";
+mes "Você já conhece os equipamentos Shadows?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Bom, como você deve saber, há diversos equipamentos shadows, cada um com atributos e elementos específicos, mas infelizmente não consigo fabricar todos.";
+next;
+mes .@nomenpc$;
+mes "Com as minhas habilidades, eu só consigo fabricar dois sets específicos, sendo eles: ^5566FFShadow Set (Conjunto das Sombras)^000000 ou o ^5566FFUnfreezing Set (Conjunto do Descongelamento)^000000, cada um com suas qualidades distintas.";
+next;
+mes .@nomenpc$;
+mes "Eu posso lhe dar 1 parte do ^5566FFShadow Set^000000 em troca de ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000.";
+next;
+mes .@nomenpc$;
+mes "E também posso lhe dar 1 parte do ^5566FFUnfreezing Set^000000 em troca de ^FF33551 Escama de Gelo^000000, ^FF3355500 Gelos^000000, ^FF33552 Presas de Hati^000000.";
+next;
+mes .@nomenpc$;
+mes "Você poderá escolher também qual parte do Set você deseja.";
+mes "Tem interesse em adquirir um dos equipamentos?";
+switch(select("Claro.:Não, obrigado.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Ótimo! Deseja adquirir o ^5566FFShadow Set (Conjunto das Sombras)^000000 ou o ^5566FFUnfreezing Set (Conjunto do Descongelamento)^000000?";
+switch(select("Shadow Set:Unfreezing Set")){
+
+case 1:
+if ((countitem(6471) < 200) || (countitem(6469) < 600)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+mes .@nomenpc$;
+mes "Escolha qual dos itens você deseja adquirir:";
+switch(select("Shadow Armor:Shadow Weapon:Shadow Shield:Shadow Shoes:Shadow Earring:Shadow Pendant:Nenhum.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Armor^000000?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24013,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 2:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Weapon^000000?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24012,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 3:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Shield^000000?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24015,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 4:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Shoes^000000?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24014,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 5:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Earring^000000?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24016,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 6:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^FF3355600 Vontade do Guerreiro^000000 e ^FF3355200 Frio dos Mortos^000000 por ^FF0000Shadow Pendant^000000?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 6471,200;
+delitem 6469,600;
+mes "Prontinho, aqui está.";
+getitem 24017,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 7:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+
+}
+case 2:
+if ((countitem(7036) < 2) || (countitem(6253) < 500) || (countitem(7562) < 1)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+mes .@nomenpc$;
+mes "Escolha qual dos itens você deseja adquirir:";
+switch(select("Unfreezing Shadow Weapon:Stabiltiy Shadow Shield:Unfreezing Shadow Earring:Unfreezing Shadow Pendant:Nenhum.")){
+next;
+case 1:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^5566FFUnfreezing Shadow Weapon^000000 em ^FF33551 Escama de Gelo^000000, ^FF3355500 Gelos^000000, ^FF33552 Presas de Hati^000000?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 7036,2;
+delitem 6253,500;
+delitem 7562,1;
+mes "Prontinho, aqui está.";
+getitem 24099,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+case 2:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^5566FFStabiltiy Shadow Shield^000000 em ^FF33551 Escama de Gelo^000000, ^FF3355500 Gelos^000000, ^FF33552 Presas de Hati^000000?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 7036,2;
+delitem 6253,500;
+delitem 7562,1;
+mes "Prontinho, aqui está.";
+getitem 24090,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 3:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^5566FFUnfreezing Shadow Earring^000000 em ^FF33551 Escama de Gelo^000000, ^FF3355500 Gelos^000000, ^FF33552 Presas de Hati^000000?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 7036,2;
+delitem 6253,500;
+delitem 7562,1;
+mes "Prontinho, aqui está.";
+getitem 24100,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 4:
+mes .@nomenpc$;
+mes "Você tem certeza que deseja trocar ^5566FFUnfreezing Shadow Pendant^000000 em ^FF33551 Escama de Gelo^000000, ^FF3355500 Gelos^000000, ^FF33552 Presas de Hati^000000?";
+switch(select("Sim.:Não.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem então.";
+next;
+delitem 7036,2;
+delitem 6253,500;
+delitem 7562,1;
+mes "Prontinho, aqui está.";
+getitem 24101,1;
+next;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 5:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}}
+
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo ^5566FF"+strcharinfo(0)+"^000000!";
+close;
+}
+
+case 2:
+mes .@nomenpc$;
+mes "Tudo bem, irei lhe explicar brevemente como os Equipamentos Shadow funcionam.";
+next;
+mes .@nomenpc$;
+mes "Os equipamentos Shadow são equipáveis na aba de Visuais mas não são simples visuais, pois eles dão status incríveis e ainda podem ser refinados, com o seu bônus aumentado a cada nível de refinamento.";
+next;
+mes .@nomenpc$;
+mes "Para maiores informações, clique abaixo para consultar nosso guia referente aos equipamentos Shadows.";
+mes "<URL>Abrir Guia<INFO>#</INFO></URL>";
+close;
+}}

@@ -1,0 +1,144 @@
+//===== rAthena Script =======================================
+//= Stylist
+//===== By: ==================================================
+//= Euphy
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= Changes your hair style, hair color, and cloth color.
+//===== Additional Comments: =================================
+//= 1.0 Initial script.
+//= 1.1 Switched to 'getbattleflag', credits to Saithis. [Euphy]
+//============================================================
+
+prontera,133,189,1	script	Estilista#custom_stylist	4_M_NEWOZ,{
+	cutin "nines02",2;
+	if( Class == 4218 || Class == 4220 ) {
+	setarray .@Styles[1],553,6,8;
+	setarray .@Look[1],
+		LOOK_CLOTHES_COLOR,
+		LOOK_HAIR,
+		LOOK_HAIR_COLOR;
+	set .@s, select(" ~ Cor da Roupa: ~ Estilo do Cabelo: ~ Cor do Cabelo");
+	set .@Revert, getlook(.@Look[.@s]);
+	set .@Style,1;
+	while(1) {
+		setlook .@Look[.@s], .@Style;
+		message strcharinfo(0),"This is style #"+.@Style+".";
+		set .@menu$, " ~ Proximo (^0055FF"+((.@Style!=.@Styles[.@s])?.@Style+1:1)+"^000000): ~ Voltar (^0055FF"+((.@Style!=1)?.@Style-1:.@Styles[.@s])+"^000000): ~ Digite o Numero...: ~ Voltar ao original (^0055FF"+.@Revert+"^000000)";
+		switch(select(.@menu$)) {
+		case 1:
+			set .@Style, ((.@Style != .@Styles[.@s]) ? .@Style+1 : 1);
+			break;
+		case 2:
+			set .@Style, ((.@Style != 1) ? .@Style-1 : .@Styles[.@s]);
+			break;
+		case 3:
+			message strcharinfo(0),"Choose a style between 1 - "+.@Styles[.@s]+".";
+			input .@Style,0,.@Styles[.@s];
+			if (!.@Style)
+				set .@Style, rand(1,.@Styles[.@s]);
+			break;
+		case 4:
+			set .@Style, .@Revert;
+			setlook .@Look[.@s], .@Revert;
+			break;
+		}
+	}
+}
+query_sql "SELECT `body` FROM `char` WHERE `char_id` = '"+ getcharid(0) +"'", .@body;
+if( .@body == 0) {
+	setarray .@Styles[1],
+		getbattleflag("max_cloth_color"),
+		getbattleflag("max_body_style"),
+		getbattleflag("max_hair_style"),
+		getbattleflag("max_hair_color");
+	setarray .@Look[1],
+		LOOK_CLOTHES_COLOR,
+		LOOK_BODY2,
+		LOOK_HAIR,
+		LOOK_HAIR_COLOR;
+	set .@s, select(" ~ Cor da Roupa: ~ Estilo da Roupa: ~ Estilo do Cabelo: ~ Cor do Cabelo");
+	if(.@s == 2) {
+	if( Class == 4054 || Class == 4055 || Class == 4056 || Class == 4057 || Class == 4058 || Class == 4059 || Class == 4060 || Class == 4066 || Class == 4068 || Class == 4069 || Class == 4071 || Class == 4061 || Class == 4062 || Class == 4063 || Class == 4064 || Class == 4065 || Class == 4067 || Class == 4070 || Class == 4072 || Class == 4073 || Class == 4074 || Class == 4075 || Class == 4076 || Class == 4077 || Class == 4078 || Class == 4079 || Class == 4096 || Class == 4097 || Class == 4098 || Class == 4099 || Class == 4100 || Class == 4101 || Class == 4102 || Class == 4103 || Class == 4104 || Class == 4105 || Class == 4106 || Class == 4107 || Class == 4108) {
+	if( BaseLevel <= 159) {mes "Lamento, você só poderá trocar sua roupa depois do nível 160!"; close2; cutin "",255; end;}
+	if( .@body == 0) {setlook LOOK_BODY2,1; setlook LOOK_CLOTHES_COLOR,0; query_sql "UPDATE `char` SET `body`='1' WHERE `char_id`='"+ getcharid(0) +"'"; cutin "",255; end;}
+	if( .@body == 1) {setlook LOOK_BODY2,0; setlook LOOK_CLOTHES_COLOR,0; query_sql "UPDATE `char` SET `body`='0' WHERE `char_id`='"+ getcharid(0) +"'"; cutin "",255; end;}}
+	else {mes "Sua classe não possui outros estilos de roupa disponíveis."; close2; cutin "",255; end;}
+	}
+
+	set .@Revert, getlook(.@Look[.@s]);
+	set .@Style,1;
+	while(1) {
+		setlook .@Look[.@s], .@Style;
+		message strcharinfo(0),"Este é o estilo #"+.@Style+".";
+		set .@menu$, " ~ Proximo (^0055FF"+((.@Style!=.@Styles[.@s])?.@Style+1:1)+"^000000): ~ Voltar (^0055FF"+((.@Style!=1)?.@Style-1:.@Styles[.@s])+"^000000): ~ Digite o Numero...: ~ Voltar ao original (^0055FF"+.@Revert+"^000000)";
+		switch(select(.@menu$)) {
+		case 1:
+			set .@Style, ((.@Style != .@Styles[.@s]) ? .@Style+1 : 1);
+			break;
+
+		case 2:
+			set .@Style, ((.@Style != 1) ? .@Style-1 : .@Styles[.@s]);
+			break;
+		case 3:
+			message strcharinfo(0),"Escolha um estilo entre 1 e "+.@Styles[.@s]+".";
+			input .@Style,0,.@Styles[.@s];
+			if (!.@Style)
+				set .@Style, rand(1,.@Styles[.@s]);
+			break;
+		case 4:
+			set .@Style, .@Revert;
+			setlook .@Look[.@s], .@Revert;
+			break;
+		}
+	}
+}
+
+if( .@body == 1) {
+	setarray .@Styles[1],450,0,29,75;
+	setarray .@Look[1],
+		LOOK_CLOTHES_COLOR,
+		LOOK_BODY2,
+		LOOK_HAIR,
+		LOOK_HAIR_COLOR;
+	set .@s, select(" ~ Cor da Roupa: ~ Estilo da Roupa: ~ Estilo do Cabelo: ~ Cor do Cabelo");
+	if(.@s == 2) {
+	if( Class == 4054 || Class == 4055 || Class == 4056 || Class == 4057 || Class == 4058 || Class == 4059 || Class == 4060 || Class == 4066 || Class == 4068 || Class == 4069 || Class == 4071 || Class == 4061 || Class == 4062 || Class == 4063 || Class == 4064 || Class == 4065 || Class == 4067 || Class == 4070 || Class == 4072 || Class == 4073 || Class == 4074 || Class == 4075 || Class == 4076 || Class == 4077 || Class == 4078 || Class == 4079 || Class == 4096 || Class == 4097 || Class == 4098 || Class == 4099 || Class == 4100 || Class == 4101 || Class == 4102 || Class == 4103 || Class == 4104 || Class == 4105 || Class == 4106 || Class == 4107 || Class == 4108) {
+	if( BaseLevel <= 159) {mes "Lamento, você só poderá trocar sua roupa depois do nível 160!"; close2; cutin "",255; end;}
+	if( .@body == 0) {setlook LOOK_BODY2,1; setlook LOOK_CLOTHES_COLOR,0; query_sql "UPDATE `char` SET `body`='1' WHERE `char_id`='"+ getcharid(0) +"'"; cutin "",255; end;}
+	if( .@body == 1) {setlook LOOK_BODY2,0; setlook LOOK_CLOTHES_COLOR,0; query_sql "UPDATE `char` SET `body`='0' WHERE `char_id`='"+ getcharid(0) +"'"; cutin "",255; end; end;}}
+	else {mes "Sua classe não possui outros estilos de roupa disponíveis."; close2; cutin "",255; end;}
+	}
+
+	set .@Revert, getlook(.@Look[.@s]);
+	set .@Style,1;
+	while(1) {
+		setlook .@Look[.@s], .@Style;
+		message strcharinfo(0),"Este é o estilo #"+.@Style+".";
+		set .@menu$, " ~ Proximo (^0055FF"+((.@Style!=.@Styles[.@s])?.@Style+1:1)+"^000000): ~ Voltar (^0055FF"+((.@Style!=1)?.@Style-1:.@Styles[.@s])+"^000000): ~ Digite o Numero...: ~ Voltar ao original (^0055FF"+.@Revert+"^000000)";
+		switch(select(.@menu$)) {
+		case 1:
+			set .@Style, ((.@Style != .@Styles[.@s]) ? .@Style+1 : 1);
+			break;
+
+		case 2:
+			set .@Style, ((.@Style != 1) ? .@Style-1 : .@Styles[.@s]);
+			break;
+		case 3:
+			message strcharinfo(0),"Escolha um estilo entre 1 e "+.@Styles[.@s]+".";
+			input .@Style,0,.@Styles[.@s];
+			if (!.@Style)
+				set .@Style, rand(1,.@Styles[.@s]);
+			break;
+		case 4:
+			set .@Style, .@Revert;
+			setlook .@Look[.@s], .@Revert;
+			break;
+		}
+	}
+}
+cutin "",255;
+}

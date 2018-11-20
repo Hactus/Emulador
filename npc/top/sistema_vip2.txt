@@ -1,0 +1,32 @@
+// Vip de 5 Dia Vip
+function	script	vipadd5	{
+query_sql "UPDATE `login` SET `group_id`='1',`vipCount`=`vipCount`+7200 WHERE `account_id`='"+ getcharid(3) +"'";
+dispbottom "[InfinityRO]: Voce adicionou 5 dias vip na sua conta, por favor relogue.";
+}
+
+
+// Vip de 7 Dias Vip
+function	script	vipadd10	{
+query_sql "UPDATE `login` SET `group_id`='1',`vipCount`=`vipCount`+10080 WHERE `account_id`='"+ getcharid(3) +"'";
+dispbottom "[InfinityRO]: Voce adicionou 10 dias vip na sua conta, por favor relogue.";
+}
+
+
+// Vip de 30 Dias Vip
+function	script	vipadd30	{
+query_sql "UPDATE `login` SET `group_id`='1',`vipCount`=`vipCount`+43200 WHERE `account_id`='"+ getcharid(3) +"'";
+dispbottom "[InfinityRO]: Voce adicionou 30 dias vip na sua conta, por favor relogue.";
+}
+
+
+// Vip de 1 Dias Vip
+function	script	vipadd1	{
+query_sql "UPDATE `login` SET `group_id`='1',`vipCount`=`vipCount`+1440 WHERE `account_id`='"+ getcharid(3) +"'";
+dispbottom "[InfinityRO]: Voce adicionou 1 dia vip na sua conta, por favor relogue.";
+}
+
+// Vip de 3 Dias Vip
+function	script	vipadd3	{
+query_sql "UPDATE `login` SET `group_id`='1',`vipCount`=`vipCount`+4320 WHERE `account_id`='"+ getcharid(3) +"'";
+dispbottom "[InfinityRO]: Voce adicionou 3 dias vip na sua conta, por favor relogue.";
+}

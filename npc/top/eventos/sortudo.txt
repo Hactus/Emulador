@@ -1,0 +1,125 @@
+-	script	Sortudo	-1,{
+
+OnInit:
+set $sortudo,0;
+end;
+
+OnMenuSortudo:
+
+	if(agitcheck() == 1) {mes "A Guerra do Emperium está acontecendo neste momento!"; close;}
+	if(getgmlevel() > 9 && getgmlevel() < 99){mes "[^FF0000Sortudo^000000]"; mes "Você não pode participar!"; close;}
+	mes "[^FF0000Sortudo^000000]";
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000 !";
+	mes "O que deseja ?";
+	if(select("- Entrar:- Nada") == 2) close;
+	if($sortudo == 0){next; mes .n$; mes "O Evento está fechado!"; close;}
+	next;
+	mes "[^FF0000Sortudo^000000]";
+	mes "Boa sorte no evento!";
+	close2;
+	set @rand_sortudo, rand(1,4);
+	if(@rand_sortudo == 1){warp "quiz_02.gat",318,34; end;}
+	if(@rand_sortudo == 2){warp "quiz_02.gat",330,34; end;}
+	if(@rand_sortudo == 3){warp "quiz_02.gat",342,34; end;}
+	if(@rand_sortudo == 4){warp "quiz_02.gat",354,34; end;}
+
+}
+
+quiz_02.gat,0,0,0	script	Core_Sortudo	-1,{
+
+OnHour00:
+OnHour09:
+OnHour18:
+if(agitcheck() == 1) {end;} set $sortudo,1; pvpoff "quiz_02";announce "O Evento 'Sortudo' irá começar em 5 minutos!",bc_all,0xFFA500; callsub OnTimers; end;
+
+OnTimers:
+initnpctimer;
+atcommand "@killmonster2";
+end;
+OnTimer60000: announce "O Evento 'Sortudo' irá começar em 4 minutos!",bc_all,0xFFA500; end;
+OnTimer120000: announce "O Evento 'Sortudo' irá começar em 3 minutos!",bc_all,0xFFA500; end;
+OnTimer180000: announce "O Evento 'Sortudo' irá começar em 2 minutos!",bc_all,0xFFA500; end;
+OnTimer240000: announce "O Evento 'Sortudo' irá começar em 1 minutos!",bc_all,0xFFA500; end;
+OnTimer300000: set $sortudo,0; announce "O Evento 'Sortudo' começou!",bc_all,0xFFA500; atcommand "@pvpon"; end;
+OnTimer420000: callsub Tesouro_Sortudo; end;
+OnTimer480000: stopnpctimer; mapannounce "quiz_02", "O evento terminou!",bc_map,"0xFFCE00"; mapwarp "quiz_02","prontera",156,191; end;
+
+Tesouro_Sortudo:
+
+		atcommand "@pvpoff";
+		monster	"quiz_02.gat",314,34,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",314,45,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",314,57,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",331,34,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",331,45,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",331,57,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",342,34,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",342,48,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",342,57,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",354,34,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",354,45,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		monster	"quiz_02.gat",354,57,	"Tesouro",1732,1,"Tesouro::OnTreasureDie";
+		end;
+}
+
+-	script	Tesouro	-1,{
+
+OnTreasureDie:
+		set @premio_sortudo, rand(1,11);
+
+		if(@premio_sortudo == 1){
+		getitem 20673,3; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 3 "+getitemname(20673)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 2){
+		getitem 20675,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(20675)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 3){
+		atcommand "@die"; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Não ganhou nada, e ainda morreu!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 4){
+		getitem 20673,2; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 2 "+getitemname(20673)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 5){
+		getitem 20672,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(20672)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 6){
+		getitem 20673,5; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 5 "+getitemname(20673)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 7){
+		getitem 12210,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(12210)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 8){
+		getitem 12412,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(12412)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 9){
+		getitem 23298,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(23298)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 10){
+		getitem 17767,1; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 1 "+getitemname(17767)+"!",bc_all,0xFFA500; end;
+		}
+		if(@premio_sortudo == 11){
+		getitem 7621,3; warp "prontera.gat",155,185;
+		announce strcharinfo(0)+" abriu um Baú. Prêmio: 3 "+getitemname(7621)+"!",bc_all,0xFFA500; end;
+		}
+
+
+}
+
+quiz_02.gat	mapflag	nomemo
+quiz_02.gat	mapflag	nowarp
+quiz_02.gat	mapflag	nowarpto
+quiz_02.gat	mapflag	noicewall
+quiz_02.gat	mapflag	nosave
+quiz_02.gat	mapflag	noreturn
+quiz_02.gat	mapflag	noteleport
+quiz_02.gat	mapflag	pvp

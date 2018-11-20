@@ -1,0 +1,360 @@
+prontera,164,166,3	script	Caçador de MVPs	404	,{
+.@nomenpc$ = "[Caçador de MVPs]";
+
+if ((countitem(7552) < 1)) {
+mes .@nomenpc$;
+mes "Olá ^5566FF"+strcharinfo(0)+"^000000!";
+mes "Já ouviu falar nos Caçadores de MVP do Éden?.";
+mes "Nós somos considerados os mais bravos guerreiros de Rune Midgard.";
+next;
+mes .@nomenpc$;
+mes "Se você quiser se tornar um Caçador de MVP do Éden, vá até o Grupo Eden (moc_para01) e procure a Eve Natalia";
+next;
+mes .@nomenpc$;
+mes "Assim que você conseguir alguns Certificados de Caçador do Éden, volte até aqui e irei trocá-los por Pergaminhos e Minérios de Refinamento";
+close; }
+
+if ((countitem(7552) > 1)) {
+mes .@nomenpc$;
+mes "Olá nobre Caçador, como vai?";
+mes "Deseja negociar os seus Certificados de Caçador do Éden?";
+switch(select("Sim.:Não.")){
+
+case 2:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo, e o que você quer em troca?";
+switch(select("Pergaminhos de Refinamento.:Elunium.:Oridecon.:Bradium.:Carnium.:Nenhum.")){
+case 6:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+
+// Pergaminhos
+case 1:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, qual Pergaminho você deseja adquirir?";
+switch(select("Nenhum.:Perg. de Arma +7.:Perg. de Armadura +7.:Perg. de de Arma +6.:Perg. de Armadura +6.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+
+case 2: 
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar o Pergaminho de Arma +7 eu precisarei de 130 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 130)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 129)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,130;
+getitem 6230,1;
+close;}
+}
+
+case 3:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar o Pergaminho de Armadura +7 eu precisarei de 130 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 130)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 129)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,130;
+getitem 6234,1;
+close;}
+}
+
+case 4:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar o Pergaminho de Arma +6 eu precisarei de 80 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 80)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 79)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,80;
+getitem 6231,1;
+close;}
+}
+
+case 5:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar o Pergaminho de Armadura +6 eu precisarei de 80 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 80)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 79)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,80;
+getitem 6235,1;
+close;}
+}}
+
+// Elunium
+
+case 2:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, qual o tipo de Elunium você deseja adquirir?";
+switch(select("Nenhum.:Elunium Perfeito.:Elunium Enriquecido.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+
+case 2: 
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Eluniuns Perfeitos eu precisarei de 40 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 40)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 39)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,40;
+getitem 16395,1;
+close;}
+}
+
+case 3:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Eluniuns Enriquecidos eu precisarei de 40 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 40)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 39)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,40;
+getitem 13610,1;
+close;}
+}}
+
+// Oridecon
+
+case 3:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, qual o tipo de Oridecon você deseja adquirir?";
+switch(select("Nenhum.:Oridecon Perfeito.:Oridecon Enriquecido.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+
+case 2: 
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Oridecons Perfeitos eu precisarei de 40 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 40)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 39)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,40;
+getitem 16393,1;
+close;}
+}
+
+case 3:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Oridecons Enriquecidos eu precisarei de 40 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 40)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 39)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,40;
+getitem 13611,1;
+close;}
+}}
+
+// Bradium
+
+case 4:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Bradiuns Perfeitos eu precisarei de 60 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 60)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 59)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,60;
+getitem 16258,1;
+close;}
+}}
+
+// Carnium
+
+case 5:
+next;
+mes .@nomenpc$;
+mes "Tudo bem, para lhe entregar os 5 Carniuns Perfeitos eu precisarei de 60 Certificados de Caçador do Eden";
+mes "Tem certeza que quer realizar a troca?";
+switch(select("Não.:Sim.")){
+case 1:
+next;
+mes .@nomenpc$;
+mes "Certo.";
+mes "Volte quando quiser.";
+close;
+case 2:
+if ((countitem(7552) < 60)) {
+next;
+mes .@nomenpc$;
+mes "Você não tem a quantidade de Certificados necessária, volte quando conseguir.";
+close;}
+if ((countitem(7552) > 59)) {
+next;
+mes .@nomenpc$;
+mes "Ótimo!! Tome aqui o seu item.";
+delitem 7552,60;
+getitem 16259,1;
+close;}
+}}
+
+
+}}
+
+

@@ -1,0 +1,109 @@
+//Made by Lunar
+//Version 1.7
+//Traduzido por x Twilight
+ 
+-	shop	topo2_shop	-1,501:50
+ra_temsky,34,144,5,	script	Topo 2	567,{
+	set @i,0;
+	mes "[Quest Shop]";
+	mes "Olá, aqui você poderá escolher várias quests para fazer.";
+	mes "^FF0000*Lembre-se de escolher apenas um item por vez.*^000000";
+	switch(select("^3366FFVer Quests^000000:^800080Ver Ranking^000000")){
+	case 1:
+	close2;
+	callshop "topo2_shop",1;
+	npcshopattach "topo2_shop";
+	end;
+	case 2:
+	set @nomequest$,"";
+	set @pontosquest,0;
+	next;
+	query_sql "SELECT `nome`, `pontos` FROM `quests_points` ORDER BY `pontos` DESC LIMIT 10",@nomequest$,@pontosquest;
+	mes "(Posição - Nome - ^FF0000Pontos^000000)";
+	for(set @i,0;@i <= 99;set @i,@i+1){
+	mes "["+(@i+1)+"] - "+@nomequest$[@i]+"- ^FF0000"+@pontosquest[@i]+"^000000";
+	}}
+ 
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+ "","Zeny"); set .e,.e+2) {}
+		npcshopadditem "topo2_shop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1),"SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Topo_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Topo_Setup; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Topo_Setup; }
+	mes "[Quest Shop]";
+	mes "Requerimento:";
+	for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000Recompensa:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Trocar:" + (((((getiteminfo(@bought_nameid,5) & 1) || (getiteminfo(@bought_nameid,5) & 256) || (getiteminfo(@bought_nameid,5) & 512)) && @equip==0))? "Item de Visualização":"") + ":Não, obrigado")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "[Quest Shop]";
+				mes "Você tem " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", enquanto eu requeiro " + getarg(@i+1) + ".";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "[Quest Shop]";
+				mes "Você não tem o Zeny suficiente.";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i)-Zeny) + " Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0),"announce")) announce "[" + strcharinfo(0) + "] acaba de fazer a quest do item " + getitemname(@bought_nameid) + "!",bc_all;
+				set @nomequest$,"";
+				set @QuestsPoints,0;
+				query_sql "SELECT `nome`,`pontos` FROM `quests_points` WHERE `char_id` = '"+getcharid(0)+"'",@nomequest$,@QuestsPoints;
+				if(@nomequest$ == "") query_sql "INSERT INTO `quests_points` (`account_id`,`char_id`,`nome`, `pontos`) VALUES ('"+getcharid(3)+"','"+getcharid(0)+"','"+strcharinfo(0)+"',1)"; else
+				query_sql "UPDATE `quests_points` SET `pontos` = `pontos`+1 WHERE `char_id` = '"+getcharid(0)+"'";
+			close;
+		case 2:
+			set @bottomview, getlook(3);
+			set @topview, getlook(4);
+			set @midview, getlook(5);
+			addtimer 1000, strnpcinfo(3)+"::On_Leave";
+			set @equip,getiteminfo(@bought_nameid, 5);
+			set @view, getiteminfo(@bought_nameid, 11);
+			if(@equip != -1 && @view > 0) {
+				if(@equip & 1) atcommand "@changelook 3 " + @view;
+				if(@equip & 256) atcommand "@changelook 1 " + @view;
+				if(@equip & 512) atcommand "@changelook 2 " + @view;
+			}
+			next;
+			goto OnBuyItem;
+		case 3:
+			close;
+	}
+On_Leave:
+	atcommand "@changelook 1 " + @topview;
+	atcommand "@changelook 2 " + @midview;
+	atcommand "@changelook 3 " + @bottomview;
+	set @equip,0;
+	set @view,0;
+	set @topview,0;
+	set @midview,0;
+	set @bottomview,0;
+	end;
+OnInit:
+	npcshopdelitem "topo2_shop",501;
+	set .BuildQuest,1;
+	set .i,1;
+Topo_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: callsub OnBuyItem,5172,1,2294,1,12098,10,203673,5,0,"SZeny",18852,1,"announce";
+		case 2: callsub OnBuyItem,2277,1,5093,1,6395,100,0,"SZeny",5968,1,"announce";
+		case 3: callsub OnBuyItem,7563,150,2258,1,2233,1,6246,100,0,"SZeny",5585,1,"announce";
+		case 4: callsub OnBuyItem,2229,1,7209,30,6557,50,2254,1,0,"SZeny",18766,1,"announce";
+		case 5: callsub OnBuyItem,2214,1,5113,1,5045,1,515,20,20673,3,0,"SZeny",18806,1,"announce";
+		}
+}

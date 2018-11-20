@@ -1,0 +1,101 @@
+-	shop	halloween_shop	-1,501:50
+prontera,149,182,6	script	Medalha das Bruxas	735,{
+	set @i,0;
+	mes "[Loja Halloween]";
+	mes "Eu posso trocar suas Medalhas das Bruxas por equipamentos visuais, fique a vontade e escolha o que preferir.";
+	mes "^FF0000*Lembre-se de escolher apenas um item por vez.*^000000";
+	close2;
+	callshop "halloween_shop",1;
+	npcshopattach "halloween_shop";
+	end;
+ 
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+ "","Zeny"); set .e,.e+2) {}
+		npcshopadditem "halloween_shop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1),"SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto halloween_shop;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub halloween_shop; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub halloween_shop; }
+	mes "[Loja Halloween]";
+	mes "Requerimento:";
+	for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000Recompensa:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Trocar:" + (((((getiteminfo(@bought_nameid,5) & 1) || (getiteminfo(@bought_nameid,5) & 256) || (getiteminfo(@bought_nameid,5) & 512)) && @equip==0))? "Item de Visualização":"") + ":Não, obrigado")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "[Loja Halloween]";
+				mes "Você tem " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", em troca disso eu quero " + getarg(@i+1) + ".";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "[Loja Halloween]";
+				mes "Você não tem o Zeny suficiente.";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i)-Zeny) + " Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			close;
+		case 2:
+			set @bottomview, getlook(3);
+			set @topview, getlook(4);
+			set @midview, getlook(5);
+			addtimer 1000, strnpcinfo(3)+"::On_Leave";
+			set @equip,getiteminfo(@bought_nameid, 5);
+			set @view, getiteminfo(@bought_nameid, 11);
+			if(@equip != -1 && @view > 0) {
+				if(@equip & 1) atcommand "@changelook 3 " + @view;
+				if(@equip & 256) atcommand "@changelook 1 " + @view;
+				if(@equip & 512) atcommand "@changelook 2 " + @view;
+			}
+			next;
+			goto OnBuyItem;
+		case 3:
+			close;
+	}
+On_Leave:
+	atcommand "@changelook 1 " + @topview;
+	atcommand "@changelook 2 " + @midview;
+	atcommand "@changelook 3 " + @bottomview;
+	set @equip,0;
+	set @view,0;
+	set @topview,0;
+	set @midview,0;
+	set @bottomview,0;
+	end;
+OnInit:
+	npcshopdelitem "halloween_shop",501;
+	set .BuildQuest,1;
+	set .i,1;
+halloween_shop:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: callsub OnBuyItem,7313,2,0,"SZeny",19960,1;
+		case 2:	callsub OnBuyItem,7313,2,0,"SZeny",19824,1;
+		case 3: callsub OnBuyItem,7313,2,0,"SZeny",20175,1;
+		case 4: callsub OnBuyItem,7313,2,0,"SZeny",20167,1;
+		case 5: callsub OnBuyItem,7313,2,0,"SZeny",19910,1;
+		case 6: callsub OnBuyItem,7313,2,0,"SZeny",31120,1;
+		case 7: callsub OnBuyItem,7313,2,0,"SZeny",31380,1;
+		case 8: callsub OnBuyItem,7313,2,0,"SZeny",31385,1;
+		case 9: callsub OnBuyItem,7313,3,0,"SZeny",31088,1;
+		case 10: callsub OnBuyItem,7313,3,0,"SZeny",31378,1;
+		case 11: callsub OnBuyItem,7313,3,0,"SZeny",31381,1;
+		case 12: callsub OnBuyItem,7313,3,0,"SZeny",20798,1;
+		case 13: callsub OnBuyItem,7313,3,0,"SZeny",20034,1;
+		case 14: callsub OnBuyItem,7313,5,0,"SZeny",20130,1;
+		case 15: callsub OnBuyItem,7313,5,0,"SZeny",20762,1;
+		case 16: callsub OnBuyItem,7313,6,0,"SZeny",20430,1;
+
+
+	}
+}

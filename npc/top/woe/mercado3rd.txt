@@ -1,0 +1,255 @@
+//====== Cronus ==========================================================
+//=Mercado 3rd
+//===== Por: =============================================================
+//=jeanroyce
+//===== Versão Atual: ====================================================
+//=v1.0
+//===== Descrição: =======================================================
+//=mercado negro com itens 3rd
+//===== Changelog: =======================================================
+//=v1.0 - mercado criado
+//========================================================================
+//Mercado Classes 3
+prontera,147,167,6	script	Mercados#1	837,{
+		mes "Olá companheiro!";
+		mes "O que deseja?";
+		switch(select("Mercado Negro:Mercadores:Nada")){
+		case 1:
+		next;
+		mes "Ok amigo!Boas compras.";
+		next;
+		warp "alberta",179,133;
+		close;
+		end;
+		case 2:
+		next;
+		mes "Ok, boas compras.";
+		close2;
+		warp "brasilis",200,149;
+		end;
+		case 3:
+		next;
+		mes "Ta certo, volte quando quiser comprar algo.";
+		close;
+		end;
+		}
+		}
+
+
+
+//-----------------------------------
+alberta,170,136,6	shop	Mecânico	4_M_JP_MID,6145:20,6146:400,6147:500,2800:100000,2801:100000,2802:500000,2803:100000,2804:100000,2805:100000,2806:150000,2807:200000,2808:250000,2809:100000,2810:100000,12392:1000,12393:1500,12394:1500,18000:100,18001:200,18002:200,18003:200,18004:500
+ 
+//===================================================
+alberta,172,136,6	shop	Sicário	4_M_GUILLOTINE,6128:100,6144:2000,7931:100,7932:100,7933:100,7934:100,7935:100,7936:100,7937:100
+ 
+//===================================================
+alberta,174,136,6	shop	Bioquimico	643,6210:2000,6211:2300,6212:1200,6213:600.6214:600,6215:600,6216:1200,6244:12,6245:120,6246:120,6247:120,6248:800,6250:400,6251:400,6255:600,6261:600,6262:600,6263:120,6264:120,6265:120:,6279:3000,6280:30000,6281:3000,6282:3000,6283:3000,6284:3000,6285:3000,6297:500,11022:600,11023:600,11024:600
+ 
+//===================================================
+alberta,176,136,6	shop	Arcano	4_F_LUCILE,6189:80000,6190:800,6191:800,6192:800,6193:800,6194:800,6195:800,6196:800,6197:800,6198:800,6199:800,6200:800,6201:800,6202:800,6203:800,6203:800,6204:800,6205:800
+ 
+//===================================================
+alberta,178,136,6	shop	Sentinela	4_M_BRZ_INDIAN,12341:40000,6124:800,12383:15000
+ 
+//===================================================
+alberta,180,136,6	shop	Rune knight	4_M_REDMAN,7938:2000,7939:2000,12727:100000,12733:100000,12728:100000,12725:100000,12729:100000,12389:100000,12726:100000,12388:100000,12731:100000,12730:100000,12732:100000
+ 
+//===================================================
+alberta,182,136,6	shop	Sorcerer	4_GEFFEN_12,6360:1000,6361:1000,6362:1000,6363:1000,11056:600
+ 
+//===================================================
+alberta,184,136,6	shop	Trovador	4_M_MINSTREL1,11513:1000
+ 
+//===================================================
+alberta,186,136,6	shop	Renegado	4_M_MELODY,6120:2000,6121:1000,6122:1000,6123:500
+ 
+alberta,188,136,2	shop	Armadura	4_M_JOB_KNIGHT2,2304:10000,2306:20000,2308:20000,2310:50000,2311:50000,2313:50000,2315:75000,2317:100000,2322:20000,2326:60000,2331:75000,2342:100000
+alberta,190,136,2	shop	Escudos	4_F_CRU,2102:10000,2106:60000,2108:60000,2110:85000,2114:30000,2116:30000
+alberta,192,136,2	shop	Botas	4_M_NFMAN,2404:10000,2406:20000,2409:30000,2412:50000,2417:50000,2418:50000
+alberta,194,136,2	shop	Maças	4_M_MONK,1502:10000,1505:20000,1511:20000,1514:-1,1517:-1,1520:50000,1522:100000
+alberta,194,133,2	shop	Punhos	4_F_MONK,1802:20000,1804:50000,1806:60000,1808:75000,1810:70000,1812:60000
+alberta,194,131,2	shop	Chicotes	4_F_07,1951:10000,1953:20000,1955:30000,1962:20000
+alberta,194,129,2	shop	Instrumentos	2_M_BARD_ORIENT,1902:10000,1904:20000,1906:-1,1908:50000,1913:50000,1914:50000,1915:50000,1916:50000,1917:50000
+alberta,192,129,2	shop	Livros	2_M_SAGE_OLD,1550:30000,1551:60000,1552:51000,1559:25000,1561:75000,1564:25000,1568:70000,1569:70000,1570:70000,1571:70000
+alberta,190,129,2	shop	Armas	4_M_CATMAN1,13103:60000,13105:100000,13106:200000,13101:10000,13150:6000,13152:30000,13153:50000,13155:60000,13156:100000,13154:30000,13159:250000,13157:150000,13161:300000,13162:500000
+alberta,188,129,2	shop	Fuuma Shurikens	4_F_JPN,13300:90000,13311:55000,13301:40000,7522:500,7521:500,7523:500,13252:30,13253:50,13250:5,13294:100,13255:30,13257:30,13258:30,13259:30,13256:30
+alberta,186,129,0	shop	Espada de Uma Mão	4_F_JOB_KNIGHT,1108:10000,1117:10000,1120:100000,1149:150000
+alberta,184,129,0	shop	Espada de Duas Mãos	733,1155:50000,1158:90000,1163:120000
+alberta,182,129,0	shop	Lanças	4_M_CRU,1405:20000,1408:50000,
+alberta,180,129,0	shop	Adagas	4_F_ROGUE,1208:20000,1211:20000,1217:20000
+alberta,178,129,0	shop	Machados	4_F_JOB_BLACKSMITH,1302:10000,1352:20000,1355:30000,1358:75000
+alberta,176,129,0	shop	Acessórios	2_M_SAGE_B,2621:-1,2622:-1,2624:30000,2618:10000,2625:30000,2626:30000,2627:-1
+alberta,174,129,2	shop	Arcos	4_M_JOB_HUNTER,1702:20000,1705:50000,1708:20000,1725:75000,1746:500000,1718:70000
+alberta,172,129,2	shop	Cajados	4_M_JOB_WIZARD,1602:20000,1605:20000,1608:20000,1611:45000,1618:85000,1620:85000
+alberta,170,129,4	shop	Capas	4_F_GON,2504:10000,2506:40000
+alberta,170,131,4	shop	Katares	4_M_ACROSS,1251:50000,1253:100000,1255:75000
+alberta,170,133,0	shop	Munições 		755,13200:5,13202:30,13217:10,13216:10,13219:10
+alberta,164,131,0	shop	Flechas 	4_F_JOB_HUNTER,1776:10,1775:10,1774:5,1773:5,1755:50,1750:50,1754:50,1761:50,1752:50,1760:50,1759:50,1757:50,1770:50,1769:50,1765:50,1763:50,1762:50,1767:50,1764:50,1751:50,1768:50,1756:50,1758:50
+prontera,147,170,0	shop	Utilidades 	4_F_JOB_HUNTER,501:-1,502:-1,503:-1,504:-1,506:-1,578:200,505:5000,610:-1,611:-1,522:-1,717:1500,715:1200,716:1200,11515:-1,11516:-1,11519:-1,11522:-1,11523:-1,11524:-1,645:-1,656:-1,657:-1,12341:-1,12392:-1,12393:-1,12394:-1
+
+ 
+alberta,178,141,0	script	Loja Mora	4_M_FAIRYSCHOLAR,{
+function ShopSettings;
+function ValidateCost;
+function CurrencyInfo;
+function ClearData;
+function ValueConvert;
+function ErrorNotice;
+
+set .@moeda,6380;
+mes	"[^FF0000 Loja Mora ^000000]";
+mes	"Olá eu vendo equipamentos por ^FF0000"+getitemname(.@moeda)+".^000000";
+mes "Eu tenho muitos equipamentos aqui!";
+mes "^00FF00____________________________^000000";
+mes "Então, o que você gostaria?";
+next;
+// Menu Selection
+select("Ver itens","Informações","Nada");
+
+ClearData();
+ShopSettings( @menu );
+npcshopitem "Emistry_Shop",512,100;
+npcshopdelitem "Emistry_Shop",512;
+for(set .@i,0; .@i < getarraysize( @ItemLists ); set .@i,.@i+1)
+	npcshopadditem "Emistry_Shop",@ItemLists[.@i],@ItemCost[.@i];
+mes "Tudo bem ... espere um pouco";
+mes "^00FF00____________________________^000000";
+CurrencyInfo( @Currency$ );
+mes "^00FF00____________________________^000000";
+callshop "Emistry_Shop",1;
+npcshopattach "Emistry_Shop";
+end;
+
+
+function	ShopSettings	{
+	switch( getarg(0) ){
+		set .@moeda,6380;
+		case 1:
+			// Currency [ Item ID / Variable Name ]
+			set @Currency$,"6380";
+			// Item ID Lists
+			setarray @ItemLists[0],2475,2574,2476,2575,2577,2477,2578,2478,2479,2580,2480,2581;
+			// Item Price
+			setarray @ItemCost[0],10,10,10,10,10,10,10,10,10,10,10,10;
+			break;
+		case 2:
+			mes	"[^FF0000 Loja Mora ^000000]";
+			mes "Eu sou uma fada de Mora. Eu vendo equipamentos vindos de lá, eu recebo em troca as ^FF0000"+getitemname(.@moeda)+".^000000!";
+			next;
+			mes	"[^FF0000 Loja Mora ^000000]";
+			mes "São equipamentos muito bons!.";
+			next;
+			mes	"[^FF0000 Loja Mora ^000000]";
+			mes	"As ^FF0000"+getitemname(.@moeda)+".^000000 você consegue trocando com o ^FF0000Loja Mora000000.";
+			close;
+			break;
+		case 3:
+				mes "[Loja Mora]";
+				mes "Ok, até mais tarde";
+				close;
+				break;
+		// case 4,5,6.....etc...
+		default:
+			ErrorNotice( "Seleção de Menu inválido para o Menu "+@menu+"." );
+			close;
+	}
+	
+	
+if( @Currency$ == "" )
+	ErrorNotice( "Inválido configuração de moeda no Menu "+@menu+" ." );
+if( getarraysize( @ItemCost ) != getarraysize( @ItemLists ) || getarraysize( @ItemLists ) != getarraysize( @ItemCost ) )
+	ErrorNotice( "Valor ausente ou extra de Item ou Definições de custo no Menu "+@menu+" ." );
+return;
+}
+
+function	ErrorNotice	{
+	mes "^FF0000ERRO^000000 - "+getarg(0);
+	mes "^00FF00____________________________^000000";
+	mes "Informar esta mensagem para ^0000FFStaff^000000 imediatamente !";
+	close;
+}
+
+function	CurrencyInfo	{
+	if( getitemname( atoi( getarg(0) ) ) != "null" ){
+		mes "Moedas item : ^FF0000"+getitemname( atoi( getarg(0) ) )+"^000000";
+		mes "Quantidade Disponível : ^0000FF"+ValueConvert( countitem( atoi( getarg(0) ) ) )+"^000000";
+	}else if( getitemname( atoi( getarg(0) ) ) == "null" ){
+		mes "Variável das Moedas : ^FF0000"+getarg(0)+"^000000";
+		mes "Quantidade Disponível : ^0000FF"+ValueConvert( getd( getarg(0) ) )+"^000000";
+	}
+return;
+}
+
+function	ValidateCost	{
+	if( getitemname( atoi( getarg(0) ) ) != "null" ){
+		if( countitem( atoi( getarg(0) ) ) < getarg(1) ) return 1;
+	}else{
+		if( getd( getarg(0) ) < getarg(1) ) return 1;
+	}
+return 0;
+}
+
+function ClearData	{
+	set @Currency$,"";
+	set @TotalCost,0;
+	deletearray @bought_nameid[0],getarraysize( @bought_nameid );
+	deletearray @bought_quantity[0],getarraysize( @bought_quantity );
+	deletearray @ItemLists[0],getarraysize( @ItemLists );
+	deletearray @ItemCost[0],getarraysize( @ItemCost );
+return;
+}
+
+function	ValueConvert	{
+	set .@num, atoi(""+getarg(0));
+	if ( .@num == 0 || .@num >= 2147483647 ) return getarg(0);
+	set .@l, getstrlen(""+.@num);
+	for ( set .@i,0; .@i < .@l; set .@i, .@i + 1 ) {
+		set .@num$, .@num % pow(10,.@i+1) / pow(10,.@i) + .@num$;
+			if ( (.@i+1) % 3 == 0 && .@i+1 != .@l ) set .@num$, ","+ .@num$;
+	}
+	return .@num$;
+}
+
+OnBuyItem:
+	ShopSettings( @menu );
+	for(set @i,0; @i < getarraysize( @bought_nameid ); set @i,@i+1)
+		for(set @j,0; @j < getarraysize( @ItemLists ); set @j,@j+1)
+			if( @ItemLists[@j] == @bought_nameid[@i] )
+			set @TotalCost,@TotalCost + ( @ItemCost[@j] * @bought_quantity[@i] );
+	mes "^FF0000       LISTA DE COBRANÇA^000000";
+	mes "^00FF00____________________________^000000";
+	for( set @i,0; @i < getarraysize( @bought_nameid ); set @i,@i+1 )
+			mes "^FF0000"+@bought_quantity[@i]+" x ^0000FF"+getitemname( @bought_nameid[@i] )+"^000000";
+	mes "^00FF00____________________________^000000";
+
+	if( getitemname( atoi( @Currency$ ) ) != "null" )
+		mes "Custo Total : ^0000FF"+ValueConvert( @TotalCost )+" x "+getitemname( atoi( @Currency$ ) )+"^000000";
+	else if( getitemname( atoi( @Currency$ ) ) == "null" ){
+		mes "Custo Total : ^0000FF"+ValueConvert( @TotalCost )+" "+@Currency$+"^000000";
+	}
+	
+	mes "^00FF00____________________________^000000";
+	if( ValidateCost( @Currency$,@TotalCost ) ){
+		if( getitemname( atoi( @Currency$ ) ) != "null" )
+			mes "[ ^FF0000X^000000 ] Insuficiente ^0000FF"+getitemname( atoi( @Currency$ ) )+"^000000";
+		else{
+			mes "[ ^FF0000X^000000 ] Insuficiente ^0000FF"+@Currency$+"^000000";
+		}
+	}else{
+		if( select( "^0000FFPurchase^000000:Cancel" ) == 1 ){
+			if( getitemname( atoi( @Currency$ ) ) != "null" )
+				delitem atoi( @Currency$ ),@TotalCost;
+			else{
+				set getd( @Currency$ ),getd( @Currency$ ) - @TotalCost;
+			}
+			for(set @i,0; @i < getarraysize( @bought_nameid ); set @i,@i+1)
+				getitem @bought_nameid[@i],@bought_quantity[@i];
+			message strcharinfo(0),"Purchased "+getarraysize( @bought_nameid )+" Items.";
+			mes "Obrigado pelas compras ^^.";
+		}
+	}
+ClearData();
+close;
+
+} 

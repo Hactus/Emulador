@@ -1,0 +1,24 @@
+-	script	compensador	-1,{
+//ALTER TABLE  `login` ADD  `compensacao` INT( 11 ) NULL DEFAULT NULL ;
+
+OnPCLoginEvent:
+query_sql "SELECT `compensacao` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'", .@compensacao;
+if (.@compensacao == 0){
+mes "[RagnaCrash]";
+mes "Devido aos acontecimentos recentes estamos disponibilizando algumas compensações pela inatividade do servidor.";
+mes "Os motivos da inatividade estão explicitados no nosso fórum, dê uma passadinha por lá para mais informações.";
+mes "As compensações estarão em seu Armazém!";
+mes "^FF0000Relogue antes de conferir seu armazém.^000000";
+close2;
+for(set .@i, 0; .@i < getarraysize(.id_comp); set .@i, .@i+1){
+query_sql "INSERT INTO `storage` (`id`, `account_id`, `nameid`, `amount`, `equip`, `identify`, `refine`, `attribute`, `card0`, `card1`, `card2`, `card3`, `expire_time`, `bound`, `unique_id`) VALUES (NULL, '"+getcharid(3)+"', '"+.id_comp[.@i]+"', '"+.qntd_comp[.@i]+"', '0', '1', '0', '0', '0', '0', '0', '0', '0', '1', '0')";
+}
+query_sql "UPDATE `login` SET `compensacao` = 1 WHERE `account_id` = '"+getcharid(3)+"'";
+}
+else {end;}
+
+OnInit:
+setarray .id_comp[0],13696,12259,12424,12427,12269,12270,12271,14003,13546,13545;
+setarray .qntd_comp[0],4,100,15,15,20,20,100,10,50,50;
+end;
+}

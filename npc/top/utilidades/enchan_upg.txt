@@ -1,0 +1,281 @@
+//===== rAthena Script =======================================
+//= Upgrade Weapon Enchants
+//===== By: ==================================================
+//= Skorm
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= [Official Conversion]
+//= Adds enchantments to Upgrade weapons.
+//===== Additional Comments: =================================
+//= 1.0 First version.
+//= 1.1 Standardizing, grammar and bug fixes. [Euphy]
+//============================================================
+
+// Main NPC :: 201105_luk_enc
+//============================================================
+prontera,107,65,3	script	Mestre Encantador Diabólico#prq	63,{
+	disable_items;
+	if (checkweight(1201,1) == 0) {
+		mes "Você está carregando muitos itens, reduza-o e volte novamente";
+		close;
+	}
+	if (MaxWeight - Weight < 10000) {
+		mes "Você está acima do limite de peso, reduza-o e volte novamente!";
+		close;
+	}
+	mes "[Mestre Encantador Diabólico]";
+	mes "Sim?";
+	mes "Você está me procurando?";
+	next;
+	switch(select("Esta é a primeira vez que vejo você!:Ouvi dizer que você é o melhor!:Por favor, remova o encantamento")) {
+	case 1:
+		mes "[Mestre Encantador Diabólico]";
+		mes "Ha ha ha~ Claro, não sou o tipo de pessoa que simplesmente lida com pessoas.";
+		next;
+		mes "[Mestre Encantador Diabólico]";
+		mes "Incluindo você!! Mesmo que você me ofereça muito dinheiro, não irei simplesmente encantar o seu item!!";
+		next;
+		mes "[Mestre Encantador Diabólico]";
+		mes "Você viu meu título? Muito poucas pessoas têm esse título, e isso não é sem motivo!";
+		next;
+		mes "[Mestre Encantador Diabólico]";
+		mes "Eu só irei encantar seu equipamento se você me trouxer um ^0000ffLivro de Encantamentos^000000!";
+		next;
+		mes "[Mestre Encantador Diabólico]";
+		mes "Se você não fizer isso não irei encantar seu equipamento....";
+		close;
+	case 2:
+		if (!countitem(6484)) {
+			mes "[Mestre Encantador Diabólico]";
+			mes "Você está me ouvindo? Eu só encantarei para você se me trouxer o Livro de Encantamento!";
+			close;
+		}
+		set .@select,1;
+		break;
+	case 3:
+		mes "[Mestre Encantador Diabólico]";
+		if (Zeny < 100000) {
+			mes "Para remover os encantamentos é necessário 100,000 zenys, e aparentemente você não tem essa quantia...";
+			close;
+		}
+		mes "A remoção custará 100,000 zenys, verifique se sua arma está encantada!";
+		next;
+		if (select("Deixe-me pensar sobre isso.:Remova o encantamento agora!") == 1) {
+			mes "[Mestre Encantador Diabólico]";
+			mes "Volte depois de ter confirmado!";
+			close;
+		}
+		set .@select,2;
+		break;
+	}
+	set .@part, EQI_HAND_R;
+
+		mes "[Mestre Encantador Diabólico]";
+	if (!getequipisequiped(.@part)) {
+		mes "Você está tentando remover o equipamento encantado?";
+		close;
+	}
+	setarray .@equip_card[0], getequipcardid(.@part,0), getequipcardid(.@part,1), getequipcardid(.@part,2), getequipcardid(.@part,3);
+	if (!getequipisequiped(.@part)) {
+		mes "É perigoso remover equipamentos durante o processo de encantamento!";
+		close;
+	}
+	set .@equip_id, getequipid(.@part);
+	set .@item$, "|1292|1394|1491|1585|2015|13071|13115|16019|18112|21000|";
+	if (!compare(.@item$,"|"+.@equip_id+"|")) {
+		mes "Eu não posso encantar seu equipamento!";
+		close;
+	}
+
+	if (.@select == 1) {
+		if (!countitem(6484)) {
+			mes "Você está me ouvindo? Eu só encantarei para você se me trouxer o livro de encantamento!";
+			close;
+		}
+		mes "Com qual tipo de efeito você quer encantar?";
+		next;
+		switch(select("Deixe-me pensar sobre isso.:Encantamentos Físicos:Encantamentos Mágicos")) {
+		case 1:
+			mes "[Mestre Encantador Diabólico]";
+			mes "Volte novamente depois que você mudar de idéia!";
+			close;
+		case 2:
+			set .@enc_type,1;
+			break;
+		case 3:
+			set .@enc_type,2;
+			break;
+		}
+		mes "[Mestre Encantador Diabólico]";
+		if (.@equip_card[3]) {
+			mes "Este equipamento já está encantado! Você precisa remover o encantamento atual antes de querer encantar novamente.";
+			close;
+		}
+		mes "O processo de encantamento pode falhar, e se falhar ^ff0000reduzirá o nível de refinamento^000000, mas o item não será quebrado, nem as cartas nele equipada! Você tem certeza que quer continuar?";
+		next;
+		if (select("Outra hora...:Vamos lá!") == 1) {
+			mes "[Mestre Encantador Diabólico]";
+			mes "Volte novamente depois de ter decidido!";
+			close;
+		}
+		if (.@equip_card[3]) {
+			mes "[Mestre Encantador Diabólico]";
+			mes "Parece que há um problema, deixe-me dar uma olhada.";
+			close;
+		}
+
+		if (.@enc_type == 1) { // Physical Series
+			set .@i, rand(1,1300);
+			     if (.@i < 51)    set .@enchant,4734; //Agility5
+			else if (.@i < 76)    set .@enchant,4735; //Agility6
+			else if (.@i < 88)    set .@enchant,4736; //Agility7
+			else if (.@i < 93)    set .@enchant,4737; //Agility8
+			else if (.@i < 95)    set .@enchant,4738; //Agility9
+			else if (.@i < 96)    set .@enchant,4739; //Agility10
+			else if (.@i < 146)   set .@enchant,4724; //Dexterity5
+			else if (.@i < 171)   set .@enchant,4725; //Dexterity6
+			else if (.@i < 183)   set .@enchant,4726; //Dexterity7
+			else if (.@i < 188)   set .@enchant,4727; //Dexterity8
+			else if (.@i < 190)   set .@enchant,4728; //Dexterity9
+			else if (.@i < 191)   set .@enchant,4729; //Dexterity10
+			else if (.@i < 291)   set .@enchant,4704; //Strength5
+			else if (.@i < 341)   set .@enchant,4705; //Strength6
+			else if (.@i < 366)   set .@enchant,4706; //Strength7
+			else if (.@i < 378)   set .@enchant,4707; //Strength8
+			else if (.@i < 383)   set .@enchant,4708; //Strength9
+			else if (.@i < 384)   set .@enchant,4709; //Strength10
+			else if (.@i < 434)   set .@enchant,4754; //Luck5
+			else if (.@i < 459)   set .@enchant,4755; //Luck6
+			else if (.@i < 471)   set .@enchant,4756; //Luck7
+			else if (.@i < 476)   set .@enchant,4757; //Luck8
+			else if (.@i < 478)   set .@enchant,4758; //Luck9
+			else if (.@i < 479)   set .@enchant,4759; //Luck10
+			else if (.@i < 679)   set .@enchant,4744; //Vitality5
+			else if (.@i < 779)   set .@enchant,4745; //Vitality6
+			else if (.@i < 829)   set .@enchant,4746; //Vitality7
+			else if (.@i < 854)   set .@enchant,4747; //Vitality8
+			else if (.@i < 866)   set .@enchant,4748; //Vitality9
+			else if (.@i < 867)   set .@enchant,4749; //Vitality10
+			else if (.@i < 967)   set .@enchant,4808; //Fighting_Spirit4
+			else if (.@i < 992)   set .@enchant,4820; //Fighting_Spirit5
+			else if (.@i < 1092)  set .@enchant,4835; //Expert_Archer4
+			else if (.@i < 1117)  set .@enchant,4836; //Expert_Archer5
+			else if (.@i < 1217)  set .@enchant,4835; //Expert_Archer4
+			else if (.@i < 1242)  set .@enchant,4836; //Expert_Archer5
+			else set .@enchant,0;
+		} else if (.@enc_type == 2) { // Magical Series
+			set .@i, rand(1,1200);
+			     if (.@i < 51)    set .@enchant,4714; //Inteligence5
+			else if (.@i < 76)    set .@enchant,4715; //Inteligence6
+			else if (.@i < 88)    set .@enchant,4716; //Inteligence7
+			else if (.@i < 93)    set .@enchant,4717; //Inteligence8
+			else if (.@i < 95)    set .@enchant,4718; //Inteligence9
+			else if (.@i < 96)    set .@enchant,4719; //Inteligence10
+			else if (.@i < 146)   set .@enchant,4724; //Dexterity5
+			else if (.@i < 171)   set .@enchant,4725; //Dexterity6
+			else if (.@i < 183)   set .@enchant,4726; //Dexterity7
+			else if (.@i < 188)   set .@enchant,4727; //Dexterity8
+			else if (.@i < 190)   set .@enchant,4728; //Dexterity9
+			else if (.@i < 191)   set .@enchant,4729; //Dexterity10
+			else if (.@i < 291)   set .@enchant,4734; //Agility5
+			else if (.@i < 341)   set .@enchant,4735; //Agility6
+			else if (.@i < 366)   set .@enchant,4736; //Agility7
+			else if (.@i < 378)   set .@enchant,4737; //Agility8
+			else if (.@i < 383)   set .@enchant,4738; //Agility9
+			else if (.@i < 384)   set .@enchant,4739; //Agility10
+			else if (.@i < 484)   set .@enchant,4754; //Luck5
+			else if (.@i < 534)   set .@enchant,4755; //Luck6
+			else if (.@i < 559)   set .@enchant,4756; //Luck7
+			else if (.@i < 571)   set .@enchant,4757; //Luck8
+			else if (.@i < 576)   set .@enchant,4758; //Luck9
+			else if (.@i < 577)   set .@enchant,4759; //Luck10
+			else if (.@i < 777)   set .@enchant,4744; //Vitality5
+			else if (.@i < 877)   set .@enchant,4745; //Vitality6
+			else if (.@i < 927)   set .@enchant,4746; //Vitality7
+			else if (.@i < 952)   set .@enchant,4747; //Vitality8
+			else if (.@i < 964)   set .@enchant,4748; //Vitality9
+			else if (.@i < 969)   set .@enchant,4749; //Vitality10
+			else if (.@i < 1069)  set .@enchant,4812; //Spell4
+			else if (.@i < 1094)  set .@enchant,4826; //Spell5
+			else if (.@i < 1119)  set .@enchant,4761; //Matk2
+			else if (.@i < 1124)  set .@enchant,4806; //Matk3
+			else set .@enchant,0;
+		} else {
+			mes "[Mestre Encantador Diabólico]";
+			mes "Hmm! Este item está tendo um problema, por favor, verifique novamente!";
+			close;
+		}
+		mes "[Mestre Encantador Diabólico]";
+		if (.@equip_card[3]) {
+			mes "Este item foi encantado!";
+			close;
+		}
+		if (!countitem(6484)) {
+			mes "Você está me ouvindo? Eu só farei por você se você trouxer o Livro de Encantamento!";
+			close;
+		}
+		set .@equip_refine, getequiprefinerycnt(.@part);
+		if (.@enchant == 0) {
+			specialeffect EF_SHIELDCHARGE;
+			mes "Ah! Inacreditável!! Falhou!! Por favor, tente novamente!";
+			set .@lost_refine, rand(0,.@equip_refine);
+			set .@equip_refine, .@equip_refine - .@lost_refine;
+		} else {
+			specialeffect EF_REPAIRWEAPON;
+			mes "O slot ^9900004^000000 foi encantado!";
+		}
+		delitem 6484,1; //Enchant_Book
+
+		// anti-hack
+		if (callfunc("F_IsEquipIDHack", .@part, .@equip_id) ||
+		    callfunc("F_IsEquipCardHack", .@part, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3]))
+			close;
+
+		delequip .@part;
+
+//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] .@enchant
+		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@enchant;
+
+		if (.@lost_refine) {
+			next;
+			mes "[Mestre Encantador Diabólico]";
+			mes "A falha resultou na redução do refinamento por "+callfunc("F_InsertPlural",.@lost_refine,"level")+"! Não fique deprimido!";
+		}
+		close;
+	} else if (.@select == 2) {
+		if (Zeny < 100000) {
+			mes "Você precisa trazer 100,000 zenys para remover o encantamento!!";
+			close;
+		}
+		if (.@equip_card[3] < 4700) { // Armor Enchant System
+			mes "Este item não está encantado!";
+			close;
+		}
+		if (!getequipisequiped(.@part)) {
+			mes "Você está desequipado agora?";
+			close;
+		}
+		specialeffect EF_REPAIRWEAPON;
+		mes "Removi os efeitos de encantamento.";
+		set Zeny, Zeny - 100000;
+
+		// anti-hack
+		if (callfunc("F_IsEquipIDHack", .@part, .@equip_id) ||
+		    callfunc("F_IsEquipCardHack", .@part, .@equip_card[0], .@equip_card[1], .@equip_card[2], .@equip_card[3]))
+			close;
+
+		set .@equip_refine, getequiprefinerycnt(.@part);
+		delequip .@part;
+
+//		GetNonSlotItemSock2 .@equip_refine .@equip_id .@equip_card[0] .@equip_card[1] .@equip_card[2] 0
+		getitem2 .@equip_id,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],0;
+
+		close;
+	} else {
+		mes "Parece que você escolheu o trabalho errado??";
+		close;
+	}
+}

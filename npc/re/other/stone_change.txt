@@ -1,0 +1,67 @@
+//===== Venus Script =========================================
+//= Trocador de Pedra
+//===== Por: =================================================
+//= Euphy / skb_ (CreativeSD Translation)
+//===== Versão atual: ========================================
+//= 1.1
+//===== Compatível com: ======================================
+//= rAthena Project / Venus-Emulator
+//===== Descrição: ===========================================
+//= [Official Conversion]
+//= Organizes ores in a player's inventory.
+//===== Comentários Adicionais: ==============================
+//= 1.0 First version.
+//= 1.1 Clean-up. [Capuche]
+//============================================================
+
+// Main NPC :: stonechange
+//============================================================
+geffen_in,99,174,5	script	Verificadora de Minério#sorty	8_F_GIRL,{
+	mes "[Verificadora de Minério Sorty]";
+	mes "Você tem ^3131FFalgum tipo de minério no seu inventário^000000 que ocupa muitos espaços?";
+	mes "Eu posso distinguir seus minérios e organizá-los imediatamente~!";
+	next;
+	switch(select("Refine meus Minérios.:Cancelar.")) {
+	case 1:
+		mes "[Verificadora de Minério Sorty]";
+		mes "No momento eu só posso distinguir ^FF0000Aço^000000, ^FF0000Ferro^000000, ^FF0000Minério de Ferro^000000, e ^FF0000Minério de Oridecon^000000 e organizá-los.";
+		mes "Por favor, note que ^3131FFque outros itens são incapazes^000000!";
+		next;
+		mes "[Verificadora de Minério Sorty]";
+		mes "Então, você gostaria que eu organizasse seus minérios?";
+		next;
+		.@i = select("Aço, por favor.:Ferro, por favor.:Minério de Ferro, por favor.:Minério de 984, por favor.:Não, obrigado.");
+		if (.@i == 5) {
+			mes "[Verificadora de Minério Sorty]";
+			mes "Huh, eu realmente odeio pessoas bagunçadas!";
+			close;
+		}
+		setarray .@ores[0],999,998,1002,756;
+		.@item = .@ores[.@i-1];
+		if (countitem(.@item) == 0) {
+			mes "[Verificadora de Minério Sorty]";
+			mes "Você não tem nenhum "+getitemname(.@item)+"...";
+			close;
+		}
+		// while(1) {
+			// if (countitem(.@item)) {
+				// set .@count, countitem(.@item);
+				// set .@total, .@total + .@count;
+				// delitem .@item, .@count;
+			// } else {
+				// getitem .@item, .@total;
+				// break;
+			// }
+		// }
+		.@count = countitem(.@item);
+		delitem .@item, .@count;
+		getitem .@item, .@count;
+		mes "[Verificadora de Minério Sorty]";
+		mes "Está feito. Parece ótimo! Você não acha?";
+		close;
+	case 2:
+		mes "[Verificadora de Minério Sorty]";
+		mes "Parece que sua bolsa está limpa? Huhu! Você pode ser o mestre da limpeza!";
+		close;
+	}
+}

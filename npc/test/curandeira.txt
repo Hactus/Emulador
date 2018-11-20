@@ -1,0 +1,265 @@
+prontera,158,192,4	script	Curandeira	936,10,10,{
+	if (@heal_cooldown >= gettimetick(2)) {
+		if (@heal_cooldown - gettimetick(2) > 2) {
+			@heal_cooldown = 0;
+		}
+		end;
+	}
+	callfunc "F_Healer";
+	//Final do script: Adiciona 3 segundos de cooldown na curandeira.
+	percentheal 100,100; 
+	specialeffect2 313;
+	@heal_cooldown = (gettimetick(2) + 2);
+	end;
+
+OnInit:
+	bindatcmd "buffs",strnpcinfo(0) + "::OnAtcommand";
+	setarray $@variable[0],1,1,1;
+	
+	setarray $@negativos[0],SC_DPOISON,SC_HALLUCINATION,SC_BLIND,SC_SILENCE,SC_CONFUSION,SC_CURSE,SC_DECREASEAGI,SC_STRIPWEAPON,SC_STRIPSHIELD,SC_STRIPARMOR,SC_STRIPHELM,SC_HARMONIZE,SC_QUAGMIRE;
+	//Skills de Sacerdote
+	setarray $@sacerdote[0],	SC_BLESSING,3600000,10,
+								SC_INCREASEAGI,3600000,10,
+								SC_ANGELUS,3600000,10,
+								SC_MAGNIFICAT,3600000,5,
+								SC_GLORIA,3600000,5,
+								SC_IMPOSITIO,3600000,10;
+	//Comidas +10
+	setarray $@comidasTen[0],	SC_STRFOOD,3600000,10,
+								SC_AGIFOOD,3600000,10,
+								SC_VITFOOD,3600000,10,
+								SC_INTFOOD,3600000,10,
+								SC_DEXFOOD,3600000,10,
+								SC_LUKFOOD,3600000,10;
+	//Comidas +20
+	setarray $@comidasTwenty[0],SC_SAVAGE_STEAK,3600000,20,
+								SC_DROCERA_HERB_STEAMED,3600000,20,
+								SC_MINOR_BBQ,3600000,20,
+								SC_COCKTAIL_WARG_BLOOD,3600000,20,
+								SC_SIROMA_ICE_TEA,3600000,20,
+								SC_PUTTI_TAILS_NOODLES,3600000,20;
+	end;
+	
+OnAtcommand:
+	if (@buffs_cooldown >= gettimetick(2)) {
+		dispbottom "Espere " + (@buffs_cooldown - gettimetick(2)) + " segundos para utilizar esse comando novamente.";
+		if (@buffs_cooldown - gettimetick(2) > 31) {
+			@buffs_cooldown = 0;
+		}
+		end;
+	}
+	@buffs_cooldown = (gettimetick(2) + 30);
+	callfunc "F_Healer";
+	
+	end;
+}
+
+function	script	F_Healer	{
+	while (getbrokenid(1))
+		repair(1);
+	//Remove todos os status negativos.
+	for(.@i = 0; .@i < getarraysize($@negativos); ++.@i)
+		sc_end $@negativos[.@i];
+	
+	if ($@variable[0])
+		for (.@i = 0; .@i < getarraysize($@sacerdote); .@i += 3)
+			sc_start($@sacerdote[.@i], $@sacerdote[.@i + 1], $@sacerdote[.@i + 2]);
+		
+	if ($@variable[1])
+		for (.@i = 0; .@i < getarraysize($@comidasTen); .@i += 3)
+			sc_start($@comidasTen[.@i], $@comidasTen[.@i + 1], $@comidasTen[.@i + 2]);
+		
+	if ($@variable[2])
+		for (.@i = 0; .@i < getarraysize($@comidasTwenty); .@i += 3)
+			sc_start($@comidasTwenty[.@i], $@comidasTwenty[.@i + 1], $@comidasTwenty[.@i + 2]);
+	return;
+}
+
+/*
+//BASICOS
+	for(.@i = 0; .@i<getarraysize(.basicos); .@i++)
+		sc_start .basicos[.@i], .basicos_time[.@i], .basicos_nivel[.@i];
+//REPARA EQUIPES
+	while (getbrokenid(1)) repair(1);
+//BONUS VIP NV_4
+	function chekskill;
+	switch (BaseClass) {
+		case Job_Swordman:	
+			chekskill( "SM_ENDURE", SC_ENDURE ); break;
+		case Job_Mage:
+			chekskill( "MG_ENERGYCOAT", SC_ENERGYCOAT ); break;
+		case Job_Archer:
+			chekskill( "AC_CONCENTRATION", SC_CONCENTRATE ); break;
+		//case Job_Acolyte:
+		case Job_Merchant:
+			chekskill( "MC_LOUD", SC_LOUD ); break;
+		//case Job_Thief:
+		}
+		
+	switch (BaseJob) {
+		case Job_Knight:
+			chekskill( "LK_AURABLADE", SC_AURABLADE ); break;	
+		case Job_Priest:
+			chekskill( "PR_KYRIE", SC_KYRIE );
+			chekskill( "PR_SLOWPOISON", SC_SLOWPOISON ); break;
+		case Job_Wizard:
+			chekskill( "WZ_SIGHTBLASTER", SC_SIGHTBLASTER ); break;
+		case Job_Blacksmith:
+			chekskill( "WS_OVERTHRUSTMAX", SC_MAXOVERTHRUST );
+			chekskill( "BS_WEAPONPERFECT", SC_WEAPONPERFECTION );
+			chekskill( "WS_MELTDOWN", SC_MELTDOWN ); break;		
+		case Job_Hunter:
+			chekskill( "SN_WINDWALK", SC_WINDWALK );
+			chekskill( "SN_SIGHT", SC_TRUESIGHT ); break;			
+		case Job_Assassin:
+			chekskill( "AS_POISONREACT", SC_POISONREACT );
+			chekskill( "ASC_EDP", SC_EDP ); break;
+		//case Job_Crusader:
+		case Job_Monk:
+			if (getskilllv ("MO_CALLSPIRITS")) {
+			atcommand "@spiritball 5";
+			}
+			chekskill( "MO_EXPLOSIONSPIRITS", SC_EXPLOSIONSPIRITS ); break;
+		case Job_Sage:
+			chekskill( "PF_DOUBLECASTING", SC_DOUBLECAST );
+			chekskill( "PF_MEMORIZE", SC_MEMORIZE ); break;			
+		case Job_Rogue:
+			chekskill( "ST_REJECTSWORD", SC_REJECTSWORD );
+			chekskill( "ST_PRESERVE", SC_PRESERVE ); break;
+		case Job_Alchemist:
+			chekskill( "AM_CP_WEAPON", SC_CP_WEAPON );
+			chekskill( "AM_CP_SHIELD", SC_CP_SHIELD );
+			chekskill( "AM_CP_ARMOR", SC_CP_ARMOR );
+			chekskill( "AM_CP_HELM", SC_CP_HELM ); break;	
+		//case Job_Bard:	
+		//case Job_Dancer:
+		}
+
+	.@eac = eaclass();
+	if( .@eac&EAJL_THIRD ) {
+		switch(BaseJob) {
+			case Job_Knight:
+				chekskill( "RK_ENCHANTBLADE", SC_ENCHANTBLADE ); break;
+			case Job_Wizard:
+				chekskill( "WL_RECOGNIZEDSPELL", SC_RECOGNIZEDSPELL ); break;
+			//case Job_Hunter:
+			case Job_Priest:
+				chekskill( "AB_RENOVATIO", SC_RENOVATIO );
+				chekskill( "AB_DUPLELIGHT", SC_DUPLELIGHT );
+				chekskill( "AB_SECRAMENT", SC_SECRAMENT );
+				chekskill( "AB_EXPIATIO", SC_EXPIATIO );
+				/* MeSMa SC_
+				chekskill( "AB_PRAEFATIO", SC_KYRIE );
+				chekskill( "AB_CLEMENTIA", SC_BLESSING );
+				chekskill( "AB_CANTO", SC_INCREASEAGI ); break;
+			//case Job_Blacksmith:
+			//case Job_Assassin:
+			case Job_Crusader:
+				chekskill( "LG_FORCEOFVANGUARD", SC_FORCEOFVANGUARD ); break;
+			//case Job_Sage:
+			case Job_Bard:
+				chekskill( "WM_FRIGG_SONG", SC_FRIGG_SONG );
+				chekskill( "MI_ECHOSONG", SC_ECHOSONG ); break;
+			case Job_Dancer:
+				chekskill( "WM_FRIGG_SONG", SC_FRIGG_SONG );
+				chekskill( "WA_SYMPHONY_OF_LOVER", SC_SYMPHONYOFLOVER ); break;
+			case Job_Monk:
+				chekskill( "SR_RAISINGDRAGON", SC_RAISINGDRAGON );
+				chekskill( "SR_GENTLETOUCH_REVITALIZE", SC_GT_REVITALIZE ); break;
+				/*PQP
+				addspiritball 5+(getskilllv("SR_RAISINGDRAGON")),600000;
+				
+			case Job_Alchemist:
+				 if (checkcart()){
+				chekskill( "GN_CARTBOOST", SC_GN_CARTBOOST ); break;
+				}
+			case Job_Rogue:
+				chekskill( "SC_DEADLYINFECT", SC__DEADLYINFECT ); break;
+		}
+	}
+				emotion e_awsm; specialeffect2 500;
+//BONUS VIP NV_8
+	//BUFFS DE ARCEBISPOS
+	sc_start SC_RENOVATIO,35000,1;
+	sc_start SC_SECRAMENT,180000,5;
+	//BUFFS DE SHURA 
+	sc_start SC_GT_REVITALIZE,240000,5;
+	//COAT
+	sc_start SC_CP_WEAPON,600000,5;
+	sc_start SC_CP_SHIELD,600000,5;
+	sc_start SC_CP_ARMOR,600000,5;
+	sc_start SC_CP_HELM,600000,5;
+//BONUS VIP NV_12
+	//ITENS								
+		sc_start SC_STRFOOD,1800000,15; sc_start SC_INCATKRATE,600000,111;//sc_start SC_INCATKRATE,600000,rand(11,111); //Palitos de Laranja ID = 14616
+		sc_start SC_AGIFOOD,1800000,15; sc_start SC_FLEEFOOD,600000,33;//sc_start SC_FLEEFOOD,600000,rand(11,33); //Palitos de Baunilha ID = 14618
+		sc_start SC_VITFOOD,1800000,15; sc_start SC_INCDEFRATE,600000,33;//sc_start SC_INCDEFRATE,600000,rand(11,33); //Palitos de Chocolate ID = 14617
+		sc_start SC_INTFOOD,1800000,15; sc_start SC_INCMATKRATE,600000,111;//sc_start SC_INCMATKRATE,600000,rand(11,111); //Palitos de Cassis ID = 14619
+		sc_start SC_DEXFOOD,1800000,15; sc_start SC_HITFOOD,600000,33;//sc_start SC_HITFOOD,600000,rand(11,33); //Palitos de Limão ID = 14620
+		sc_start SC_LUKFOOD,1800000,15; sc_start SC_CRIFOOD,600000,33;//sc_start SC_CRIFOOD,600000,rand(11,33); //Palitos de Morango ID = 14621
+		sc_start SC_INCMHPRATE,36000000,5; //Pílula de HP - ID = 12274
+		sc_start SC_INCMSPRATE,36000000,5; //Pílula de SP - ID = 12275
+		sc_start2 SC_PROMOTE_HEALTH_RESERCH,500000,1,3; //Poção Grande de HP - ID = 12424
+		sc_start2 SC_ENERGY_DRINK_RESERCH,500000,1,3; //Poção Grande de SP ID = 12427
+		sc_start SC_ATTHASTE_CASH,900000,3; //Poção de Ouro ID = 12684
+		sc_start SC_EXTRACT_SALAMINE_JUICE,500000,10; //Suco Celular Enriquecido ID = 12437
+		/*CHECAR CLASSES
+		sc_start SC_ASPDPOTION0,1800000,4; //Poção da Concentração ID = 645
+		sc_start SC_ASPDPOTION1,1800000,6; //Poção do Despertar ID = 656 
+		sc_start SC_ASPDPOTION2,1800000,9; //Poção da Fúria Selvagem ID = 657
+		
+		sc_start SC_SPEEDUP1,5000,50; //Poção do Vento ID = 12016
+		sc_start SC_INCHEALRATE,1800000,20; //Poção de Regeneração ID = 14537
+		sc_start SC_EXTRACT_WHITE_POTION_Z,500000,20; //Poção Branca Especial ID = 12428
+		sc_start SC_VITATA_500,500000,0; //Poção Vitata 500 ID = 12436
+		sc_start SC_DEF_RATE,180000,3; //Poção Maior de Defesa ID = 14542
+		sc_start SC_MDEF_RATE,180000,3; //Poção Maior de Defesa Mágica ID = 14544
+		sc_start SC_ATKPOTION,300000,20; sc_start SC_MATKPOTION,300000,20; sc_start SC_HITFOOD,300000,30; sc_start SC_FLEEFOOD,300000,30; //Bênção de Tyr ID = 14601
+	//ESPIRITO		
+		switch ( basejob ) {
+			case Job_Alchemist:	set .@spirit, 445; break;
+			case Job_Monk:	 set .@spirit, 447; break;
+			case Job_Star_Gladiator:  set .@spirit, 448; break;
+			case Job_Sage:	 set .@spirit, 449; break;
+			case Job_Crusader:	set .@spirit, 450; break;
+			case Job_SuperNovice:   set .@spirit, 451; break;
+			case Job_Knight:	set .@spirit, 452; break;
+			case Job_Wizard:	set .@spirit, 453; break;
+			case Job_Priest:	set .@spirit, 454; break;
+			case Job_Bard: case Job_Dancer: set .@spirit, 455; break;
+			case Job_Rogue:	 set .@spirit, 456; break;
+			case Job_Assassin:	set .@spirit, 457; break;
+			case Job_Blacksmith:   set .@spirit, 458; break;
+			case Job_Hunter:	set .@spirit, 460; break;
+			case Job_Soul_Linker:   set .@spirit, 461; break;
+			default:
+			if ( upper == 1 && baselevel < 70 )
+				set .@spirit, 494;
+			}
+			if ( .@spirit ) {
+				sc_start4 sc_spirit, 360000, 5, .@spirit,0,0;
+			}
+			
+			specialeffect2 363;
+	
+//FUNCTION CHEKSKILL
+function	chekskill	{
+	if(getskilllv(getarg(0))) {
+		sc_start getarg(1),0,(getskilllv(getarg(0)));
+	}
+	return;
+}
+//CURA	
+	percentheal 100,100; 
+	specialeffect2 313; 
+	@.@heal_cooldown = gettimetick(2); 
+	end;
+
+	
+OnInit:
+	
+	setarray .basicos[0],SC_BLESSING,SC_INCREASEAGI,SC_ANGELUS,SC_MAGNIFICAT,SC_GLORIA,SC_IMPOSITIO,SC_STRFOOD,SC_AGIFOOD,SC_VITFOOD,SC_INTFOOD,SC_DEXFOOD,SC_LUKFOOD,SC_SAVAGE_STEAK,SC_DROCERA_HERB_STEAMED,SC_MINOR_BBQ,SC_COCKTAIL_WARG_BLOOD,SC_SIROMA_ICE_TEA,SC_PUTTI_TAILS_NOODLES;
+	setarray .basicos_time[0],240000,240000,300000,90000,30000,60000,600000,600000,600000,600000,600000,600000,300000,300000,300000,300000,300000,300000;
+	setarray .basicos_nivel[0],10,10,10,5,5,5,10,10,10,10,10,10,20,20,20,20,20,20;
+
+}

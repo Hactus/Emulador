@@ -1,0 +1,3756 @@
+function	script	F_EncSelItem	{
+	
+	setarray .@equip_pos[0],EQI_HEAD_TOP,EQI_HEAD_MID,EQI_HEAD_LOW,EQI_ARMOR,EQI_HAND_R,EQI_HAND_L,EQI_GARMENT,EQI_SHOES,EQI_ACC_R,EQI_ACC_L;
+	setarray .@func_name$[0],"F_EncHeadtop","F_EncHeadmid","F_EncHeadlow","F_EncArmor","F_EncWeapon","F_EncShield","F_EncGarment","F_EncShoes","F_EncAcc";
+	setarray .@equip_tipo$[0],"Cima","Centro","Baixo","Vestimenta","Arma","Escudo","Capa","Sapatos","Acessório 1","Acessório 2";
+	
+	set .@menu$,"";
+	for ( .@i = 0; .@i<=getarraysize( .@equip_pos ); .@i++ ) {
+		//Se tiver algo equipado...
+		if ( getequipisequiped( .@equip_pos[.@i] ) ) {
+			.@id = getequipid( .@equip_pos[.@i] );
+			
+			//Se for EQI_ACC_L, utilizar a mesma função de EQI_ACC_R
+			if ( .@equip_pos[.@i] == EQI_ACC_L )
+				set .@func_name$[.@i], .@func_name$[.@i-1];
+			
+			//Se tiver Arma equipada em EQI_HAND_L, utilizar a função de EQI_HAND_R
+			if ( .@equip_pos[.@i] == EQI_HAND_L ) {
+				if ( getiteminfo(.@id,5) == 2 || getiteminfo(.@id,5) == 34 )
+					.@func_name$[.@i] = .@func_name$[.@i-1];
+			}
+			
+			if ( !callfunc( .@func_name$[.@i] , .@id, .@i ) ) {
+				.@enc_bit[.@i] = 1;
+				.@menu$ = .@menu$ + "^FF0000";
+			} else {
+				.@menu$ = .@menu$ + "^009900";
+			}
+			.@menu$ = .@menu$ + getitemname(.@id) + "^000000";
+		}
+		//Se não tiver algo equipado...
+		else {
+			.@menu$ = .@menu$ + "^777777" + .@equip_tipo$[.@i] + "- [Vazio]" + "^000000";
+			.@enc_bit[.@i] = 2;
+		}
+		
+		.@menu$ = .@menu$ + ":";
+	}
+	
+	.@sel_type = select( .@menu$ ) - 1;
+	
+	mes @nome$;
+	
+		 if ( .@enc_bit[.@sel_type] == 1 ) { mes "Desculpe, este equipamento não é encantável."; close; }
+	else if ( .@enc_bit[.@sel_type] == 2 ) { mes "Desculpe, você não selecionou nenhum equipamento."; close; }
+	
+	@parte = .@equip_pos[.@sel_type];
+	.@refine = getequiprefinerycnt(@parte);
+	@equip_id = getequipid( @parte );
+	setarray @carta[0], getequipcardid( @parte,0 ),getequipcardid( @parte,1 ),getequipcardid( @parte,2 ),getequipcardid( @parte,3 );
+	
+	mes "Bom, e o que você deseja fazer com "+getequipname( @parte )+"?";
+	next;
+	disable_command;
+	switch( @enc_type[.@sel_type] ) {
+		case 1: //Aprendiz de Encantamento
+			callfunc "F_AprDeEnc";	break;
+		case 2: //Armas Aprimoradas
+			callfunc "F_ArmasUpg";	break;
+		case 3: //Arcanjo
+			callfunc "F_Arcanjo";	break;
+		case 4: //Arcanjo Caído
+			callfunc "F_FallenAW";	break;
+		case 5: //Botas Temporais
+			callfunc "F_Temporais";	break;
+		case 6: //Natal
+			callfunc "F_ItemNatal";	break;
+		case 7: //Mora
+			callfunc "F_EquipMora";	break;
+		case 8: //Malangdo
+			callfunc "F_Malangdo";	break;
+		case 9: //Éden
+			callfunc "F_EquipEden";	break;
+		case 10: //Not in use
+			callfunc "F_Felino";	break;
+		case 11: //Not in use
+			callfunc "F_ItemAfago";	break;
+		case 12: //Biológico
+			callfunc "F_Biologico"; break;
+		case 13: //Ninja
+			callfunc "F_ItemNinja"; break;
+		case 14: //ROPs
+			callfunc "F_EquipROPs"; break;
+		case 15: //Anel do Herói
+			callfunc "F_AnelHeroi";	break;
+		case 16: //Operação Sucata
+			callfunc "F_Sucata";	break;
+		case 17: //Custom - Covil de Vermes
+			callfunc "F_Faceworm";	break;
+		case 18: //Rock Ridge
+			callfunc "F_RockRidge",.@refine; break;
+		case 19: //Verus
+			callfunc "F_Verus",.@refine; break;
+		case 20: //Royal Banquet
+			callfunc "F_RoyalBanquet",.@refine; break;
+	}
+	callfunc "F_EncGetItem";
+	return;
+}
+
+
+
+function	script	F_EncGetItem	{
+	if (callfunc("F_IsEquipIDHack", @parte, @equip_id) ) {
+		mes @nome$;
+		emotion ET_FRET;
+		mes "Espere um pouco...";
+		mes "O que você pensa que sou?";
+		mes "Você trocou de item enquanto eu não estava olhando! Dê o fora";
+		close2;
+		end;
+	}
+	.@cardcnt = getiteminfo(@equip_id,10);
+	
+	if (@tipo) {
+		for (.@i=4; .@i>.@cardcnt; .@i--)
+			@carta[.@i-1] = 0;
+	}
+	
+	specialeffect2 EF_REPAIRWEAPON;
+	.@refino = getequiprefinerycnt( @parte );
+	delequip @parte;
+	getitem2 @equip_id,1,1,.@refino,0,@carta[0],@carta[1],@carta[2],@carta[3];
+	return;
+}
+
+function	script	F_AprDeEnc	{
+	if ( select( (@carta[3] == 0)?"Encantar":"",(@carta[3] != 0)?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( "Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) {
+		case 1:
+			switch( select( "FOR +3","FOR +2","FOR +1" ) ) {
+				case 1:
+					set @encanto, 4702; break;
+				case 2:
+					set @encanto, 4701; break;
+				case 3:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 2:
+			switch( select( "AGI +3","AGI +2","AGI +1" ) ) {
+				case 1:
+					set @encanto, 4732; break;
+				case 2:
+					set @encanto, 4731; break;
+				case 3:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 3:
+			switch( select( "VIT +3","VIT +2","VIT +1" ) ) {
+				case 1:
+					set @encanto, 4742; break;
+				case 2:
+					set @encanto, 4741; break;
+				case 3:
+					set @encanto, 4740; break;
+			}
+			break;
+		case 4:
+			switch( select( "INT +3","INT +2","INT +1" ) ) {
+				case 1:
+					set @encanto, 4712; break;
+				case 2:
+					set @encanto, 4711; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 5:
+			switch( select( "DES +3","DES +2","DES +1" ) ) {
+				case 1:
+					set @encanto, 4722; break;
+				case 2:
+					set @encanto, 4721; break;
+				case 3:
+					set @encanto, 4720; break;
+			}
+			break;
+		case 6:
+			switch( select( "SOR +3","SOR +2","SOR +1" ) ) {
+				case 1:
+					set @encanto, 4752; break;
+				case 2:
+					set @encanto, 4751; break;
+				case 3:
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[3] = @encanto;
+	return;
+}
+
+function	script	F_ArmasUpg	{
+	if ( select( (@carta[3] == 0)?"Encantar":"",(@carta[3] != 0)?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( "Espírito do Lutador","Pedra da Conjuração","Pedra de Crítico","Pedra da Mira Apurada","Pedra de Encantamento","Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) {
+		case 1:
+			switch( select( "Espírito do Lutador 5","Espírito do Lutador 4" ) ) {
+				case 1:
+					set @encanto, 4820; break;
+				case 2:
+					set @encanto, 4808; break;
+			}
+			break;
+		case 2:
+			switch( select( "Pedra da Conjuração 3","Pedra da Conjuração 2","Pedra da Conjuração 1" ) ) {
+				case 1:
+					set @encanto, 4806; break;
+				case 2:
+					set @encanto, 4761; break;
+				case 3:
+					set @encanto, 4760; break;
+			}
+			break;
+		case 3:
+			switch( select( "Pedra de Crítico 5","Pedra de Crítico 4" ) ) {
+				case 1:
+					set @encanto, 4844; break;
+				case 2:
+					set @encanto, 4843; break;
+			}
+			break;
+		case 4:
+			switch( select( "Pedra da Mira Apurada 5","Pedra da Mira Apurada 4" ) ) {
+				case 1:
+					set @encanto, 4836; break;
+				case 2:
+					set @encanto, 4835; break;
+			}
+			break;
+		case 5:
+			switch( select( "Pedra de Encantamento 5","Pedra de Encantamento 4" ) ) {
+				case 1:
+					set @encanto, 4826; break;
+				case 2:
+					set @encanto, 4812; break;
+			}
+			break;
+		case 6:
+			switch( select( "FOR +10","FOR +9","FOR +8","FOR +7","FOR +6","FOR +5" ) ) {
+				case 1:
+					set @encanto, 4709; break;
+				case 2:
+					set @encanto, 4708; break;
+				case 3:
+					set @encanto, 4707; break;
+				case 4:
+					set @encanto, 4706; break;
+				case 5:
+					set @encanto, 4705; break;
+				case 6:
+					set @encanto, 4704; break;
+			}
+			break;
+		case 7:
+			switch( select( "AGI +10","AGI +9","AGI +8","AGI +7","AGI +6","AGI +5" ) ) {
+				case 1:
+					set @encanto, 4739; break;
+				case 2:
+					set @encanto, 4738; break;
+				case 3:
+					set @encanto, 4737; break;
+				case 4:
+					set @encanto, 4736; break;
+				case 5:
+					set @encanto, 4735; break;
+				case 6:
+					set @encanto, 4734; break;
+			}
+			break;
+		case 8:
+			switch( select( "VIT +10","VIT +9","VIT +8","VIT +7","VIT +6","VIT +5" ) ) {
+				case 1:
+					set @encanto, 4749; break;
+				case 2:
+					set @encanto, 4748; break;
+				case 3:
+					set @encanto, 4747; break;
+				case 4:
+					set @encanto, 4746; break;
+				case 5:
+					set @encanto, 4745; break;
+				case 6:
+					set @encanto, 4744; break;
+			}
+			break;
+		case 9:
+			switch( select( "INT +10","INT +9","INT +8","INT +7","INT +6","INT +5" ) ) {
+				case 1:
+					set @encanto, 4719; break;
+				case 2:
+					set @encanto, 4718; break;
+				case 3:
+					set @encanto, 4717; break;
+				case 4:
+					set @encanto, 4716; break;
+				case 5:
+					set @encanto, 4715; break;
+				case 6:
+					set @encanto, 4714; break;
+			}
+			break;
+		case 10:
+			switch( select( "DES +10","DES +9","DES +8","DES +7","DES +6","DES +5" ) ) {
+				case 1:
+					set @encanto, 4729; break;
+				case 2:
+					set @encanto, 4728; break;
+				case 3:
+					set @encanto, 4727; break;
+				case 4:
+					set @encanto, 4726; break;
+				case 5:
+					set @encanto, 4725; break;
+				case 6:
+					set @encanto, 4724; break;
+			}
+			break;
+		case 11:
+			switch( select( "SOR +10","SOR +9","SOR +8","SOR +7","SOR +6","SOR +5" ) ) {
+				case 1:
+					set @encanto, 4759; break;
+				case 2:
+					set @encanto, 4758; break;
+				case 3:
+					set @encanto, 4757; break;
+				case 4:
+					set @encanto, 4756; break;
+				case 5:
+					set @encanto, 4755; break;
+				case 6:
+					set @encanto, 4754; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[3] = @encanto;
+	return;
+}
+
+function	script	F_Arcanjo	{
+	if ( select( (@carta[3] == 0)?"Encantar":"",(@carta[3] != 0)?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( "Espírito do Lutador","Fator de Cura","Pedra de Crítico","Pedra de Encantamento","Pedra da Mira Apurada","Redução Neutra","Redução Humanoide","Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) {
+		case 1:
+			switch( select( "Espírito do Lutador 3:Espírito do Lutador 2" ) ) {
+				case 1:
+					set @encanto, 4809; break;
+				case 2:
+					set @encanto, 4811; break;
+			}
+			break;
+		case 2:
+			switch( select( "Fator de Cura 5","Fator de Cura 4","Fator de Cura 3" ) ) {
+				case 1:
+					set @encanto, 4852; break;
+				case 2:
+					set @encanto, 4851; break;
+				case 3:
+					set @encanto, 4850; break;
+			}
+			break;
+		case 3:
+			switch( select( "Pedra de Crítico 3:Pedra de Crítico 2" ) ) {
+				case 1:
+					set @encanto, 4834; break;
+				case 2:
+					set @encanto, 4833; break;
+			}
+			break;
+		case 4:
+			switch( select( "Pedra de Encantamento 3:Pedra de Encantamento 2" ) ) {
+				case 1:
+					set @encanto, 4813; break;
+				case 2:
+					set @encanto, 4814; break;
+			}
+			break;
+		case 5:
+			switch( select( "Pedra da Mira Apurada 3:Pedra da Mira Apurada 2" ) ) {
+				case 1:
+					set @encanto, 4834; break;
+				case 2:
+					set @encanto, 4833; break;
+			}
+			break;
+		case 6:
+			set @encanto, 4848; break;
+		case 7:
+			set @encanto, 4849; break;
+		case 8:
+			switch( select( "Super Força","FOR +2","FOR +1" ) ) {
+				case 1:
+					set @encanto, 4853; break;
+				case 2:
+					set @encanto, 4701; break;
+				case 3:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 9:
+			switch( select( "Super Agilidade","AGI +2","AGI +1" ) ) {
+				case 1:
+					set @encanto, 4854; break;
+				case 2:
+					set @encanto, 4731; break;
+				case 3:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 10:
+			switch( select( "Super Vitalidade","VIT +2","VIT +1" ) ) {
+				case 1:
+					set @encanto, 4855; break;
+				case 2:
+					set @encanto, 4741; break;
+				case 3:
+					set @encanto, 4740; break;
+			}
+			break;
+		case 11:
+			switch( select( "Super Inteligência","INT +2","INT +1" ) ) {
+				case 1:
+					set @encanto, 4856; break;
+				case 2:
+					set @encanto, 4711; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 12:
+			switch( select( "Super Destreza","DES +2","DES +1" ) ) {
+				case 1:
+					set @encanto, 4857; break;
+				case 2:	
+					set @encanto, 4721; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 13:
+			switch( select( "Super Sorte","SOR +2","SOR +1" ) ) {
+				case 1:
+					set @encanto, 4858; break;
+				case 2:
+					set @encanto, 4751; break;
+				case 3:	
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[3] = @encanto;
+	return;
+}
+
+function	script	F_FallenAW	{
+	if ( select( ( @carta[3] == 0 || @carta[2] == 0 || @carta[1] == 0 )?"Encantar":"",(@carta[3] != 0)?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+		
+	switch( select( "Físico","Mágico","Alcance","Crítico","HP","SP","Vel. Ataque","Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) {
+		case 1:
+			switch( select( (.@card == 1)?"Espírito do Lutador 6":"","Espírito do Lutador 5","Espírito do Lutador 4","Espírito do Lutador 3" ) ) {
+				case 1:
+					set @encanto, 4821; break;
+				case 2:
+					set @encanto, 4820; break;
+				case 3:
+					set @encanto, 4808; break;
+				case 4:
+					set @encanto, 4809; break;
+			}
+			break;
+		case 2:
+			switch( select( (.@card == 1)?"Pedra de Encantamento 7":"","Pedra de Encantamento 6","Pedra de Encantamento 5","Pedra de Encantamento 4" ) ) {
+				case 1:
+					set @encanto, 4828; break;
+				case 2:
+					set @encanto, 4827; break;
+				case 3:
+					set @encanto, 4826; break;
+				case 4:
+					set @encanto, 4812; break;
+			}
+			break;
+		case 3:
+			switch( select( (.@card == 1)?"Pedra de Mira Apurada 4":"","Pedra de Mira Apurada 3","Pedra de Mira Apurada 2","Pedra de Mira Apurada 1" ) ) {
+				case 1:
+					set @encanto, 4835; break;
+				case 2:
+					set @encanto, 4834; break;
+				case 3:
+					set @encanto, 4833; break;
+				case 4:
+					set @encanto, 4832; break;
+			}
+			break;
+		case 4:
+			switch( select( (.@card == 1)?"Crítico 4":"","Crítico 3","Crítico 2","Crítico 1" ) ) {
+				case 1:
+					set @encanto, 4866; break;
+				case 2:
+					set @encanto, 4865; break;
+				case 3:
+					set @encanto, 4864; break;
+				case 4:
+					set @encanto, 4863; break;
+			}
+			break;
+		case 5:
+			switch( select( (.@card == 1)?"HP Máximo 7":"","HP Máximo 6","HP Máximo 5","HP Máximo 4" ) ) {
+				case 1:
+					set @encanto, 4868; break;
+				case 2:
+					set @encanto, 4867; break;
+				case 3:
+					set @encanto, 4862; break;
+				case 4:
+					set @encanto, 4861; break;
+			}
+			break;
+		case 6:
+			switch( select( (.@card == 1)?"SP Máximo 4":"","SP Máximo 3","SP Máximo 2","SP Máximo 1" ) ) {
+				case 1:
+					set @encanto, 4801; break;
+				case 2:
+					set @encanto, 4871; break;
+				case 3:
+					set @encanto, 4800; break;
+				case 4:
+					set @encanto, 4870; break;
+			}
+			break;
+		case 7:
+			switch( select( (.@card == 1)?"Vel. Ataque 1":"","Anti-atraso 3","Anti-atraso 2","Anti-atraso 1" ) ) {
+				case 1:
+					set @encanto, 4807; break;
+				case 2:
+					set @encanto, 4873; break;
+				case 3:
+					set @encanto, 4872; break;
+				case 4:
+					set @encanto, 4869; break;
+			}
+			break;
+		case 8:
+			switch( select( (.@card == 1)?"Super Força":"","FOR +5","FOR +4","FOR +3" ) ) {
+				case 1:
+					set @encanto, 4853; break;
+				case 2:
+					set @encanto, 4704; break;
+				case 3:
+					set @encanto, 4703; break;
+				case 4:
+					set @encanto, 4702; break;
+			}
+			break;
+		case 9:
+			switch( select( (.@card == 1)?"Super Agilidade":"","AGI +5","AGI +4","AGI +3" ) ) {
+				case 1:
+					set @encanto, 4854; break;
+				case 2:
+					set @encanto, 4734; break;
+				case 3:
+					set @encanto, 4733; break;
+				case 4:
+					set @encanto, 4732; break;
+			}
+			break;
+		case 10:
+			switch( select( (.@card == 1)?"Super Vitalidade":"","VIT +5","VIT +4","VIT +3" ) ) {
+				case 1:
+					set @encanto, 4855; break;
+				case 2:
+					set @encanto, 4744; break;
+				case 3:
+					set @encanto, 4743; break;
+				case 4:
+					set @encanto, 4742; break;
+			}
+			break;
+		case 11:
+			switch( select( (.@card == 1)?"Super Inteligência":"","INT +5","INT +4","INT +3" ) ) {
+				case 1:
+					set @encanto, 4856; break;
+				case 2:
+					set @encanto, 4714; break;
+				case 3:
+					set @encanto, 4713; break;
+				case 4:
+					set @encanto, 4712; break;
+			}
+			break;
+		case 12:
+			switch( select( (.@card == 1)?"Super Destreza":"","DES +5","DES +4","DES +3" ) ) {
+				case 1:
+					set @encanto, 4857; break;
+				case 2:
+					set @encanto, 4724; break;
+				case 3:
+					set @encanto, 4723; break;
+				case 4:
+					set @encanto, 4722; break;
+			}
+			break;
+		case 13:
+			switch( select( (.@card == 1)?"Super Sorte":"","SOR +5","SOR +4","SOR +3" ) ) {
+				case 1:
+					set @encanto, 4858; break;
+				case 2:
+					set @encanto, 4754; break;
+				case 3:
+					set @encanto, 4753; break;
+				case 4:
+					set @encanto, 4752; break;
+			}
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_Temporais	{
+	if ( select( ( @carta[3] != 0 && @carta[2] != 0 )?"":"Encantar",(@carta[3] != 0)?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	switch( @carta[3] ) {
+		case 0:
+			mes @nome$,"Selecione o encantamento desejado.";
+			next;
+			
+			switch( select( "Espírito do Lutador","Mira Apurada","Encantamento","Vitalidade","Anti-Atraso","Sorte" ) ) {
+				case 1:
+					set @encanto, 4808; break;
+				case 2:
+					set @encanto, 4832; break;
+				case 3:
+					set @encanto, 4814; break;
+				case 4:
+					set @encanto, 4741; break;
+				case 5:
+					set @encanto, 4869; break;
+				case 6:
+					set @encanto, 4752; break;
+			}
+			break;
+		//Primeira tentativa de encantar o 4th slot
+		case 4808:
+			set @encanto, 4820; break;
+		case 4832:
+			set @encanto, 4833; break;
+		case 4814:
+			set @encanto, 4813; break;
+		case 4741:
+			set @encanto, 4742; break;
+		case 4869:
+			set @encanto, 4872; break;
+		case 4752:
+			set @encanto, 4753; break;
+		//Segunda tentativa de encantar o 4th slot
+		case 4820:
+			set @encanto, 4821; break;
+		case 4833:
+			set @encanto, 4834; break;
+		case 4813:
+			set @encanto, 4812; break;
+		case 4742:
+			set @encanto, 4861; break;
+		case 4872:
+			set @encanto, 4873; break;
+		case 4753:
+			set @encanto, 4754; break;
+		//Terceira tentativa de encantar o 4th slot
+		case 4821:
+			set @encanto, 4822; break;
+		case 4834:
+			set @encanto, 4835; break;
+		case 4812:
+			set @encanto, 4826; break;
+		case 4861:
+			set @encanto, 4862; break;
+		case 4873:
+			set @encanto, 4881; break;
+		case 4754:
+			set @encanto, 4755; break;
+		case 4822:
+		case 4835:
+		case 4826:
+		case 4862:
+		case 4881:
+		case 4755:
+			mes @nome$,"Sua bota já está com o encantamento máximo.";
+			mes "Selecione o encantamento especial que deseja.";
+			next;
+			
+			switch( select( "Delírio","Ânimo","Histeria","Epifania","Instinto","Euforia" ) ) {
+				case 1:
+					set @encanto, 4875; break;
+				case 2:
+					set @encanto, 4877; break;
+				case 3:
+					set @encanto, 4878; break;
+				case 4:
+					set @encanto, 4876; break;
+				case 5:
+					set @encanto, 4879; break;
+				case 6:
+					set @encanto, 4880; break;
+			}
+			.@n = 1;
+			break;
+	}
+	@tipo = 0; @carta[3 - .@n] = @encanto;
+	return;
+}
+
+function	script	F_ItemNatal	{
+	if ( getiteminfo(@equip_id,5) == 2 ) {
+		.@a = 1;
+		.@select = select( (!@carta[3])?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	else if ( @parte == EQI_HEAD_TOP || @parte == EQI_SHOES ) {
+		.@a = 2;
+		.@select = select( (!@carta[3] || !@carta[2])?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	else {
+		.@a = 3;
+		.@select = select( (!@carta[3] || !@carta[2] || !@carta[1] )?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	
+	if ( .@select  == 2 ) {
+		@tipo = 1; return;
+	}
+	
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	
+	switch( .@a ) {
+		case 1:
+			switch( select( "Anti-atraso","Espírito do Lutador","Pedra da Conjuração","Pedra de Crítico","Pedra de Encantamento","Vel. Ataque" ) ) {
+				case 1:
+					switch( select( "Anti-atraso 4","Anti-atraso 3","Anti-Atraso 2" ) ) {
+						case 1:
+							set @encanto, 4881; break;
+						case 2:
+							set @encanto, 4873; break;
+						case 3:
+							set @encanto, 4872; break;
+						}
+						break;
+				case 2:
+					switch( select( "Espírito do Lutador 10","Espírito do Lutador 9","Espírito do Lutador 8","Espírito do Lutador 7","Espírito do Lutador 6","Espírito do Lutador 5" ) ) {
+						case 1:
+							set @encanto, 4825; break;
+						case 2:
+							set @encanto, 4824; break;
+						case 3:
+							set @encanto, 4823; break;
+						case 4:
+							set @encanto, 4822; break;
+						case 5:
+							set @encanto, 4821; break;
+						case 6:
+							set @encanto, 4820; break;
+						}
+						break;
+				case 3:
+					switch( select( "Pedra da Conjuração 3","Pedra da Conjuração 2","Pedra da Conjuração 1" ) ) {
+						case 1:
+							set @encanto, 4806; break;
+						case 2:
+							set @encanto, 4761; break;
+						case 3:
+							set @encanto, 4760; break;
+						}
+						break;
+				case 4:
+					switch( select( "Pedra de Crítico 5","Pedra de Crítico 4","Pedra de Crítico 3" ) ) {
+						case 1:
+							set @encanto, 4844; break;
+						case 2:
+							set @encanto, 4843; break;
+						case 3:
+							set @encanto, 4816; break;
+						}
+						break;
+				case 5:
+					switch( select( "Pedra de Encantamento 9","Pedra de Encantamento 8","Pedra de Encantamento 7","Pedra de Encantamento 6" ) ) {
+						case 1:
+							set @encanto, 4830; break;
+						case 2:
+							set @encanto, 4829; break;
+						case 3:
+							set @encanto, 4828; break;
+						case 4:
+							set @encanto, 4827; break;
+						}
+						break;
+				case 6:
+					set @encanto, 4807; break;
+			}
+			break;
+		case 2:
+		case 3:
+			switch( select( (.@a == 3)?"":"Anti-atraso",(.@a == 3)?"":"Espírito do Lutador",(.@a == 3)?"":"Pedra da Conjuração",(.@a == 3)?"":"Pedra de Crítico",(.@a == 3)?"":"Pedra de Encantamento",
+			(.@card == 3 && .@a == 2)?"":"Força",(.@card == 3 && .@a == 2)?"":"Agilidade",(.@card == 3 && .@a == 2)?"":"Vitalidade",(.@card == 3 && .@a == 2)?"":"Inteligência",(.@card == 3 && .@a == 2)?"":"Destreza",(.@card == 3 && .@a == 2)?"":"Sorte" ) ) {
+				case 1:
+					switch( select( "Anti-atraso 4","Anti-atraso 3","Anti-atraso 2","Anti-atraso 1" ) ) {
+						case 1:
+							set @encanto, 4881; break;
+						case 2:
+							set @encanto, 4873; break;
+						case 3:
+							set @encanto, 4872; break;
+						case 4:
+							set @encanto, 4869; break;
+					}
+					break;
+				case 2:
+					switch( select( "Espírito do Lutador 5","Espírito do Lutador 4","Espírito do Lutador 3","Espírito do Lutador 2" ) ) {
+						case 1:
+							set @encanto, 4820; break;
+						case 2:
+							set @encanto, 4808; break;
+						case 3:
+							set @encanto, 4809; break;
+						case 4:
+							set @encanto, 4810; break;
+					}
+					break;
+				case 3:
+					switch( select( "Pedra da Conjuração 2","Pedra da Conjuração 1" ) ) {
+						case 1:
+							set @encanto, 4761; break;
+						case 2:
+							set @encanto, 4760; break;
+					}
+					break;
+				case 4:
+					switch( select( "Pedra de Crítico 3","Pedra de Crítico 2","Pedra de Crítico 1" ) ) {
+						case 1:
+							set @encanto, 4816; break;
+						case 2:
+							set @encanto, 4817; break;
+						case 3:
+							set @encanto, 4818; break;
+					}
+					break;
+				case 5:
+					switch( select( "Pedra de Encantamento 6","Pedra de Encantamento 5","Pedra de Encantamento 4","Pedra de Encantamento 3" ) ) {
+						case 1:
+							set @encanto, 4827; break;
+						case 2:
+							set @encanto, 4826; break;
+						case 3:
+							set @encanto, 4812; break;
+						case 4:
+							set @encanto, 4813; break;
+					}
+					break;
+				case 6:
+					switch( select( (.@card == 1 && .@a == 3)?"FOR +4":"","FOR +3","FOR +2","FOR +1" ) ) {
+						case 1:
+							set @encanto, 4703; break;
+						case 2:
+							set @encanto, 4702; break;
+						case 3:
+							set @encanto, 4701; break;
+						case 4:
+							set @encanto, 4700; break;
+					}
+					break;
+				case 7:
+					switch( select( (.@card == 1 && .@a == 3)?"AGI +4":"","AGI +3","AGI +2","AGI +1" ) ) {
+						case 1:
+							set @encanto, 4733; break;
+						case 2:
+							set @encanto, 4732; break;
+						case 3:
+							set @encanto, 4731; break;
+						case 4:
+							set @encanto, 4730; break;
+					}
+					break;
+				case 8:
+					switch( select( (.@card == 1 && .@a == 3)?"VIT +4":"","VIT +3","VIT +2","VIT +1" ) ) {
+						case 1:
+							set @encanto, 4743; break;
+						case 2:
+							set @encanto, 4742; break;
+						case 3:
+							set @encanto, 4741; break;
+						case 4:
+							set @encanto, 4740; break;
+					}
+					break;
+				case 9:
+					switch( select( (.@card == 1 && .@a == 3)?"INT +4":"","INT +3","INT +2","INT +1" ) ) {
+						case 1:
+							set @encanto, 4713; break;
+						case 2:
+							set @encanto, 4712; break;
+						case 3:
+							set @encanto, 4711; break;
+						case 4:
+							set @encanto, 4710; break;
+					}
+					break;
+				case 10:
+					switch( select( (.@card == 1 && .@a == 3)?"DES +4":"","DES +3","DES +2","DES +1" ) ) {
+						case 1:
+							set @encanto, 4723; break;
+						case 2:
+							set @encanto, 4722; break;
+						case 3:
+							set @encanto, 4721; break;
+						case 4:
+							set @encanto, 4720; break;
+					}
+					break;
+				case 11:
+					switch( select( (.@card == 1 && .@a == 3)?"SOR +4":"","SOR +3","SOR +2","SOR +1" ) ) {
+						case 1:
+							set @encanto, 4753; break;
+						case 2:
+							set @encanto, 4752; break;
+						case 3:
+							set @encanto, 4751; break;
+						case 4:
+							set @encanto, 4750; break;
+					}
+					break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_EquipMora	{
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+			
+	switch (@equip_id) {
+		case 2007: case 2008: case 2009: case 2010: //Cajados - Forjador de Artefatos
+		case 15025: case 15026: case 15027: case 15028: //Armaduras - Forjador de Artefatos
+		case 2859: case 2860: case 2861: case 2862: //Acessórios - Forjador de Artefatos
+		case 2467: case 2468: case 2469: case 2470: //Sapatos - Forjador de Artefatos
+			@mora_tipo = 1; break; //Forjador de Artefatos
+		case 1657:
+			setarray .@bit[1],0,1,0,0,1,0,0,1,1,1,0,0,0;
+			set .@vit[1],1; set .@vit[2],1; set .@int[1],1; set .@int[2],1; set .@int[3],1; set .@int[4], 1; set .@dex[1],1; set .@dex[2],1; set .@pdc[1],1; set .@pdc[2],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2471:
+			setarray .@bit[1],1,0,0,1,0,1,0,0,1,1,0,0,0;
+			set .@dex[2],1; set .@dex[1],1; set .@int[2],1; set .@int[1],1; set .@atq[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 15029:
+			setarray .@bit[1],1,0,1,1,0,1,1,1,1,1,0,0,0;
+			set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@int[3],1; set .@int[2],1; set .@int[1],1; set .@atq[1],1; set .@for[4],1; set .@vit[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2569:
+			setarray .@bit[1],0,0,1,1,0,1,0,1,1,1,0,0,0;
+			set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@int[4],1; set .@int[3],1; set .@int[2],1; set .@int[1],1; set .@vit[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 16013:
+			setarray .@bit[1],0,1,0,1,0,0,1,1,1,1,0,0,0;
+			set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@pdc[3],1; set .@for[5],1; set .@for[4],1; set .@for[3],1; set .@for[2],1; set .@for[1],1; set .@vit[2],1; set .@vit[1],1; set .@int[4],1; set .@int[3],1; set .@int[2],1; set .@int[1],1; set .@hp[3],1; set .@hp[2],1; set .@hp[1],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2472:
+			setarray .@bit[1],1,0,0,0,0,1,0,1,1,1,0,0,0;
+			set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@int[2],1; set .@int[1],1; set .@vit[2],1; set .@vit[1],1; set .@atq[1],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 15030:
+			setarray .@bit[1],1,0,1,1,0,1,0,0,1,1,0,0,0;
+			set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@int[4],1; set .@int[3],1; set .@int[2],1; set .@int[1],1; set .@atq[2],1; set .@atq[1],1; set .@hp[4],1; set .@pdc[2],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2570:
+			setarray .@bit[1],1,0,1,1,0,1,0,1,1,1,0,0,0;
+			set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@int[2],1; set .@int[1],1; set .@vit[1],1; set .@hp[4],1; set .@atq[1],1; 
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2156:
+			setarray .@bit[1],1,1,1,1,0,1,0,1,1,1,0,0,0;
+			set .@atq[1],1; set .@vit[2],1; set .@vit[1],1; set .@int[4],1; set .@int[3],1; set .@int[2],1; set .@int[1],1; set .@dex[4],1; set .@dex[3],1; set .@dex[2],1; set .@dex[1],1; set .@hp[4],1; set .@pdc[2],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2864:
+			setarray .@bit[1],1,0,0,1,0,1,0,0,1,1,1,0,0;
+			set .@int[2],1; set .@int[1],1; set .@dex[2],1; set .@dex[1],1; set .@vit[2],1; set .@vit[1],1; set .@atq[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2865:
+			setarray .@bit[1],1,0,0,1,0,1,0,1,1,1,0,1,0;
+			set .@int[2],1; set .@dex[2],1; set .@dex[1],1; set .@vit[2],1; set .@vit[1],1; set .@atq[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		case 2866:
+			setarray .@bit[1],1,0,0,1,0,1,0,1,1,1,0,0,1;
+			set .@int[2],1; set .@dex[2],1; set .@dex[1],1; set .@vit[1],1; set .@atq[1],1; set .@hp[4],1;
+			@mora_tipo = 2; break; //Mestre das Relíquias
+		
+		case 1660:
+		case 16018:
+		case 2011:
+		case 2012:
+		case 2013:
+		case 2014:		
+			@mora_tipo = 3; break;
+			
+		default: 
+			@mora_tipo = 4;
+	}
+			
+	switch (@mora_tipo) {
+		case 1: //Forjador de Artefatos
+			if ( getiteminfo(@equip_id,5) == 2 ) {
+				.@select = select( (!@carta[3] || !@carta[2])?"Encantar":"",(@carta[3])?"Resetar":"" );
+			}
+			else {
+				.@select = select( (!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );
+			}
+			
+			switch(.@select) {
+				case 1: //Encantar
+					break;
+				case 2: //Resetar
+					@tipo = 1; return;
+			}
+			
+			switch( select("Pedra da Conjuração","HP","SP","DEFM","DES","INT") ){
+				case 1:
+					switch( select("Pedra da Conjuração 2","Pedra da Conjuração 1") ){
+						case 1:
+							set @encanto, 4761; break;
+						case 2:
+							set @encanto, 4760; break;
+					}
+					break;
+				case 2:
+					switch( select("HP +200","HP +100") ){
+						case 1:
+							set @encanto, 4796; break;
+						case 2:
+							set @encanto, 4795; break;
+					}
+					break;
+				case 3:
+					switch( select("SP +150","SP +100") ){
+						case 1:
+							set @encanto, 4802; break;
+						case 2:
+							set @encanto, 4801; break;
+					}
+					break;
+				case 4:
+					switch( select( "DEFM +4","DEFM +2") ){
+						case 1:
+							set @encanto, 4787; break;
+						case 2:
+							set @encanto, 4786; break;
+					}
+					break;
+				case 5:
+					switch( select("DES +4","DES +3","DES +2","DES +1") ){
+						case 1:
+							set @encanto, 4723; break;
+						case 2:
+							set @encanto, 4722; break;
+						case 3:
+							set @encanto, 4721; break;
+						case 4:
+							set @encanto, 4720; break;
+					}
+					break;
+				case 6:
+					switch( select("INT +4","INT +3","INT +2","INT +1") ){
+						case 1:
+							set @encanto, 4713; break;
+						case 2:
+							set @encanto, 4712; break;
+						case 3:
+							set @encanto, 4711; break;
+						case 4:
+							set @encanto, 4710; break;
+					}
+					break;
+			}
+			break;
+			
+		case 2: //Mestre das Relíquias
+			if ( @parte == EQI_HAND_R || @parte == EQI_ACC_R || @parte == EQI_ACC_L ) {
+				.@select = select( (!@carta[3] || !@carta[2])?"Encantar":"",(@carta[3])?"Resetar":"" );
+			}
+			else {
+				.@select = select( (!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );
+			}
+			
+			switch(.@select) {
+				case 1:
+					break;
+				case 2:
+					@tipo = 1; return;
+			}
+			
+			switch( select((.@bit[1])?"ATQ":"",(.@bit[2])?"Pedra da Conjuração":"",(.@bit[3])?"CRI +5":"",(.@bit[4])?"HP":"",(.@bit[5])?"SP":"",(.@bit[6])?"DEFM":"",(.@bit[7])?"FOR":"",(.@bit[8])?"VIT":"",(.@bit[9])?"INT":"",(.@bit[10])?"DES":"",(.@bit[11])?"Cura Nv. 1":"",(.@bit[12])?"Catolicismo Nv. 1":"",(.@bit[13])?"Arcebispo Nv. 1":"") ){
+				case 1: //ATQ
+					switch( select((.@atq[2])?"ATQ +3%":"",(.@atq[1])?"ATQ +2%":"") ){
+						case 1:
+							set @encanto,4767; break;
+						case 2:
+							set @encanto,4766; break;
+					}
+					break;
+				case 2: //Pedra da Conjuração
+					switch( select((.@pdc[3])?"Pedra da Conjuração 3":"",(.@pdc[2])?"Pedra da Conjuração 2":"",(.@pdc[1])?"Pedra da Conjuração 1":"") ){
+						case 1:
+							set @encanto,4806; break;
+						case 2:
+							set @encanto,4761; break;
+						case 3:
+							set @encanto,4760; break;
+					}
+					break;
+				case 3: //Cri
+					set @encanto,4764; break;
+				case 4: //HP
+					switch( select((.@hp[4])?"HP +500":"",(.@hp[3])?"HP +300":"",(.@hp[2])?"HP +200":"",(.@hp[1])?"HP +100":"") ){
+						case 1:
+							set @encanto,4799; break;
+						case 2:
+							set @encanto,4797; break;
+						case 3:
+							set @encanto,4796; break;
+						case 4:
+							set @encanto,4795; break;
+					}
+					break;
+				case 5: //SP
+					set @encanto,4801; break;
+				case 6: //Defm
+					set @encanto,4788; break;
+				case 7: //For
+					switch( select((.@for[5])?"FOR +5":"",(.@for[4])?"FOR +4":"",(.@for[3])?"FOR +3":"",(.@for[2])?"FOR +2":"",(.@for[1])?"FOR +1":"") ){
+						case 1:
+							set @encanto,4704; break;
+						case 2:
+							set @encanto,4703; break;
+						case 3:
+							set @encanto,4702; break;
+						case 4:
+							set @encanto,4701; break;
+						case 5:
+							set @encanto,4700; break;
+					}
+					break;
+				case 8: //Vit
+					switch( select((.@vit[2])?"VIT +2":"",(.@vit[1])?"VIT +1":"") ){
+						case 1:
+							set @encanto,4741; break;
+						case 2:
+							set @encanto,4740; break;
+					}
+					break;
+				case 9: //Int
+					switch( select((.@int[4])?"INT +4":"",(.@int[3])?"INT +3":"",(.@int[2])?"INT +2":"",(.@int[1])?"INT +1":"") ){
+						case 1:
+							set @encanto,4713; break;
+						case 2:
+							set @encanto,4712; break;
+						case 3:
+							set @encanto,4711; break;
+						case 4:
+							set @encanto,4710; break;
+					}
+					break;
+				case 10: //Des
+					switch( select((.@dex[4])?"DES +4":"",(.@dex[3])?"DES +3":"",(.@dex[2])?"DES +2":"",(.@dex[1])?"DES +1":"") ){
+						case 1:
+							set @encanto,4723; break;
+						case 2:
+							set @encanto,4722; break;
+						case 3:
+							set @encanto,4721; break;
+						case 4:
+							set @encanto,4720; break;
+					}
+					break;
+				case 11: //Cura
+					set @encanto,4803; break;
+				case 12: //Catolicismo
+					set @encanto,4804; break;
+				case 13: //Arcebispo
+					set @encanto,4805; break;
+			}
+		case 3: //Mestre dos Artefatos
+		case 4: //Curadora de Artefatos
+			switch(select( (!@carta[3] || !@carta[2] || (!@carta[1] && (.@parte != EQI_ACC_L || .@parte != EQI_ACC_R)) )?"Encantar":"",(@carta[3])?"Resetar":"" )){
+				case 1:
+					break;
+				case 2:
+					@tipo = 1; return;
+			}
+			
+			mes @nome$;
+			mes "Selecione o encantamento desejado.";
+			next;
+			
+			switch(@equip_id){
+				/** Arcanos e Arcebispos **/
+				case 1660:
+					if (select("Conjunto da Cura","Conjunto Mágico I") == 1) { set .@ci,10; }
+					else { set .@ci,7; }
+					break;
+				case 16018:
+					if (select("Conjunto do Ataque","Conjunto Mágico I") == 1) { set .@ci,2; }
+					else { set .@ci,7;}
+					break;
+				case 2011: case 2012: case 2013: case 2014:
+					if (select("Conjunto Mágico I","Conjunto Mágico II") == 1) { set .@ci,4; }
+					else { set .@ci,5; }
+					break;
+				/** Cavaleiros Rúnicos **/
+				case 2475:
+					if (select("Conjunto Básico","Conjunto do Vigor") == 1) { set .@ci,9; }
+					else { set .@ci,1; }
+					break;
+				case 2476:
+					if (select("Conjunto Básico","Conjunto Físico") == 1) { set .@ci,9; }
+					else { set .@ci,3; }
+					break;
+				case 2574:
+					if (select("Conjunto Evasivo","Conjunto do Vigor") == 1) { set .@ci,5; }
+					else { set .@ci,1; }
+					break;
+				case 2575:
+					if (select("Conjunto Evasivo","Conjunto Crítico") == 1) { set .@ci,5; }
+					else { set .@ci,4; }
+					break;
+				case 15036:
+					if (select("Conjunto do Vigor","Conjunto do Ataque") == 1) { set .@ci,1; }
+					else { set .@ci,2; }
+					break;
+				case 15037:
+					if (select("Conjunto Físico","Conjunto Crítico") == 1) { set .@ci,3; }
+					else { set .@ci,4; }
+					break;
+				case 2883:
+				case 2884:
+					if (select("Conjunto Básico")) { set .@ci,9; }
+					break;
+				/** Sentinelas **/
+				case 2479:
+					if (select("Conjunto Básico","Conjunto Crítico") == 1) { set .@ci,9; }
+					else { set .@ci,4; }
+					break;
+				case 2480:
+					if (select("Conjunto Básico","Conjunto do Ataque") == 1) { set .@ci,9; }
+					else { set .@ci,2; }
+					break;
+				case 2580:
+				case 2581:
+					if (select("Conjunto Evasivo","Conjunto do Ataque") == 1) { set .@ci,5; }
+					else { set .@ci,2; }
+					break;
+				case 15042:
+					if (select("Conjunto Crítico","Conjunto de Distância") == 1) { set .@ci,4; }
+					else { set .@ci,6; }
+					break;
+				case 15043:
+					if (select("Conjunto do Ataque","Conjunto de Distância") == 1) { set .@ci,2; }
+					else { set .@ci,6; }
+					break;
+				case 2890:
+				case 2891:
+					if (select("Conjunto Básico")) { set .@ci,9; }
+					break;
+				/** Sicários **/
+				case 2477:
+					if (select("Conjunto Básico","Conjunto Crítico") == 1) { set .@ci,9; }
+					else { set .@ci,4; }
+					break;
+				case 2478:
+					if (select("Conjunto Básico","Conjunto do Ataque") == 1) { set .@ci,2; }
+					else { set .@ci,2; }
+					break;
+				case 2577:
+				case 2578:
+					if (select("Conjunto Evasivo","Conjunto Crítico") == 1) { set .@ci,5; }
+					else { set .@ci,4; }
+					break;
+				case 15038:
+					if (select("Conjunto Crítico","Conjunto Físico") == 1) { set .@ci,4; }
+					else { set .@ci,3; }
+					break;
+				case 15039:
+					if (select("Conjunto do Ataque","Conjunto Crítico") == 1) { set .@ci,2; }
+					else { set .@ci,4; }
+					break;
+				case 2886:
+				case 2887:
+					if (select("Conjunto Básico")) { set .@ci,9; }
+					break;
+				case 20820:
+					if (select("Conjunto Básico")) { set .@ci,9; }
+					break;
+			}
+			callsub Conjunto_ID,.@ci,.@card;
+			break;
+	}
+	@mora_tipo = 0;
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+	
+Conjunto_ID:
+	.@ci = getarg(0);
+	.@card = getarg(1);
+	switch(.@ci){
+		case 1: //Conjunto do Vigor
+			{
+				switch(select("HP","VIT","DEF")){
+					case 1:
+						switch(select("HP +500",(.@card == 3 || .@card == 2)?"HP +400":"",(.@card == 3)?"HP +300":"")){
+							case 1:
+								set @encanto, 4799; break;
+							case 2:
+								set @encanto, 4798; break;
+							case 3:
+								set @encanto, 4797; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"VIT +5":"",(.@card == 2 || .@card == 1)?"VIT +4":"","VIT +3",(.@card == 3 || .@card == 2)?"VIT +2":"",(.@card == 3)?"VIT +1":"")){
+							case 1:
+								set @encanto, 4744; break;
+							case 2:
+								set @encanto, 4743; break;
+							case 3:
+								set @encanto, 4742; break;
+							case 4:
+								set @encanto, 4741; break;
+							case 5:
+								set @encanto, 4740; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 2 || .@card == 1)?"DEF +12":"","DEF +9",(.@card == 3 || .@card == 2)?"DEF +6":"",(.@card == 3)?"DEF +3":"")){
+							case 1:
+								set @encanto, 4794; break;
+							case 2:
+								set @encanto, 4793; break;
+							case 3:
+								set @encanto, 4792; break;
+							case 4:
+								set @encanto, 4791; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 2: //Conjunto do Ataque
+			{
+				switch(select("ATQ","FOR","Espírito do Lutador")){
+					case 1:
+						switch(select("ATQ +3%",(.@card == 3 || .@card == 2)?"ATQ +2%":"",(.@card == 3)?"ATQ 1%":"")){
+							case 1:
+								set @encanto, 4767; break;
+							case 2:
+								set @encanto, 4766; break;
+							case 3:
+								set @encanto, 4819; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"FOR +5":"",(.@card == 2 || .@card == 1)?"FOR +4":"","FOR +3",(.@card == 3 || .@card == 2)?"FOR +2":"",(.@card == 3)?"FOR +1":"")){
+							case 1:
+								set @encanto, 4704; break;
+							case 2:
+								set @encanto, 4703; break;
+							case 3:
+								set @encanto, 4702; break;
+							case 4:
+								set @encanto, 4701; break;
+							case 5:
+								set @encanto, 4700; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"Espírito do Lutador 6":"",(.@card == 1)?"Espírito do Lutador 5":"",(.@card == 2 || .@card == 1)?"Espírito do Lutador 4":"","Espírito do Lutador 3",(.@card == 3 || .@card == 2)?"Espírito do Lutador 2":"",(.@card == 3)?"Espírito do Lutador 1":"")){
+							case 1:
+								set @encanto, 4821; break;
+							case 2:
+								set @encanto, 4820; break;
+							case 3:
+								set @encanto, 4808; break;
+							case 4:
+								set @encanto, 4809; break;
+							case 5:
+								set @encanto, 4810; break;
+							case 6:
+								set @encanto, 4811; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 3: //Conjunto Físico
+			{
+				switch(select("HP","SOR","AGI","DEF")){
+					case 1:
+						switch(select((.@card == 1 || .@card == 2)?"HP +300":"",(.@card == 3 || .@card == 2)?"HP +200":"",(.@card == 3)?"HP +100":"")){
+							case 1:
+								set @encanto, 4797; break;
+							case 2:
+								set @encanto, 4796; break;
+							case 3:
+								set @encanto, 4795; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"SOR +4":"",(.@card ==  2|| .@card == 1)?"SOR +3":"",(.@card == 3 || .@card == 2)?"SOR +2":"",(.@card == 1)?"SOR +1":"")){
+							case 1:
+								set @encanto, 4753; break;
+							case 2:
+								set @encanto, 4752; break;
+							case 3:
+								set @encanto, 4751; break;
+							case 4:
+								set @encanto, 4750; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"AGI +4":"",(.@card ==  2|| .@card == 1)?"AGI +3":"",(.@card == 3 || .@card == 2)?"AGI +2":"",(.@card == 1)?"AGI +1":"")){
+							case 1:
+								set @encanto, 4733; break;
+							case 2:
+								set @encanto, 4732; break;
+							case 3:
+								set @encanto, 4731; break;
+							case 4:
+								set @encanto, 4730; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 2 || .@card == 1)?"DEF +9":"",(.@card == 3 || .@card == 2)?"DEF +6":"",(.@card == 1)?"DEF +3":"")){
+							case 1:
+								set @encanto, 4793; break;
+							case 2:
+								set @encanto, 4792; break;
+							case 3:
+								set @encanto, 4791; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 4: //Conjunto Crítico
+			{
+				switch(select("SOR","FOR","CRIT","Pedra de Crítico")){
+					case 1:
+						switch(select((.@card == 1 || .@card == 2)?"SOR +5":"","SOR +4","SOR +3",(.@card == 3 || .@card == 2)?"SOR +2":"",(.@card == 3)?"SOR +1":"")){
+							case 1:
+								set @encanto, 4754; break;
+							case 2:
+								set @encanto, 4753; break;
+							case 3:
+								set @encanto, 4752; break;
+							case 4:
+								set @encanto, 4751; break;
+							case 5:
+								set @encanto, 4750; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"FOR +4":"",(.@card == 3 || .@card == 2)?"FOR +3":"",(.@card == 3 || .@card == 2)?"FOR +2":"",(.@card == 3)?"FOR +1":"")){
+							case 1:
+								set @encanto, 4703; break;
+							case 2:
+								set @encanto, 4702; break;
+							case 3:
+								set @encanto, 4701; break;
+							case 4:
+								set @encanto, 4700; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 2 || .@card == 1)?"CRIT +7":"","CRIT +5")){
+							case 1:
+								set @encanto, 4765; break;
+							case 2:
+								set @encanto, 4764; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"Pedra de Crítico 3":"",(.@card == 2 || .@card == 1)?"Pedra de Crítico 2":"","Pedra de Crítico 1")){
+							case 1:
+								set @encanto, 4816; break;
+							case 2:
+								set @encanto, 4817; break;
+							case 3:
+								set @encanto, 4818; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 5: //Conjunto Evasivo
+			{
+				switch(select("SOR","AGI","Esquiva")){
+					case 1:
+						switch(select((.@card == 1)?"SOR +5":"",(.@card == 2 || .@card == 1)?"SOR +4":"","SOR +3",(.@card == 3 || .@card == 2)?"SOR +2":"",(.@card == 3)?"SOR +1":"")){
+							case 1:
+								set @encanto, 4754; break;
+							case 2:
+								set @encanto, 4753; break;
+							case 3:
+								set @encanto, 4752; break;
+							case 4:
+								set @encanto, 4751; break;
+							case 5:
+								set @encanto, 4750; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"AGI +5":"",(.@card == 1 || .@card == 2)?"AGI +4":"","AGI +3","AGI +2",(.@card == 3)?"AGI +1":"")){
+							case 1:
+								set @encanto, 4734; break;
+							case 2:
+								set @encanto, 4733; break;
+							case 3:
+								set @encanto, 4732; break;
+							case 4:
+								set @encanto, 4731; break;
+							case 5:
+								set @encanto, 4730; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"Esquiva +12":"",(.@card == 2 || .@card == 1)?"Esquiva +6":"",(.@card == 3 || .@card == 1)?"Esquiva +3":"",(.@card == 3 )?"Esquiva +1":"")){
+							case 1:
+								set @encanto, 4763; break;
+							case 2:
+								set @encanto, 4762; break;
+							case 3:
+								set @encanto, 4860; break;
+							case 4:
+								set @encanto, 4859; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 6: //Conjunto de Distância
+			{
+				switch(select("DES","SOR","CRIT","Pedra da Mira Apurada")){
+					case 1:
+						switch(select((.@card == 1 || .@card == 2)?"DES +4":"",(.@card == 3 || .@card == 2)?"DES +3":"",(.@card == 3 || .@card == 2)?"DES +2":"",(.@card == 3)?"DES +1":"")){
+							case 1:
+								set @encanto, 4723; break;
+							case 2:
+								set @encanto, 4722; break;
+							case 3:
+								set @encanto, 4721; break;
+							case 4:
+								set @encanto, 4720; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 3 || .@card == 2)?"SOR +4":"","SOR +3",(.@card == 3 || .@card == 2)?"SOR +2":"",(.@card == 3)?"SOR +1":"")){
+							case 1:
+								set @encanto, 4753; break;
+							case 2:
+								set @encanto, 4752; break;
+							case 3:
+								set @encanto, 4751; break;
+							case 4:
+								set @encanto, 4750; break;
+						}
+						break;
+					case 3:
+						switch(select("CRIT +5")){
+							case 1:
+								set @encanto, 4764; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"Pedra da Mira Apurada 5":"",(.@card == 1)?"Pedra da Mira Apurada 4":"","Pedra da Mira Apurada 3","Pedra da Mira Apurada 2","Pedra da Mira Apurada 1")){
+							case 1:
+								set @encanto, 4836; break;
+							case 2:
+								set @encanto, 4835; break;
+							case 3:
+								set @encanto, 4834; break;
+							case 4:
+								set @encanto, 4833; break;
+							case 5:
+								set @encanto, 4832; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 7: //Conjunto Mágico I
+			{
+				switch(select("HP","INT","DES","Pedra de Encantamento")){
+					case 1:
+						switch(select((.@card == 1 || .@card == 2)?"HP +300":"","HP +200",(.@card == 3)?"HP +100":"")){
+							case 1:
+								set @encanto, 4797; break;
+							case 2:
+								set @encanto, 4796; break;
+							case 3:
+								set @encanto, 4795; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"INT +4":"",(.@card == 1 || .@card == 2)?"INT +3":"","INT +2",(.@card == 3)?"INT +1":"")){
+							case 1:
+								set @encanto, 4713; break;
+							case 2:
+								set @encanto, 4712; break;
+							case 3:
+								set @encanto, 4711; break;
+							case 4:
+								set @encanto, 4710; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"DES +4":"",(.@card == 1 || .@card == 2)?"DES +3":"","DES +2",(.@card == 3)?"DES +1":"")){
+							case 1:
+								set @encanto, 4723; break;
+							case 2:
+								set @encanto, 4722; break;
+							case 3:
+								set @encanto, 4721; break;
+							case 4:
+								set @encanto, 4720; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"Pedra de Encantamento 4":"",(.@card == 1 || .@card == 2)?"Pedra de Encantamento 3":"","Pedra de Encantamento 2",(.@card == 3)?"Pedra de Encantamento 1":"")){
+							case 1:
+								set @encanto, 4812; break;
+							case 2:
+								set @encanto, 4813; break;
+							case 3:
+								set @encanto, 4814; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 8: //Conjunto Mágico II
+			{
+				switch(select((.@card == 3)?"HP":"","INT","DES","Pedra da Conjuração","Pedra de Encantamento")){
+					case 1:
+						switch(select("HP +100")){
+							case 1:
+								set @encanto, 4795; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"INT +5":"",(.@card == 2 || .@card == 1)?"INT +4":"","INT +3",(.@card == 3)?"INT +2":"")){
+							case 1:
+								set @encanto, 4714; break;
+							case 2:
+								set @encanto, 4713; break;
+							case 3:
+								set @encanto, 4712; break;
+							case 4:
+								set @encanto, 4711; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"DES +5":"",(.@card == 2 || .@card == 1)?"DES +4":"","DES +3",(.@card == 3)?"DES +2":"")){
+							case 1:
+								set @encanto, 4724; break;
+							case 2:
+								set @encanto, 4723; break;
+							case 3:
+								set @encanto, 4722; break;
+							case 4:
+								set @encanto, 4721; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"Pedra da Conjuração 3":"",(.@card == 2 || .@card == 1)?"Pedra da Conjuração 2":"","Pedra da Conjuração 1")){
+							case 1:
+								set @encanto, 4806; break;
+							case 2:
+								set @encanto, 4761; break;
+							case 3:
+								set @encanto, 4760; break;
+						}
+						break;
+					case 5:
+						switch(select((.@card == 1 || .@card == 2)?"Pedra de Encantamento 4":"",(.@card == 3 || .@card == 2)?"Pedra de Encantamento 3":"",(.@card == 3)?"Pedra de Encantamento 2":"")){
+							case 1:
+								set @encanto, 4812; break;
+							case 2:
+								set @encanto, 4813; break;
+							case 3:
+								set @encanto, 4814; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 9: //Conjunto Básico
+			{
+				switch(select("HP","SP","DEF","DEFM","FOR","VIT","DES","AGI")){
+					case 1:
+						switch(select((.@card != 3)?"HP +300":"",(.@card == 3)?"HP +200":"")){
+							case 1:
+								set @encanto, 4797; break;
+							case 2:
+								set @encanto, 4796; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card != 3)?"SP +150":"",(.@card == 3)?"SP +100":"")){
+							case 1:
+								set @encanto, 4802; break;
+							case 2:
+								set @encanto, 4801; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card != 3)?"DEF +9":"",(.@card == 3)?"DEF +6":"")){
+							case 1:
+								set @encanto, 4793; break;
+							case 2:
+								set @encanto, 4792; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"DEFM +8":"",(.@card == 2)?"DEFM +6":"",(.@card == 3)?"DEFM +4":"")){
+							case 1:
+								set @encanto, 4789; break;
+							case 2:
+								set @encanto, 4788; break;
+							case 3:
+								set @encanto, 4787; break;
+						}
+						break;
+					case 5:
+						switch(select((.@card == 1)?"FOR +2":"",(.@card != 1)?"FOR +1":"")){
+							case 1:
+								set @encanto, 4701; break;
+							case 2:
+								set @encanto, 4700; break;
+						}
+						break;
+					case 6:
+						switch(select((.@card == 1)?"VIT +2":"",(.@card != 1)?"VIT +1":"")){
+							case 1:
+								set @encanto, 4741; break;
+							case 2:
+								set @encanto, 4740; break;
+						}
+						break;
+					case 7:
+						switch(select((.@card == 1)?"DES +2":"",(.@card != 1)?"DES +1":"")){
+							case 1:
+								set @encanto, 4721; break;
+							case 2:
+								set @encanto, 4720; break;
+						}
+						break;
+					case 8:
+						switch(select((.@card == 1)?"AGI +2":"",(.@card != 1)?"AGI +1":"")){
+							case 1:
+								set @encanto, 4731; break;
+							case 2:
+								set @encanto, 4730; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+		case 10: //Conjunto da Cura
+			{
+				switch(select("INT","DES",(.@card == 3)?"Pedra da Conjuração":"","Fator de Cura")){
+					case 1:
+						switch(select((.@card == 1)?"INT +4":"","INT +3",(.@card == 3 || .@card == 2)?"INT +2":"",(.@card == 3)?"INT +1":"")){
+							case 1:
+								set @encanto, 4713; break;
+							case 2:
+								set @encanto, 4712; break;
+							case 3:
+								set @encanto, 4711; break;
+							case 4:
+								set @encanto, 4710; break;
+						}
+						break;
+					case 2:
+						switch(select((.@card == 1)?"DES +4":"","DES +3",(.@card == 3 || .@card == 2)?"DES +2":"",(.@card == 3)?"DES +1":"")){
+							case 1:
+								set @encanto, 4723; break;
+							case 2:
+								set @encanto, 4722; break;
+							case 3:
+								set @encanto, 4721; break;
+							case 4:
+								set @encanto, 4720; break;
+						}
+						break;
+					case 3:
+						switch(select((.@card == 1)?"Pedra da Conjuração 3":"",(.@card == 1)?"Pedra da Conjuração 2":"","Pedra da Conjuração 1")){
+							case 1:
+								set @encanto, 4806; break;
+							case 2:
+								set @encanto, 4761; break;
+							case 3:
+								set @encanto, 4760; break;
+						}
+						break;
+					case 4:
+						switch(select((.@card == 1)?"Fator de Cura 5":"",(.@card == 1)?"Fator de Cura 4":"",(.@card == 1 || .@card == 2)?"Fator de Cura 3":"","Fator de Cura 1")){
+							case 1:
+								set @encanto, 4852; break;
+							case 2:
+								set @encanto, 4851; break;
+							case 3:
+								set @encanto, 4850; break;
+							case 4:
+								set @encanto, 4805; break;
+						}
+						break;
+				}
+				break;
+			}
+			break;
+	}
+	return;
+}
+
+function	script	F_Malangdo	{
+		 if ( @carta[3] == 0 ) .@card = 3;						//Verificação do 1 slot
+	else if ( getiteminfo(@equip_id,10) - 2 > 0 ) .@card = 1;	//Possui mais de 3 slots = true;
+	else if ( @carta[2] == 0 ) .@card = 2;						//Verificação do 2 slot
+	else .@card = 0;											//Não possui mais de 3 slots e ambos os slots já estão encantados
+	
+	if ( select( ( .@card == 3 || .@card == 2 )?"Encantar":"",( @carta[3] )?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( "Físico","Longa Distância","Mágico","Outros" ) ) {
+		case 1:
+			switch( select( "Vel. Ataque","Espírito do Lutador","Pedra de Crítico","AGI" ) ) {
+				case 1:
+					set @encanto, 4807; break;
+				case 2:
+					switch( select( "Espírito do Lutador 8","Espírito do Lutador 7","Espírito do Lutador 6","Espírito do Lutador 5" ) ) {
+						case 1:
+							set @encanto, 4823; break;
+						case 2:
+							set @encanto, 4822; break;
+						case 3:
+							set @encanto, 4821; break;
+						case 4:
+							set @encanto, 4820; break;
+					}
+					break;
+				case 3:
+					switch( select( "Pedra de Crítico 5","Pedra de Crítico 4","Pedra de Crítico 3","Pedra de Crítico 2" ) ) {
+						case 1:
+							set @encanto, 4844; break;
+						case 2:
+							set @encanto, 4843; break;
+						case 3:
+							set @encanto, 4816; break;
+						case 4:
+							set @encanto, 4817; break;
+					}
+					break;
+				case 4:
+					switch( select( "AGI +6","AGI +5","AGI +4","AGI +3","AGI +2","AGI +1" ) ) {
+						case 1:
+							set @encanto, 4735; break;
+						case 2:
+							set @encanto, 4734; break;
+						case 3:
+							set @encanto, 4733; break;
+						case 4:
+							set @encanto, 4732; break;
+						case 5:
+							set @encanto, 4731; break;
+						case 6:
+							set @encanto, 4730; break;
+					}
+					break;
+			}
+			break;
+		case 2:
+			switch( select( "Vel. Ataque","Pedra da Mira Apurada","Pedra de Crítico","AGI" ) ) {
+				case 1:
+					set @encanto, 4807; break;
+				case 2:
+					switch( select( "Pedra da Mira Apurada 6","Pedra da Mira Apurada 5","Pedra da Mira Apurada 4","Pedra da Mira Apurada 3","Pedra da Mira Apurada 2" ) ) {
+						case 1:
+							set @encanto, 4837; break;
+						case 2:
+							set @encanto, 4836; break;
+						case 3:
+							set @encanto, 4835; break;
+						case 4:
+							set @encanto, 4834; break;
+						case 5:
+							set @encanto, 4833; break;
+					}
+					break;
+				case 3:
+					switch( select( "Pedra de Crítico 5","Pedra de Crítico 4","Pedra de Crítico 3","Pedra de Crítico 2" ) ) {
+						case 1:
+							set @encanto, 4844; break;
+						case 2:
+							set @encanto, 4843; break;
+						case 3:
+							set @encanto, 4816; break;
+						case 4:
+							set @encanto, 4817; break;
+					}
+					break;
+				case 4:
+					switch( select( "AGI +6","AGI +5","AGI +4","AGI +3","AGI +2","AGI +1" ) ) {
+						case 1:
+							set @encanto, 4735; break;
+						case 2:
+							set @encanto, 4734; break;
+						case 3:
+							set @encanto, 4733; break;
+						case 4:
+							set @encanto, 4732; break;
+						case 5:
+							set @encanto, 4731; break;
+						case 6:
+							set @encanto, 4730; break;
+					}
+					break;
+			}
+			break;
+		case 3:
+			switch( select( "Pedra de Encantamento","Pedra da Conjuração","INT","DES" ) ) {
+				case 1:
+					switch( select( "Pedra de Encantamento 6","Pedra de Encantamento 5","Pedra de Encantamento 4","Pedra de Encantamento 3","Pedra de Encantamento 2" ) ) {
+						case 1:
+							set @encanto, 4827; break;
+						case 2:
+							set @encanto, 4826; break;
+						case 3:
+							set @encanto, 4812; break;
+						case 4:
+							set @encanto, 4813; break;
+						case 5:
+							set @encanto, 4814; break;
+					}
+					break;
+				case 2:
+					switch( select( "Pedra da Conjuração 3","Pedra da Conjuração 2","Pedra da Conjuração 1" ) ) {
+						case 1:
+							set @encanto, 4806; break;
+						case 2:
+							set @encanto, 4761; break;
+						case 3:
+							set @encanto, 4760; break;
+					}
+					break;
+				case 3:
+					switch( select( "INT +6","INT +5","INT +4","INT +3","INT +2","INT +1" ) ) {
+						case 1:
+							set @encanto, 4715; break;
+						case 2:
+							set @encanto, 4714; break;
+						case 3:
+							set @encanto, 4713; break;
+						case 4:
+							set @encanto, 4712; break;
+						case 5:
+							set @encanto, 4711; break;
+						case 6:
+							set @encanto, 4710; break;
+					}
+					break;
+				case 4:
+					switch( select( "DES +3","DES +2","DES +1" ) ) {
+						case 1:
+							set @encanto, 4722; break;
+						case 2:
+							set @encanto, 4721; break;
+						case 3:
+							set @encanto, 4720; break;
+				}
+				break;
+				}
+			break;
+				case 4:
+					switch( select( "DEFM +4","DEF +6","Máx SP","Máx HP" ) ) {	
+				case 1:
+					set @encanto, 4787; break;	
+				case 2:
+					set @encanto, 4792; break;
+				case 3:
+					set @encanto, 4801; break;					
+				case 4:
+					switch( select( "HP +200","HP +100" ) ) {
+						case 1:
+							set @encanto, 4796; break;	
+						case 2:
+							set @encanto, 4795; break;
+							}	
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto; 
+	return;
+}
+
+function	script	F_EquipEden	{
+	if ( @parte == EQI_HEAD_TOP ) { 
+		.@a = 1; //Administrador Mihael
+		.@select = select( (!@carta[3])?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	else if ( getiteminfo(@equip_id,5) == 2 || getiteminfo(@equip_id,5) == 34 ) { 
+		.@a = 3; //Especialista BK
+		.@select = select( (!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	else {
+		.@a = 2; //Ferreiro Torhen
+		.@select = select( (!@carta[3] || !@carta[2] )?"Encantar":"",(@carta[3])?"Resetar":"" );
+	}
+	
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	
+	if ( .@select == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	switch( .@a ) {
+		case 1: //Administrador Mihael
+		case 2: //Ferreiro Torhen
+			mes @nome$,"Selecione o encantamento desejado.";
+			next;
+			
+			switch( select( ( .@a == 2 )?"DEF":"",( .@a == 2 )?"DEFM":"","FOR +2","AGI +2","VIT +2","INT +2","DES +2","SOR +2" ) ) {
+				case 1:
+					switch( select( "DEF +9","DEF +6","DEF +3" ) ) {
+						case 1:
+							set @encanto, 4793; break;
+						case 2:
+							set @encanto, 4792; break;
+						case 3:
+							set @encanto, 4791; break;
+					}
+					break;
+				case 2:
+					switch( select( "DEFM +8","DEFM +6","DEFM +4" ) ) {
+						case 1:
+							set @encanto, 4789; break;
+						case 2:
+							set @encanto, 4788; break;
+						case 3:
+							set @encanto, 4787; break;
+					}
+					break;
+				case 3:
+					set @encanto, 4701; break;
+				case 4:
+					set @encanto, 4731; break;
+				case 5:
+					set @encanto, 4741; break;
+				case 6:
+					set @encanto, 4711; break;
+				case 7:
+					set @encanto, 4721; break;
+				case 8:
+					set @encanto, 4751; break;
+			}
+			break;
+		case 3: //Especialista BK
+			switch( .@card ) {
+				case 3:
+					mes @nome$,"Selecione o encantamento desejado.";
+					next;
+					
+					if ( select( "ATK +3%","Pedra da Conjuração 3" ) == 2 )
+						set @encanto, 4806;
+					else
+						set @encanto, 4767;
+					break;
+				case 2:
+					mes @nome$,"Selecione o encantamento desejado.";
+					next;
+					
+					switch( select( "Arcebispo Nv.1","Carta Pinguicula","Carta Ovo de Draco","Carta Nepenthes","Carta Naga","Carta Golem de Bradium","Carta Caramelo","Carta Escorpião","Carta Flora","Carta Goblin","Carta Petite" ) ) {
+						case 1:
+							set @encanto, 4805; break;
+						case 2:
+							set @encanto, 4476; break;
+						case 3:
+							set @encanto, 4471; break;
+						case 4:
+							set @encanto, 4470; break;
+						case 5:
+							set @encanto, 4469; break;
+						case 6:
+							set @encanto, 4472; break;
+						case 7:
+							set @encanto, 4063; break;
+						case 8:
+							set @encanto, 4068; break;
+						case 9:
+							set @encanto, 4080; break;
+						case 10:
+							set @encanto, 4060; break;
+						case 11:
+							set @encanto, 4118; break;
+					}
+					break;
+				case 1:
+					set @encanto, @carta[2]; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_Felino	{
+	mes @nome$,"Em progresso...";
+	return;
+}
+
+function	script	F_ItemAfago	{
+	mes @nome$,"Em progresso...";
+	return;
+}
+
+function	script	F_Biologico	{
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	
+	if ( select( ( .@card == 3 || .@card == 2 )?"Encantar":"",( @carta[3] != 0 )?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	
+	if ( getiteminfo(@equip_id,5) == 2 ||  getiteminfo(@equip_id,5) == 34 )
+		set .@a,0;
+	else
+		set .@a,1;
+	
+	switch( select( (.@a == 0)?"Físico":"",(.@a == 0)?"Mágico":"",(.@a == 0)?"Alcance":"",(.@a == 0)?"Crítico":"",(.@a == 0)?"Vel. Ataque":"", //Armas
+					(.@a == 1)?"Pedra de Esquiva":"",(.@a == 1)?"DEF":"",(.@a == 1)?"DEFM":"",(.@a == 1)?"HP":"",(.@a == 1)?"SP":"", //Equipamentos
+					"Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) //Ambos
+	{
+		case 1:
+			switch( select( "Espírito do Lutador 3","Espírito do Lutador 2","Espírito do Lutador 1" ) ) {
+				case 1:
+					set @encanto, 4809; break;
+				case 2:
+					set @encanto, 4810; break;
+				case 3:
+					set @encanto, 4811; break;
+			}
+			break;
+		case 2:
+			switch( select( "Pedra de Encantamento 3","Pedra de Encantamento 2","Pedra de Encantamento 1" ) ) {
+				case 1:
+					set @encanto, 4813; break;
+				case 2:
+					set @encanto, 4814; break;
+				case 3:
+					set @encanto, 4815; break;
+			}
+			break;
+		case 3:
+			switch( select( "Pedra da Mira Apurada 3","Pedra da Mira Apurada 2","Pedra da Mira Apurada 1" ) ) {
+				case 1:
+					set @encanto, 4834; break;
+				case 2:
+					set @encanto, 4833; break;
+				case 3:
+					set @encanto, 4832; break;
+			}
+			break;
+		case 4:
+			switch( select( "Pedra de Crítico 3","Pedra de Crítico 2","Pedra de Crítico 1" ) ) {
+				case 1:
+					set @encanto, 4816; break;
+				case 2:
+					set @encanto, 4817; break;
+				case 3:
+					set @encanto, 4818; break;
+			}
+			break;
+		case 5:
+			set @encanto, 4807; break;
+		case 6:
+			switch( select( "Pedra de Esquiva +6","Pedra de Esquiva +3","Pedra de Esquiva +1" ) ){
+				case 1:
+					set @encanto, 4762; break;
+				case 2:
+					set @encanto, 4860; break;
+				case 3:
+					set @encanto, 4859; break;
+			}
+			break;
+		case 7:
+			switch( select( "DEF +12","DEF +9","DEF +6","DEF +3" ) ) {
+				case 1:
+					set @encanto, 4794; break;
+				case 2:
+					set @encanto, 4793; break;
+				case 3:
+					set @encanto, 4792; break;
+				case 4:
+					set @encanto, 4791; break;
+			}
+			break;
+		case 8:
+			switch( select( "DEFM +10","DEFM +8","DEFM +6","DEF +4","DEF +2" ) ) {
+				case 1:
+					set @encanto, 4790; break;
+				case 2:
+					set @encanto, 4789; break;
+				case 3:
+					set @encanto, 4788; break;
+				case 4:
+					set @encanto, 4787; break;
+				case 5:
+					set @encanto, 4786; break;
+			}
+			break;
+		case 9:
+			switch( select( "HP +300","HP +200","HP +100" ) ) {
+				case 1:
+					set @encanto, 4797; break;
+				case 2:
+					set @encanto, 4796; break;
+				case 3:
+					set @encanto, 4795; break;
+			}
+			break;
+		case 10:
+			set @encanto, 4800; break;
+		case 11:
+			switch( select( "FOR +3","FOR +2","FOR +1" ) ) {
+				case 1:
+					set @encanto, 4702; break;
+				case 2:
+					set @encanto, 4701; break;
+				case 3:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 12:
+			switch( select( "AGI +3","AGI +2","AGI +1" ) ) {
+				case 1:
+					set @encanto, 4732; break;
+				case 2:
+					set @encanto, 4731; break;
+				case 3:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 13:
+			switch( select( "VIT +3","VIT +2","VIT +1" ) ) {
+				case 1:
+					set @encanto, 4742; break;
+				case 2:
+					set @encanto, 4741; break;
+				case 3:
+					set @encanto, 4740; break;
+			}
+			break;
+		case 14:
+			switch( select( "INT +3","INT +2","INT +1" ) ) {
+				case 1:
+					set @encanto, 4712; break;
+				case 2:
+					set @encanto, 4711; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 15:
+			switch( select( "DES +3","DES +2","DES +1" ) ) {
+				case 1:
+					set @encanto, 4722; break;
+				case 2:
+					set @encanto, 4721; break;
+				case 3:
+					set @encanto, 4720; break;
+			}
+			break;
+		case 16:
+			switch( select( "SOR +3","SOR +2","SOR +1" ) ) {
+				case 1:
+					set @encanto, 4752; break;
+				case 2:
+					set @encanto, 4751; break;
+				case 3:
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_ItemNinja	{
+	if ( select( ( !@carta[3] || !@carta[2] )?"Encantar":"",( !@carta[3] )?"Resetar":"" ) == 2 ) {
+		@tipo = 1; return;
+	}
+
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( "DEF","DEFM","HP","SP","Força","Agilidade","Vitalidade","Inteligência","Destreza","Sorte" ) ) {
+		case 1:
+			switch( select( "DEF +12","DEF +9","DEF +6","DEF +3" ) ) {
+				case 1:
+					set @encanto, 4794; break;
+				case 2:
+					set @encanto, 4793; break;
+				case 3:
+					set @encanto, 4792; break;
+				case 4:
+					set @encanto, 4791; break;
+			}
+			break;
+		case 2:
+			switch( select( "DEFM +8","DEFM +6","DEFM +4","DEFM +2" ) ) {
+				case 1:
+					set @encanto, 4789; break;
+				case 2:
+					set @encanto, 4788; break;
+				case 3:
+					set @encanto, 4787; break;
+				case 4:
+					set @encanto, 4786; break;
+			}
+			break;
+		case 3:
+			switch( select( "HP +300","HP +200","HP +100" ) ) {
+				case 1:
+					set @encanto, 4797; break;
+				case 2:
+					set @encanto, 4796; break;
+				case 3:
+					set @encanto, 4795; break;
+			}
+			break;
+		case 4:
+			switch( select( "SP +100","SP +50" ) ) {
+				case 1:
+					set @encanto, 4801; break;
+				case 2:
+					set @encanto, 4800; break;
+			}
+			break;
+		case 5:
+			switch( select( "FOR +3","FOR +2","FOR +1" ) ) {
+				case 1:
+					set @encanto, 4702; break;
+				case 2:
+					set @encanto, 4701; break;
+				case 3:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 6:
+			switch( select( "AGI +3","AGI +2","AGI +1" ) ) {
+				case 1:
+					set @encanto, 4732; break;
+				case 2:
+					set @encanto, 4731; break;
+				case 3:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 7:
+			switch( select( "VIT +3","VIT +2","VIT +1" ) ) {
+			case 1:
+				set @encanto, 4742; break;
+			case 2:
+				set @encanto, 4741; break;
+			case 3:
+				set @encanto, 4740; break;
+			}
+			break;
+		case 8:
+			switch( select( "INT +3","INT +2","INT +1" ) ) {
+				case 1:
+					set @encanto, 4712; break;
+				case 2:
+					set @encanto, 4711; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 9:
+			switch( select( "DES +3","DES +2","DES +1" ) ) {
+				case 1:
+					set @encanto, 4722; break;
+				case 2:
+					set @encanto, 4721; break;
+				case 3:
+					set @encanto, 4720; break;
+			}
+			break;
+		case 10:
+			switch( select( "SOR +3","SOR +2","SOR +1" ) ) {
+				case 1:
+					set @encanto, 4752; break;
+				case 2:
+					set @encanto, 4751; break;
+				case 3:
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto; 
+	return;
+}
+
+function	script	F_EquipROPs	{
+	if ( @parte == EQI_HEAD_MID ) 
+		.@a = 1;
+	else 
+		.@a = 2;
+	
+		 if ( @carta[3] == 0 && .@a == 2 ) set .@card,3;
+	else if ( @carta[2] == 0 && .@a == 2 ) set .@card,2;
+	else if ( @carta[1] == 0 && .@a == 2 ) set .@card,1;
+	else if ( getiteminfo(@equip_id,10) + 1 == 1 && .@a == 2 ) { .@card = 0; .@a = 3; }
+	else .@card = 3;
+	
+	if ( .@a == 1)
+		.@select = select( (!@carta[3] )?"Encantar":"",(@carta[3])?"Resetar":"" );
+	else if ( .@a == 2 ) { 
+		.@select = select( (!@carta[3] || !@carta[2] || !@carta[1] )?"Encantar":"",(@carta[3])?"Resetar":"" );
+		.@b = 1;
+	}
+	else {
+		.@select = select( (!@carta[3] || !@carta[2] || !@carta[1] || !@carta[0] )?"Encantar":"",(@carta[3])?"Resetar":"" );
+		.@b = 2;
+	}
+	
+	if ( .@select == 2 ) {
+		@tipo = 1; return;
+	}
+	
+	switch( @equip_id ) {
+		case 2966:
+		case 2967:
+			.@c = 1; break;
+		case 2968:
+		case 2969:
+			.@c = 2; break;
+	}
+		 if ( ( .@c == 1 && .@card == 3 ) == 1 || ( .@c == 1 && .@card == 2 ) == 1 ) .@doido$ = "Espírito do Lutador:ATQ:HP Máximo:HP:::::::::::";
+	else if ( ( .@c == 1 && .@card == 1 ) == 1 || ( .@c == 1 && .@card == 0 ) == 1 ) .@doido$ = "::::::::FOR:AGI:VIT:INT:DES:SOR:";
+	else if ( ( .@c == 2 && .@card == 3 ) == 1 || ( .@c == 2 && .@card == 2 ) == 1 ) .@doido$ = "::::Pedra da Conjuração:Pedra de Encanto:SP Máximo::::::::";
+	else if ( ( .@c == 2 && .@card == 1 ) == 1 || ( .@c == 2 && .@card == 0 ) == 1 ) .@doido$ = "::::::::FOR:AGI:VIT:INT:DES:SOR:HP Máximo";
+	else .@doido$ = ":::::::DEFM +1:FOR:AGI:VIT:INT:DES:SOR:";
+	
+	mes @nome$,"Selecione o encantamento desejado.";
+	next;
+	
+	switch( select( .@doido$ ) ) {
+		case 1:
+			switch( select( "Espírito do Lutador 3","Espírito do Lutador 2","Espírito do Lutador 1" ) ) {
+				case 1:
+					set @encanto, 4809; break;
+				case 2:
+					set @encanto, 4810; break;
+				case 3:
+					set @encanto, 4811; break;
+			}
+			break;
+		case 2:
+			switch( select( "ATQ +3%","ATQ +2%","ATQ +1%" ) ) {
+				case 1:
+					set @encanto, 4767; break;
+				case 2:
+					set @encanto, 4766; break;
+				case 3:
+					set @encanto, 4819; break;
+			}
+			break;
+		case 3: case 15:
+			switch( select( "HP Máximo 6","HP Máximo 5","HP Máximo 4" ) ) {
+				case 1:
+					set @encanto, 4867; break;
+				case 2:
+					set @encanto, 4862; break;
+				case 3:
+					set @encanto, 4861; break;
+			}
+			break;
+		case 4:
+			switch( select( "HP +300","HP +200","HP +100" ) ) {
+				case 1:
+					set @encanto, 4797; break;
+				case 2:
+					set @encanto, 4796; break;
+				case 3:
+					set @encanto, 4795; break;
+			}
+			break;
+		case 5:
+			switch( select( "Pedra da Conjuração 3","Pedra da Conjuração 2","Pedra da Conjuração 1" ) ) {
+				case 1:
+					set @encanto, 4806; break;
+				case 2:
+					set @encanto, 4761; break;
+				case 3:
+					set @encanto, 4760; break;
+			}
+			break;
+		case 6:
+			switch( select( "Pedra de Encantamento 3","Pedra de Encantamento 2","Pedra de Encantamento 1" ) ) {
+				case 1:
+					set @encanto, 4813; break;
+				case 2:	
+					set @encanto, 4814; break;
+				case 3:
+					set @encanto, 4815; break;
+			}
+			break;
+		case 7:
+			switch( select( "SP Máximo 3","SP Máximo 2","SP Máximo 1" ) ) {
+				case 1:
+					set @encanto, 4871; break;
+				case 2:
+					set @encanto, 4800; break;
+				case 3:
+					set @encanto, 4870; break;
+			}
+			break;
+		case 8:
+			set @encanto, 4890; break;
+		case 9:
+			switch( select( "FOR +3","FOR +2","FOR +1" ) ) {
+				case 1:
+					set @encanto, 4702; break;
+				case 2:
+					set @encanto, 4701; break;
+				case 3:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 10:
+			switch( select( "AGI +3","AGI +2","AGI +1" ) ) {
+				case 1:
+					set @encanto, 4732; break;
+				case 2:
+					set @encanto, 4731; break;
+				case 3:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 11:
+			switch( select( "VIT +3","VIT +2","VIT +1" ) ) {
+				case 1:
+					set @encanto, 4742; break;
+				case 2:
+					set @encanto, 4741; break;
+				case 3:
+					set @encanto, 4740; break;
+			}
+			break;
+		case 12:
+			switch( select( "INT +3","INT +2","INT +1" ) ) {
+				case 1:
+					set @encanto, 4712; break;
+				case 2:
+					set @encanto, 4711; break;
+				case 3:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 13:
+			switch( select( "DES +3","DES +2","DES +1" ) ) {
+				case 1:
+					set @encanto, 4722; break;
+				case 2:
+					set @encanto, 4721; break;
+				case 3:
+					set @encanto, 4720; break;
+			}
+			break;
+		case 14:
+			switch( select( "SOR +3","SOR +2","SOR +1" ) ) {
+				case 1:
+					set @encanto, 4752; break;
+				case 2:
+					set @encanto, 4751; break;
+				case 3:
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_AnelHeroi	{
+	
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else if ( @carta[0] == 0 ) set .@card,0;
+	else set .@card,4;
+	
+	if (select(( .@card != 4 )?"Encantar":"",( .@card < 3 || .@card == 4 )?"Resetar":"") == 2){
+		@tipo = 1; 
+		return;
+	}
+	
+	mes @nome$;
+	mes "Selecione o encantamento desejado.";
+	next;
+	
+	switch(.@card) {
+		case 3:
+			switch(select("FOR","AGI","VIT","INT","DES","SOR")){
+				case 1:
+					switch(select("FOR +5","FOR +4","FOR +3","FOR +2","FOR +1")){
+						case 1:
+							set @encanto, 4704; break;
+						case 2:
+							set @encanto, 4703; break;
+						case 3:
+							set @encanto, 4702; break;
+						case 4:
+							set @encanto, 4701; break;
+						case 5:
+							set @encanto, 4700; break;
+					}
+					break;
+				case 2:
+					switch(select("AGI +5","AGI +4","AGI +3","AGI +2","AGI +1")){
+						case 1:
+							set @encanto, 4734; break;
+						case 2:
+							set @encanto, 4733; break;
+						case 3:
+							set @encanto, 4732; break;
+						case 4:
+							set @encanto, 4731; break;
+						case 5:
+							set @encanto, 4730; break;
+					}
+					break;
+				case 3:
+					switch(select("VIT +5","VIT +4","VIT +3","VIT +2","VIT +1")){
+						case 1:
+							set @encanto, 4744; break;
+						case 2:
+							set @encanto, 4743; break;
+						case 3:
+							set @encanto, 4742; break;
+						case 4:
+							set @encanto, 4741; break;
+						case 5:
+							set @encanto, 4740; break;
+					}
+					break;
+				case 4:
+					switch(select("INT +5","INT +4","INT +3","INT +2","INT +1")){
+						case 1:
+							set @encanto, 4714; break;
+						case 2:
+							set @encanto, 4713; break;
+						case 3:
+							set @encanto, 4712; break;
+						case 4:
+							set @encanto, 4711; break;
+						case 5:
+							set @encanto, 4710; break;
+					}
+					break;
+				case 5:
+					switch(select("DES +5","DES +4","DES +3","DES +2","DES +1")){
+						case 1:
+							set @encanto, 4724; break;
+						case 2:
+							set @encanto, 4723; break;
+						case 3:
+							set @encanto, 4722; break;
+						case 4:
+							set @encanto, 4721; break;
+						case 5:
+							set @encanto, 4720; break;
+					}
+					break;
+				case 6:
+					switch(select("SOR +5","SOR +4","SOR +3","SOR +2","SOR +1")){
+						case 1:
+							set @encanto, 4754; break;
+						case 2:
+							set @encanto, 4753; break;
+						case 3:
+							set @encanto, 4752; break;
+						case 4:
+							set @encanto, 4751; break;
+						case 5:
+							set @encanto, 4754; break;
+					}
+					break;
+			}
+			break;
+		case 2:
+			switch(select("ATQ","ATQM")){
+				case 1:
+					switch(select("ATQ +5%","ATQ +4%","ATQ +3%","ATQ +2%","ATQ +1%")){
+						case 1:
+							set @encanto, 4895; break;
+						case 2:
+							set @encanto, 4894; break;
+						case 3:
+							set @encanto, 4767; break;
+						case 4:
+							set @encanto, 4766; break;
+						case 5:
+							set @encanto, 4882; break;
+					}
+					break;
+				case 2:
+					switch(select("ATQM +5%","ATQM +4%","ATQM +3%","ATQM +2%","ATQM +1%")){
+						case 1:
+							set @encanto, 4899; break;
+						case 2:
+							set @encanto, 4898; break;
+						case 3:
+							set @encanto, 4897; break;
+						case 4:
+							set @encanto, 4896; break;
+						case 5:
+							set @encanto, 4883; break;
+					}
+					break;
+			}
+			break;
+		case 1:
+			switch(select("HP","SP")){
+				case 1:
+					switch(select("HP Máx. +5%","HP Máx. +4%","HP Máx. +3%","HP Máx. +2%","HP Máx. +1%")){
+						case 1:
+							set @encanto, 4900; break;
+						case 2:
+							set @encanto, 4868; break;
+						case 3:
+							set @encanto, 4867; break;
+						case 4:
+							set @encanto, 4862; break;
+						case 5:
+							set @encanto, 4861; break;
+					}
+					break;
+				case 2:
+					switch(select("SP +150","SP +100","SP +75","SP +50","SP +25")){
+						case 1:
+							set @encanto, 4802; break;
+						case 2:
+							set @encanto, 4801; break;
+						case 3:
+							set @encanto, 4871; break;
+						case 4:
+							set @encanto, 4800; break;
+						case 5:
+							set @encanto, 4870; break;
+					}
+					break;
+			}
+			break;
+		case 0:
+			switch(select("DEF","DEFM")){
+				case 1:
+					switch(select("DEF +15","DEF +12","DEF +9","DEF +6","DEF +3")){
+						case 1:
+							set @encanto, 4893; break;
+						case 2:
+							set @encanto, 4794; break;
+						case 3:
+							set @encanto, 4793; break;
+						case 4:
+							set @encanto, 4792; break;
+						case 5:
+							set @encanto, 4791; break;
+					}
+					break;
+				case 2:
+					switch(select("DEFM +5","DEFM +4","DEFM +3","DEFM +2","DEFM +1")){
+						case 1:
+							set @encanto, 4892; break;
+						case 2:
+							set @encanto, 4787; break;
+						case 3:
+							set @encanto, 4891; break;
+						case 4:
+							set @encanto, 4786; break;
+						case 5:
+							set @encanto, 4890; break;
+					}
+					break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_Faceworm	{
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else set .@card,4;
+	
+	if (select(( .@card != 4 )?"Encantar":"",( .@card < 3 || .@card == 4 )?"Resetar":"") == 2){
+		@tipo = 1; 
+		return;
+	}
+	
+	switch(select("FOR","AGI","VIT","INT","DES","SOR")){
+		case 1:
+			switch(select((.@card == 1)?"Super Força":"","FOR +7","FOR +6","FOR +5","FOR +4","FOR +3","FOR +2","FOR +1")){
+				case 1:
+					set @encanto, 4853; break;
+				case 2:
+					set @encanto, 4706; break;
+				case 3:
+					set @encanto, 4705; break;
+				case 4:
+					set @encanto, 4704; break;
+				case 5:
+					set @encanto, 4703; break;
+				case 6:
+					set @encanto, 4702; break;
+				case 7:
+					set @encanto, 4701; break;
+				case 8:
+					set @encanto, 4700; break;
+			}
+			break;
+		case 2:
+			switch(select((.@card == 1)?"Super Agilidade":"","AGI +7","AGI +6","AGI +5","AGI +4","AGI +3","AGI +2","AGI +1")){
+				case 1:
+					set @encanto, 4854; break;
+				case 2:
+					set @encanto, 4736; break;
+				case 3:
+					set @encanto, 4735; break;
+				case 4:
+					set @encanto, 4734; break;
+				case 5:
+					set @encanto, 4733; break;
+				case 6:
+					set @encanto, 4732; break;
+				case 7:
+					set @encanto, 4731; break;
+				case 8:
+					set @encanto, 4730; break;
+			}
+			break;
+		case 3:
+			switch(select((.@card == 1)?"Super Vitalidade":"","VIT +7","VIT +6","VIT +5","VIT +4","VIT +3","VIT +2","VIT +1")){
+				case 1:
+					set @encanto, 4855; break;
+				case 2:
+					set @encanto, 4746; break;
+				case 3:
+					set @encanto, 4745; break;
+				case 4:
+					set @encanto, 4744; break;
+				case 5:
+					set @encanto, 4743; break;
+				case 6:
+					set @encanto, 4742; break;
+				case 7:
+					set @encanto, 4741; break;
+				case 8:
+					set @encanto, 4740; break;
+			}
+			break;
+		case 4:
+			switch(select((.@card == 1)?"Super Inteligência":"","INT +7","INT +6","INT +5","INT +4","INT +3","INT +2","INT +1")){
+				case 1:
+					set @encanto, 4856; break;
+				case 2:
+					set @encanto, 4716; break;
+				case 3:
+					set @encanto, 4715; break;
+				case 4:
+					set @encanto, 4714; break;
+				case 5:
+					set @encanto, 4713; break;
+				case 6:
+					set @encanto, 4712; break;
+				case 7:
+					set @encanto, 4711; break;
+				case 8:
+					set @encanto, 4710; break;
+			}
+			break;
+		case 5:
+			switch(select((.@card == 1)?"Super Destreza":"","DES +7","DES +6","DES +5","DES +4","DES +3","DES +2","DES +1")){
+				case 1:
+					set @encanto, 4857; break;
+				case 2:
+					set @encanto, 4726; break;
+				case 3:
+					set @encanto, 4725; break;
+				case 4:
+					set @encanto, 4724; break;
+				case 5:
+					set @encanto, 4723; break;
+				case 6:
+					set @encanto, 4722; break;
+				case 7:
+					set @encanto, 4721; break;
+				case 8:
+					set @encanto, 4720; break;
+			}
+			break;
+		case 6:
+			switch(select((.@card == 1)?"Super Sorte":"","SOR +7","SOR +6","SOR +5","SOR +4","SOR +3","SOR +2","SOR +1")){
+				case 1:
+					set @encanto, 4858; break;
+				case 2:
+					set @encanto, 4756; break;
+				case 3:
+					set @encanto, 4755; break;
+				case 4:
+					set @encanto, 4754; break;
+				case 5:
+					set @encanto, 4753; break;
+				case 6:
+					set @encanto, 4752; break;
+				case 7:
+					set @encanto, 4751; break;
+				case 8:
+					set @encanto, 4750; break;
+			}
+			break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_Sucata	{
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else set .@card,4;
+	
+	if (select(( .@card != 4 )?"Encantar":"",( .@card < 3 || .@card == 4 )?"Resetar":"") == 2){
+		@tipo = 1; 
+		return;
+	}
+	
+	if (@equip_id == 15128)
+		.@s=1;
+	
+	
+	switch(select((.@s && .@card == 3)?"E-Fogo":"",(.@s && .@card == 3)?"E-Água":"",(.@s && .@card == 3)?"E-Terra":"",(.@s && .@card == 3)?"E-Vento":"",
+					(.@s && (@carta[3] != 4990 && @carta[2] != 4990 && @carta[1] != 4990 ))?"I-Gelo":"",(.@s && (@carta[3] != 4982 && @carta[2] != 4982 && @carta[1] != 4982 ))?"A-FOR":"",(.@s && (@carta[3] != 4983 && @carta[2] != 4983 && @carta[1] != 4983 ))?"A-INT":"",
+					(!.@s)?"R-Fogo":"",(!.@s)?"R-Água":"",(!.@s)?"R-Terra":"",(!.@s)?"R-Vento":"",
+					"C-Corpo","C-Alma","C-Físico","C-Mental","A-DEF","A-ATQ","A-ATQM","A-HP","A-SP",(@carta[3] != 4985 && @carta[2] != 4985 && @carta[1] != 4985)?"A-ESQV":"",(@carta[3] != 4991 && @carta[2] != 4991 && @carta[1] != 4991)?"A-VdA":""))
+	{
+		case 1:
+			set @encanto, 4970; break;
+		case 2:
+			set @encanto, 4971; break;
+		case 3:
+			set @encanto, 4972; break;
+		case 4:
+			set @encanto, 4973; break;
+		case 5:
+			set @encanto, 4990; break;
+		case 6:
+			set @encanto, 4982; break;
+		case 7:
+			set @encanto, 4983; break;
+		case 8:
+			set @encanto, 4974; break;
+		case 9:
+			set @encanto, 4975; break;
+		case 10:
+			set @encanto, 4976; break;
+		case 11:
+			set @encanto, 4977; break;
+		case 12:
+			set @encanto, 4978; break;
+		case 13:
+			set @encanto, 4979; break;
+		case 14:
+			set @encanto, 4980; break;
+		case 15:
+			set @encanto, 4981; break;
+		case 16:
+			set @encanto, 4984; break;
+		case 17:
+			set @encanto, 4986; break;
+		case 18:
+			set @encanto, 4987; break;
+		case 19:
+			set @encanto, 4988; break;
+		case 20:
+			set @encanto, 4989; break;
+		case 21:
+			set @encanto, 4985; break;
+		case 22:
+			set @encanto, 4991; break;
+	}
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;			
+}
+
+function	script	F_RockRidge	{
+
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else set .@card,4;
+	
+	switch (@equip_id)
+	{
+		case 15177: case 15179: case 15176: case 15178: case 15180: //Armaduras
+		case 20820: case 20822: case 20821: //Manto
+			@RockR_tipo = 1; break;
+		
+		case 28441: case 28442:	//Acessórios
+			@RockR_tipo = 2; break;
+			
+		default:
+			mes @nome$;
+			mes "Não existe categoria para o item_id = "+@equip_id+"";
+			close;
+	}
+	
+	switch (@RockR_tipo)
+	{
+		case 1:
+		
+				if ( getiteminfo(@equip_id,5) == 4 || getiteminfo(@equip_id,5) == 16 )
+				{ .@select = select((!@carta[3])?"Encantar":"",(@carta[3])?"Resetar":"" ); }				
+								
+				if(.@select == 2){ @tipo = 1; return; }	
+				
+				switch(select("Status Comum:Def:DefM:Crítico:Esquiva:Alcance:Físico:Mágico:Anti-atraso"))
+				{
+					case 1:
+							switch( select("Força:Agilidade:Inteligência:Destreza") )
+							{
+								//Encanto STR
+								case 1:
+										switch( select("FOR +2:FOR +1") )
+										{
+											case 1: set @encanto, 4701; break;	
+											case 2: set @encanto, 4700; break;																
+										}
+										break;
+										
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +2:AGI +1") )
+										{
+											case 1: set @encanto, 4731; break;
+											case 2: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto INT
+								case 3:
+										switch( select("INT +2:INT +1") )
+										{
+											case 1: set @encanto, 4711; break;
+											case 2: set @encanto, 4710; break;								
+										}
+										break;
+										
+								//Encanto DEX
+								case 4:
+										switch( select("DEX +2:DEX +1") )
+										{
+											case 1: set @encanto, 4721; break;
+											case 2: set @encanto, 4720; break;								
+										}
+										break;
+							}
+							break;
+							
+					//Encanto DEF
+					case 2:
+							switch( select("DEF +20:DEF +15") )
+							{
+								case 1: set @encanto, 29026; break;
+								case 2: set @encanto, 4893; break;						
+							}
+							break;
+							
+					//Encanto MDEF
+					case 3:
+							switch( select("MDEF +5:MDEF +2") )
+							{
+								case 1: set @encanto, 4892; break;
+								case 2: set @encanto, 4786; break;								
+							}
+							break;
+
+					//Encanto Crítico
+					case 4:
+							switch( select("Crítico Lv3:Crítico Lv1") )
+							{
+								case 1: set @encanto, 4940; break;
+								case 2: set @encanto, 4926; break;								
+							}
+							break;
+							
+					//Encanto Esquiva
+					case 5:
+							switch( select("Esquiva +6:Esquiva +3") )
+							{
+								case 1: set @encanto, 4762; break;
+								case 2: set @encanto, 4860; break;								
+							}
+							break;
+							
+					//Encanto Pedra da Mira Apurada
+					case 6:
+							switch( select("Pedra da Mira Apurada 4:Pedra da Mira Apurada 3:Mira Apurada 2:Mira Apurada 1") )
+							{
+								case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4835; break;
+								case 2: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4834; break;
+								case 3: set @encanto, 4833; break;	
+								case 4: set @encanto, 4832; break;							
+							}
+							break;
+					
+					//Encanto Espírito do Lutador 
+					case 7:
+							switch( select("Espírito do Lutador 4:Espírito do Lutador 3:Espírito do Lutador 2:Espírito do Lutador 1") )
+							{
+								case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4808; break;
+								case 2: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4809; break;
+								case 3: set @encanto, 4810; break;
+								case 4: set @encanto, 4811; break;	
+							}
+							break;
+							
+					//Encanto Pedra de Encantamento
+					case 8:
+							switch( select("Pedra de Encantamento 4:Pedra de Encantamento 3:Pedra de Encantamento 2:Pedra de Encantamento 1") )
+							{
+								case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4812; break;
+								case 2: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4813; break;
+								case 3: set @encanto, 4814; break;
+								case 4: set @encanto, 4815; break;
+							}
+							break;
+					
+					//Encanto Anti-atraso
+					case 9:
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }
+							switch( select("Anti-atraso 2:Anti-atraso 1") )
+							{
+								case 1: set @encanto, 4872; break;
+								case 2: set @encanto, 4869; break;
+							}
+							break;
+				}
+				break;			
+			
+		case 2:
+		
+				if ( @parte == EQI_ACC_R || @parte == EQI_ACC_L )
+				{ .@select = select( (!@carta[3])?"Encantar":"",(@carta[3])?"Resetar":"" ); }				
+				
+				if(.@select == 2){ @tipo = 1; return; }
+				
+				switch(select("Status Comum:HP:SP:Alcance:Mágico:Físico:Anti-atraso:Crítico"))
+				{
+					case 1: //Comum
+							switch( select("Força:Agilidade:Vitalidade:Inteligência:Destreza:Sorte") )
+							{
+								//Encanto STR
+								case 1:
+										switch( select("FOR +2:FOR +1") )
+										{
+											case 1: set @encanto, 4701; break;	
+											case 2: set @encanto, 4700; break;																
+										}
+										break;
+								
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +2:AGI +1") )
+										{
+											case 1: set @encanto, 4731; break;
+											case 2: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto VIT
+								case 3:
+										switch( select("VIT +2:VIT +1") )
+										{
+											case 1: set @encanto, 4741; break;
+											case 2: set @encanto, 4740; break;								
+										}
+										break;
+										
+								//Encanto INT
+								case 4:
+										switch( select("INT +2:INT +1") )
+										{
+											case 1: set @encanto, 4711; break;
+											case 2: set @encanto, 4710; break;								
+										}
+										break;
+										
+								//Encanto DEX
+								case 5:
+										switch( select("DEX +2:DEX +1") )
+										{
+											case 1: set @encanto, 4721; break;
+											case 2: set @encanto, 4720; break;								
+										}
+										break;
+								
+								//Encanto LUK/SOR
+								case 6:
+										switch( select("SOR +2:SOR +1") )
+										{
+											case 1: set @encanto, 4751; break;
+											case 2: set @encanto, 4750; break;								
+										}
+										break;
+							}
+							break;
+							
+					case 2: //HP
+					
+							switch( select("HP +200:HP +100") )
+							{
+								case 1: set @encanto, 4796; break;
+								case 2: set @encanto, 4795; break;
+							}
+						break;
+						
+					case 3: //SP
+					
+							switch( select("SP +100:SP +50") )
+							{
+								case 1: set @encanto, 4801; break;
+								case 2: set @encanto, 4800; break;
+							}					
+					
+					case 4: set @encanto, 4832; break;  //Encanto Pedra da Mira Apurada
+					case 5: set @encanto, 4815; break;  //Encanto Pedra de Encantamento
+					case 6: set @encanto, 4811; break;  //Encanto Espírito do Lutador
+					case 7: set @encanto, 4869; break;  //Encanto Anti-atraso
+					case 8: set @encanto, 4863; break;  //Encanto Espírito do Lutador
+				}
+				break;
+	}				
+	
+	@RockR_tipo = 0;
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_Verus	{
+
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else set .@card,4;
+	
+	switch (@equip_id)
+	{
+		case 22044: case 22043:	//Botas
+			@Verus_tipo = 1; break;
+			
+		case 20733: case 20732: //Mantos
+			@Verus_tipo = 2; break;
+		
+		case 15111: case 15110: //Armaduras
+			@Verus_tipo = 3; break;
+		
+		case 2996: case 2995:	//Acessórios
+			@Verus_tipo = 4; break;
+			
+			
+			
+		default:
+			mes @nome$;
+			mes "Não existe categoria para o item_id = "+@equip_id+"";
+			close;
+	}
+	
+	switch (@Verus_tipo)
+	{
+		case 1:	
+				.@select = select((!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );			
+								
+				if(.@select == 2){ @tipo = 1; return; }
+
+				switch(select("Status Comum:Mágico:Anti-atraso"))
+				{
+					case 1:
+							switch( select("Força:Agilidade:Vitalidade:Destreza:Sorte") )
+							{
+								//Encanto STR
+								case 1:
+										switch( select("FOR +3:FOR +2:FOR +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4702; break;														
+											case 2: set @encanto, 4701; break;	
+											case 3: set @encanto, 4700; break;																
+										}
+										break;
+								
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +3:AGI +2:AGI +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4732; break;
+											case 2: set @encanto, 4731; break;
+											case 3: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto VIT
+								case 3:
+										switch( select("VIT +3:VIT +2:VIT +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4742; break;
+											case 2: set @encanto, 4741; break;
+											case 3: set @encanto, 4740; break;								
+										}
+										break;
+																							
+								//Encanto DEX
+								case 4:
+										switch( select("DEX +3:DEX +2:DEX +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4722; break;
+											case 2: set @encanto, 4721; break;
+											case 3: set @encanto, 4720; break;								
+										}
+										break;
+								
+								//Encanto LUK/SOR
+								case 5:
+										switch( select("SOR +3:SOR +2:SOR +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4752; break;
+											case 2: set @encanto, 4751; break;
+											case 3: set @encanto, 4750; break;								
+										}
+										break;
+							}
+							break;
+							
+					case 2:
+							switch( select((@equip_id == 22043 ? "Pedra de Encantamento 1:":"Pedra de Encantamento 2:")+""+(@equip_id == 22043 ? "":"Pedra de Encantamento 1") ) )
+							{
+								case 1: if(getarg(0) < 9 && @equip_id != 22043){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } if(@equip_id == 22043){ set @encanto, 4815; break; } set @encanto, 4814; break;
+								case 2: set @encanto, 4815; break;
+							}
+							break;
+							
+					case 3:											
+							switch( select("Anti-atraso 2:Anti-atraso 1") )
+							{
+								case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4872; break;
+								case 2: set @encanto, 4869; break;
+							}
+							break;
+				}
+				break;
+		
+		case 2:	
+				.@select = select((!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );			
+
+				if(.@select == 2){ @tipo = 1; return; }
+
+				switch(select("Status Comum:Alcance"))
+				{
+					case 1:
+							switch( select("Força:Agilidade:Vitalidade:Inteligência:Destreza:Sorte") )
+							{
+								//Encanto STR
+								case 1:
+										switch( select("FOR +3:FOR +2:FOR +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4702; break;														
+											case 2: set @encanto, 4701; break;	
+											case 3: set @encanto, 4700; break;																
+										}
+										break;
+								
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +3:AGI +2:AGI +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4732; break;
+											case 2: set @encanto, 4731; break;
+											case 3: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto VIT
+								case 3:
+										switch( select("VIT +3:VIT +2:VIT +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4742; break;
+											case 2: set @encanto, 4741; break;
+											case 3: set @encanto, 4740; break;								
+										}
+										break;
+								
+								//Encanto INT
+								case 4:
+										if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }
+										switch( select("INT +3:INT +2:INT +1") )
+										{
+											case 1: set @encanto, 4712; break;
+											case 2: set @encanto, 4711; break;
+											case 3: set @encanto, 4710; break;								
+										}										
+										break;
+								
+								//Encanto DEX
+								case 5:
+										switch( select("DEX +3:DEX +2:DEX +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4722; break;
+											case 2: set @encanto, 4721; break;
+											case 3: set @encanto, 4720; break;								
+										}
+										break;
+								
+								//Encanto LUK/SOR
+								case 6:
+										switch( select("SOR +3:SOR +2:SOR +1") )
+										{
+											case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4752; break;
+											case 2: set @encanto, 4751; break;
+											case 3: set @encanto, 4750; break;								
+										}
+										break;
+							}
+							break;
+							
+					case 2:
+							switch( select("Pedra da Mira Apurada 3:Pedra da Mira Apurada 2:Pedra da Mira Apurada 1") )
+							{								
+								case 1: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4834; break;
+								case 2: if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; } set @encanto, 4833; break;	
+								case 3: set @encanto, 4832; break;							
+							}
+							break;
+				}
+				break;
+				
+		case 3:
+				.@select = select((!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );			
+								
+				if(.@select == 2){ @tipo = 1; return; }
+
+				switch(select("Status Comum:Esquiva:Anti-atraso:Espírito do Lutador:Alcance:HP Máximo:DEF:Redução Neutra"))
+				{
+					case 1:
+							switch( select("Força:Agilidade:Vitalidade:Destreza:Sorte") )
+							{
+								//Encanto STR
+								case 1:
+										if(@equip_id != 15111){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15111)+"!"; close; }
+										if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }
+										switch( select("FOR +3:FOR +2:FOR +1") )
+										{
+											case 1: set @encanto, 4702; break;														
+											case 2: set @encanto, 4701; break;	
+											case 3: set @encanto, 4700; break;																
+										}
+										break;
+								
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +2:AGI +1") )
+										{
+											case 1: set @encanto, 4731; break;
+											case 2: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto VIT
+								case 3:
+										if(@equip_id != 15110){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15110)+"!"; close; }
+										if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }
+										switch( select("VIT +3:VIT +2:VIT +1") )
+										{
+											case 1: set @encanto, 4742; break;
+											case 2: set @encanto, 4741; break;
+											case 3: set @encanto, 4740; break;								
+										}
+										break;
+																							
+								//Encanto DEX
+								case 4:
+										if(@equip_id != 15111){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15111)+"!"; close; }
+										if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }
+										switch( select("DEX +3:DEX +2:DEX +1") )
+										{
+											case 1: set @encanto, 4722; break;
+											case 2: set @encanto, 4721; break;
+											case 3: set @encanto, 4720; break;								
+										}
+										break;
+								
+								//Encanto LUK/SOR
+								case 5:
+										switch( select("SOR +2:SOR +1") )
+										{
+											case 1: set @encanto, 4751; break;
+											case 2: set @encanto, 4750; break;								
+										}
+										break;
+							}
+							break;
+							
+					case 2:
+							switch( select("Esquiva +12:Esquiva +6:Esquiva +3:Esquiva +1") )
+							{
+								case 1: set @encanto, 4763; break;
+								case 2: set @encanto, 4762; break;
+								case 3: set @encanto, 4860; break;							
+							}
+							break;
+							
+					case 3:											
+							switch( select("Anti-atraso 2:Anti-atraso 1") )
+							{								
+								case 1: set @encanto, 4872; break;
+								case 2: set @encanto, 4869; break;
+							}
+							break;
+							
+					case 4:
+							if(@equip_id != 15111){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15111)+"!"; close; }
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }	
+							switch( select( "Espírito do Lutador 3:Espírito do Lutador 2:Espírito do Lutador 1" ) )
+							{
+								case 1: set @encanto, 4809; break;
+								case 2: set @encanto, 4810; break;
+								case 3: set @encanto, 4811; break;
+							}
+							break;
+					
+					case 5:
+							if(@equip_id != 15111){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15111)+"!"; close; }
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }	
+							switch( select("Pedra da Mira Apurada 3:Pedra da Mira Apurada 2:Pedra da Mira Apurada 1") )
+							{
+								case 1: set @encanto, 4834; break;
+								case 2: set @encanto, 4833; break;	
+								case 3: set @encanto, 4832; break;							
+							}
+							break;
+					
+					case 6:
+							if(@equip_id != 15110){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15110)+"!"; close; }
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }	
+							switch( select( "HP Máximo 3","HP Máximo 2","HP Máximo 1" ) )
+							{
+								case 1: set @encanto, 4867; break;
+								case 2: set @encanto, 4862; break;
+								case 3: set @encanto, 4861; break;
+							}
+							break;
+					
+					case 7:
+							if(@equip_id != 15110){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15110)+"!"; close; }
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }	
+							switch( select("DEF +9:DEF +6:DEF +3") )
+							{
+								case 1: set @encanto, 4793; break;
+								case 2: set @encanto, 4792; break;
+								case 3: set @encanto, 4791; break;
+							}
+							break;
+						
+				
+					case 8:
+							if(@equip_id != 15110){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(15110)+"!"; close; }
+							if(getarg(0) < 9){ mes @nome$; mes "Somente para itens refinados a partir de +9!"; close; }	
+							switch( select("Resistência Neutra 3:Resistência Neutra 2:Resistência Neutra 1") )
+							{
+								case 1: set @encanto, 4935; break;
+								case 2: set @encanto, 4934; break;
+								case 3: set @encanto, 4933; break;
+							}
+							break;
+				}
+				break;
+				
+		case 4:	
+				.@select = select((!@carta[3] || !@carta[2])?"Encantar":"",(@carta[3])?"Resetar":"" );			
+								
+				if(.@select == 2){ @tipo = 1; return; }
+
+				switch(select("Status Comum:Mágico:Anti-atraso"))
+				{
+					case 1:
+							switch( select("Força:Agilidade:Vitalidade:Inteligência:Destreza") )
+							{
+								//Encanto STR
+								case 1:
+										switch( select("FOR +2:FOR +1") )
+										{														
+											case 1: set @encanto, 4701; break;	
+											case 2: set @encanto, 4700; break;																
+										}
+										break;
+								
+								//Encanto AGI
+								case 2:
+										switch( select("AGI +2:AGI +1") )
+										{
+											case 1: set @encanto, 4731; break;
+											case 2: set @encanto, 4730; break;								
+										}
+										break;
+										
+								//Encanto VIT
+								case 3:
+										switch( select("VIT +2:VIT +1") )
+										{
+											case 1: set @encanto, 4741; break;
+											case 2: set @encanto, 4740; break;								
+										}
+										break;
+										
+								//Encanto INT
+								case 4:
+										switch( select("INT +2:INT +1") )
+										{
+											case 1: set @encanto, 4711; break;
+											case 2: set @encanto, 4710; break;								
+										}
+										break;
+
+								//Encanto DEX
+								case 5:
+										switch( select("DEX +2:DEX +1") )
+										{
+											case 1: set @encanto, 4721; break;
+											case 2: set @encanto, 4720; break;								
+										}
+										break;
+							}
+							break;
+							
+					case 2:
+							switch( select((@equip_id == 2995 ? "Pedra de Encantamento 2:":"Pedra de Encantamento 1:")+""+(@equip_id != 2995 ? "":"Pedra de Encantamento 1") ) )
+							{
+								case 1: if(@equip_id == 2996){ set @encanto, 4815; break; } set @encanto, 4814; break;
+								case 2: set @encanto, 4815; break;
+							}
+							break;
+							
+					case 3:	
+							if(@equip_id != 2996){ mes @nome$; mes "Encanto dispoível somente para "+getitemname(2996)+"!"; close; }
+							set @encanto, 4869; break;							
+							break;
+				}
+				break;
+	}
+
+	@Verus_tipo = 0;
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+
+function	script	F_RoyalBanquet	{
+
+		 if ( @carta[3] == 0 ) set .@card,3;
+	else if ( @carta[2] == 0 ) set .@card,2;
+	else if ( @carta[1] == 0 ) set .@card,1;
+	else set .@card,4;
+
+	.@select = select((!@carta[3] || !@carta[2] || !@carta[1])?"Encantar":"",(@carta[3])?"Resetar":"" );			
+
+	if(.@select == 2){ @tipo = 1; return; }
+
+	switch( select("Força:Agilidade:Vitalidade:Inteligência:Destreza:Sorte") )
+	{
+		case 1: set @encanto, 4996; break;	//Encanto STR		
+		case 2: set @encanto, 4999; break;	//Encanto AGI
+		case 3:	set @encanto, 29011; break;	//Encanto VIT
+		case 4: set @encanto, 29002; break;	//Encanto INT
+		case 5: set @encanto, 29005; break;	//Encanto DEX
+		case 6: set @encanto, 29008; break;	//Encanto LUK/SOR
+	}
+	
+	@tipo = 0; @carta[.@card] = @encanto;
+	return;
+}
+

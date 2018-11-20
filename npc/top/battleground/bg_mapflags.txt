@@ -1,0 +1,138 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   MapFlags                                                         .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 4.7	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Mapflags relacionado as mapas de batalhas.                       .
+  *---------------------------------------------------------------------*/
+
+// Tierra
+bat_a01	mapflag	nowarp
+bat_a01	mapflag	nowarpto
+bat_a01	mapflag	nomemo
+bat_a01	mapflag	noteleport
+bat_a01	mapflag	nosave
+bat_a01	mapflag	battleground	2
+
+bat_a02	mapflag	nowarp
+bat_a02	mapflag	nowarpto
+bat_a02	mapflag	nomemo
+bat_a02	mapflag	noteleport
+bat_a02	mapflag	nosave
+bat_a02	mapflag	battleground	2
+
+// Flavius
+bat_b01	mapflag	nowarp
+bat_b01	mapflag	nowarpto
+bat_b01	mapflag	nomemo
+bat_b01	mapflag	noteleport
+bat_b01	mapflag	nosave
+bat_b01	mapflag	battleground	2
+
+bat_b02	mapflag	nowarp
+bat_b02	mapflag	nowarpto
+bat_b02	mapflag	nomemo
+bat_b02	mapflag	noteleport
+bat_b02	mapflag	nosave
+bat_b02	mapflag	battleground	2
+
+// Krieger von Midgard
+bat_c01	mapflag	nowarp
+bat_c01	mapflag	nowarpto
+bat_c01	mapflag	nomemo
+bat_c01	mapflag	noteleport
+bat_c01	mapflag	nosave
+bat_c01	mapflag	battleground	2
+
+bat_c02	mapflag	nowarp
+bat_c02	mapflag	nowarpto
+bat_c02	mapflag	nomemo
+bat_c02	mapflag	noteleport
+bat_c02	mapflag	nosave
+bat_c02	mapflag	battleground	2
+
+bat_c03	mapflag	nowarp
+bat_c03	mapflag	nowarpto
+bat_c03	mapflag	nomemo
+bat_c03	mapflag	noteleport
+bat_c03	mapflag	nosave
+bat_c03	mapflag	battleground	2
+
+// Valfreyja
+bg_soul01	mapflag	nowarp
+bg_soul01	mapflag	nowarpto
+bg_soul01	mapflag	nomemo
+bg_soul01	mapflag	noteleport
+bg_soul01	mapflag	nosave
+bg_soul01	mapflag	battleground	2
+
+bg_soul02	mapflag	nowarp
+bg_soul02	mapflag	nowarpto
+bg_soul02	mapflag	nomemo
+bg_soul02	mapflag	noteleport
+bg_soul02	mapflag	nosave
+bg_soul02	mapflag	battleground	2
+
+// Kingdom
+prtg2_cas01	mapflag	nowarp
+prtg2_cas01	mapflag	nowarpto
+prtg2_cas01	mapflag	nomemo
+prtg2_cas01	mapflag	noteleport
+prtg2_cas01	mapflag	nosave
+prtg2_cas01	mapflag	battleground	2
+//prtg2_cas01	mapflag	gvg_castle
+
+payg2_cas01	mapflag	nowarp
+payg2_cas01	mapflag	nowarpto
+payg2_cas01	mapflag	nomemo
+payg2_cas01	mapflag	noteleport
+payg2_cas01	mapflag	nosave
+payg2_cas01	mapflag	battleground	2
+//payg2_cas01	mapflag	gvg_castle
+
+gefg2_cas03	mapflag	nowarp
+gefg2_cas03	mapflag	nowarpto
+gefg2_cas03	mapflag	nomemo
+gefg2_cas03	mapflag	noteleport
+gefg2_cas03	mapflag	nosave
+gefg2_cas03	mapflag	battleground	2
+//gefg2_cas03	mapflag	gvg_castle
+
+aldg2_cas05	mapflag	nowarp
+aldg2_cas05	mapflag	nowarpto
+aldg2_cas05	mapflag	nomemo
+aldg2_cas05	mapflag	noteleport
+aldg2_cas05	mapflag	nosave
+aldg2_cas05	mapflag	battleground	2
+//aldg2_cas01	mapflag	gvg_castle
+
+arug2_cas01	mapflag	nowarp
+arug2_cas01	mapflag	nowarpto
+arug2_cas01	mapflag	nomemo
+arug2_cas01	mapflag	noteleport
+arug2_cas01	mapflag	nosave
+arug2_cas01	mapflag	battleground	2
+//arug2_cas01	mapflag	gvg_castle
+
+schg2_cas01	mapflag	nowarp
+schg2_cas01	mapflag	nowarpto
+schg2_cas01	mapflag	nomemo
+schg2_cas01	mapflag	noteleport
+schg2_cas01	mapflag	nosave
+//schg2_cas01	mapflag	gvg_castle

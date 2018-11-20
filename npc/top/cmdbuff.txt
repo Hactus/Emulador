@@ -1,0 +1,92 @@
+// ========================================================== //
+//         __  __ _____ _    _          ______ _              //
+//        |  \/  |_   _| |  | |   /\   |  ____| |             //     
+//        | \  / | | | | |__| |  /  \  | |__  | |             //    
+//        | |\/| | | | |  __  | / /\ \ |  __| | |             //    
+//        | |  | |_| |_| |  | |/ ____ \| |____| |____         //
+//        |_|  |_|_____|_|  |_/_/    \_\______|______|        //
+//                 forum.brathena.org                         //
+//                                                            //
+// ===================== Licença ============================ //
+//     Esta script está protegida por uma licença Creative    //
+//          Commons Atribuido ao Uso-Não-Comercial            //
+//                      Compartilhado                         //
+// ========================================================== //
+// Nome:	@Buff VIP                                         //
+// ========================================================== //
+// Autor:	Mihael                                            //
+// ========================================================== //
+// Versão:	1.0                                               //
+// ========================================================== //
+// Descrição:	Um sistema vip de buffs por comando           //
+//              , fornece buffs para players vip em seu ro.   //
+// ========================================================== //
+// Comentários Adicionais:	Favor manter os créditos pois     //
+//                          da trabalho para fazer.           //
+// ========================================================== //
+// Change Log:	1.0 - Script criado.            [Mihael]      //
+// ========================================================== //
+-	script	cmdbuff	-1,{
+
+OnInit:
+		bindatcmd "buff",strnpcinfo(3)+"::OnBuff";
+		end;
+OnBuff:
+		setarray .@maps$[0],"pvp_y_1-1","pvp_y_1-2","guild_vs5","pvp_n_1-5","pvp_y_2-2","force_1-1","turbo_n_1","prtg_cas01","un_myst","guild_vs2","iz_battle","guild_vs3","pvp_n_2-5","guild_vs1"; //Mapas onde o comando é bloqueado.
+        for ( set .@i, 0; .@i < getarraysize(.@maps$); set .@i, .@i + 1 ) {
+            if ( strcharinfo(3) == .@maps$[.@i] ) {
+			dispbottom "Desculpe "+strcharinfo(0)+" mas você não pode utilizar o @buff nesse mapa.";
+                end;
+            }
+        }
+        if (getgroupid() < 1) {
+			dispbottom "Desculpe "+strcharinfo(0)+" mas só jogadores VIP podem usar este comando.";
+			end;
+        }
+		if (buff_timer > gettimetick(2)) {
+			dispbottom "Você deve esperar "+ (buff_timer - gettimetick(2))  +" segundos para usar o comando novamente.";
+			end;}
+			sc_start 30,3600000,10;        // Ben?					Dura?: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura?: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura?: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura?: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura?: 600 seg.
+			sc_start 41,3600000,10;          // Gl??					Dura?: 600 seg.
+			//sc_start SC_ASPERSIO,3600000,10;        // Aspersio					Dura?: 600 seg.
+			sc_start 39,3600000,10;           // Kyrie Eleison				Dura?: 600 seg.
+			//sc_start SC_PROTECTWEAPON,3600000,10;   // Revestimento Arma			Dura?: 600 seg.
+			//sc_start SC_REFLECTSHIELD,3600000,10;   // Escudo Refletor			Dura?: 600 seg.
+			sc_start SC_RENOVATIO,3600000,10;                 // Renovatio		Dura?: 600 seg.
+			//sc_start SC_EXTRACT_SALAMINE_JUICE,3600000,10;                 // Suco Celular Enriquecido		Dura?: 600 seg.
+			sc_start 23,3600000,10;                 // Concentra?		Dura?: 600 seg.
+			//sc_start 110,3600000,5;                 // Dedica?				Dura?: 600 seg.
+			//sc_start 122,3600000,10;                // Golpe Estilha?te		Dura?: 600 seg.
+			//sc_start 156,3600000,1;                 // For?Violent?ima		Dura?: 600 seg.
+			sc_start 121,3600000,10;	               // Caminho do Vento			Dura?: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura?: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura?: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura?: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura?: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura?: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura?: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			set buff_timer, gettimetick(2) + 60;
+			end;
+}

@@ -1,0 +1,528 @@
+//===== rAthena Script =======================================
+//= Official iRO Halloween Event 2013
+//===== By: ==================================================
+//= Akkarin
+//===== Current Version: =====================================
+//= 1.1
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= [Official Conversion]
+//= This event ran on iRO from 16th Oct to 6th Nov (3 weeks)
+//===== Additional Comments: =================================
+//= 1.0 Conversion from official script -> rAthena. [Akkarin]
+//= 1.1 Some cleanup. [Euphy]
+//= 1.2 Added monster spawns [Akkarin]
+//============================================================
+
+// Main Quest :: 2013e_hallow_en_1015
+//============================================================
+prontera,160,182,5	script	Suspicious Coffin#2013HE	801,{
+	if (eve_bs < 1) {
+		mes "- O caixão parece muito suspeito. -";
+		next;
+		switch(select("Ignorar:Knock-knock.")) {
+		case 1:
+			mes "- Você ignora, embora com uma ponta de dúvida. -";
+			close;
+		case 2:
+			mes "- tap tap tap -";
+			next;
+			mes "[???]";
+			mes "Awwww!!!";
+			mes "Que......Quem é você!!!";
+			next;
+			mes "- chunk -";
+			mes "- thump -";
+			next;
+			mes "[???]";
+			mes "Ai, minha cabeça!!!";
+			next;
+			mes "[???]";
+			mes "Você está bem? Travessura?";
+			next;
+			mes "[Travessura]";
+			mes "Estou bem!";
+			mes "Não foi nada!";
+			mes "Gostosura.";
+			next;
+			mes "[Gostosura]";
+			mes "Tem geleia de morango saindo da sua cabeça!";
+			mes "Travessura.";
+			next;
+			mes "[Travessura]";
+			mes "Awwww!";
+			mes "Ugh!!!!";
+			mes "Eu vou morrer!!!";
+			mes "Oh, não...!!!";
+			next;
+			mes "[Travessura]";
+			mes "koff, koff...";
+			mes "Eu era feliz com você.....embora tenha sido pouco tempo...";
+			mes "Gostosura....";
+			next;
+			mes "[Travessura]";
+			mes "Eu morri.......";
+			next;
+			mes "[Gostosura]";
+			mes "...";
+			next;
+			mes "[Gostosura]";
+			mes "Travessura.";
+			next;
+			mes "[Gostosura]";
+			mes "nunca morremos...";
+			mes "nós morremos antes.";
+			next;
+			mes "[Travessura]";
+			mes "Yipee, é, é verdade!";
+			next;
+			mes "[Travessura]";
+			mes "Eu sempre esqueço que morri há muito tempo.";
+			next;
+			mes "[Travessura]";
+			mes "Yow!!!";
+			mes "Por falar nisso!!!!";
+			mes "A gente não devia desperdiçar tempo assim!";
+			mes "Gostosura.";
+			next;
+			mes "[Travessura]";
+			mes "Nós vamos morrer se não voltarmos para o mestre com ^ff9000'aquilo'^000000...";
+			next;
+			mes "[Gostosura]";
+			mes "Nós já estamos mortos...";
+			mes "Travessura.";
+			next;
+			mes "[Gostosura]";
+			mes "Nós vamos ser perturbados por ele até que o deixemos irritado.";
+			next;
+			mes "[Travessura]";
+			mes "Ah... não...";
+			mes "Rápido!";
+			mes "Vamos achar 'aquilo' !";
+			mes "Gostosura.";
+			next;
+			mes "[Gostosura]";
+			mes "Agora...";
+			next;
+			mes "[Travessura]";
+			mes "^ff9000Ugh, awww, que diabos!!!!!!!!^000000";
+			next;
+			mes "[Gostosura]";
+			mes "Nós vamos morrer queimados pelo sol se sairmos agora.";
+			mes "Travessura.";
+			next;
+			mes "[Travessura]";
+			mes "Você DEVE dizer aquela coisa importante antes!!!!!!!!!";
+			next;
+			mes "[Gostosura]";
+			mes "Essa palavra só era boa quando eramos vivos.";
+			next;
+			mes "[Travessura]";
+			mes "Ei!";
+			mes "Você!";
+			next;
+			mes "[Travessura]";
+			mes "Você é a primeira pessoa que tira geleia de morango da minha cabeça.";
+			mes "Você me... amaria...?";
+			next;
+			mes "- Crash! -";
+			next;
+			mes "- Tem mais geleia saindo de baixo do caixão. -";
+			next;
+			mes "[Gostosura]";
+			mes "Ele está um pouco estranho desde que a geleia começou a vazar.";
+			mes "Travessura..";
+			next;
+			mes "[Travessura]";
+			mes "Não, Gostosura.";
+			mes "Agora me sinto revigorado, você pode largar esse taco??";
+			next;
+			mes "[Travessura]";
+			mes "Eu você!";
+			mes "Eu não te culpo por deixar minha cabeça assim. Poderia nos ajudar?";
+			next;
+			mes "[Travessura]";
+			mes "Sem pressão.";
+			mes "A coisa de morango vai voltar ao normal após alguns dias.";
+			next;
+			switch(select("Ajudar.:Ignorar.")) {
+			case 1:
+				mes "[Travessura]";
+				mes "Haha!";
+				mes "Obrigado!";
+				next;
+				select("ouvir a história.");
+				mes "[Travessura]";
+				mes "É um segredo...";
+				mes "Bom, estamos mortos.";
+				next;
+				mes "- kaboom! -";
+				next;
+				mes "[Travessura]";
+				mes "Isso dói.";
+				mes "Gostosura.";
+				next;
+				mes "[Travessura]";
+				mes "Eu vou explicar direitinho, larga isso.";
+				next;
+				callsub L_Explanation;
+				set eve_bs,1;
+				setquest 11378;
+				close;
+			case 2:
+				mes "[Travessura]";
+				mes "Ooops!";
+				mes "Bom, nós temos que sair, Gostosura!";
+				next;
+				mes "[Gostosura]";
+				mes "Não se preocupe, Gostosura.";
+				mes "No pior caso, nós vamos voltar para Niflheim.";
+				close;
+			}
+		}
+	} else if (eve_bs == 1) {
+		callsub L_Explanation;
+		close;
+	} else if (eve_bs == 2) {
+		if (isbegin_quest(11378)) {
+			mes "[Travessura]";
+			mes "^ff9000As abóboras estão no campo. Colete abóboras orgânicas ou não orgânicas para 30 pessoas e traga-as para o Chef Candycon em Niflheim.^000000";
+			next;
+			mes "[Travessura]";
+			mes "A abóbora orgânica é mais valiosa.";
+			mes "É três vezes melhor!";
+			close;
+		} else {
+			mes "[Travessura]";
+			mes "Obrigado! Não vamos morrer queimados pelo sol!";
+			next;
+			mes "[Gostosura]";
+			mes "Obrigado.";
+			next;
+			mes "[Travessura]";
+			mes "Se não for problema, poderia ajudar mais?";
+			mes "Ainda temos poucos bolos de abóbora.";
+			next;
+			mes "[Travessura]";
+			mes "A última vez que eu estive aqui, eu vi uma torre de bolos de abóbora que era maior que o castelo... quantos mais precisamos fazer?";
+			next;
+			switch(select("Ajudar:Ignorar.")) {
+			case 1:
+				mes "[Travessura]";
+				mes "^ff9000As abóboras estão no campo. Colete abóboras orgânicas ou não orgânicas para 30 pessoas e traga-as para o Chef Candycon em Niflheim.^000000";
+				next;
+				mes "[Travessura]";
+				mes "A abóbora orgânica é mais valiosa.";
+				mes "É três vezes melhor!";
+				setquest 11378;
+				close;
+			case 2:
+				mes "[Travessura]";
+				mes "Ooops!";
+				mes "Bom, nós temos que sair, Gostosura!";
+				next;
+				mes "[Gostosura]";
+				mes "Não se preocupe, Gostosura.";
+				mes "No pior caso, nós vamos voltar para Niflheim.";
+				close;
+			}
+		}
+	}
+	end;
+
+L_Explanation:
+	mes "[Travessura]";
+	mes "Nós somos da ^ff9000'cidade dos mortos' Niflheim^000000.";
+	next;
+	mes "[Travessura]";
+	mes "^ff9000As abóboras para o evento de Halloween de Niflheim^000000 desapareceram.";
+	next;
+	mes "[Travessura]";
+	mes "Primeiro vamos preparar outro bolo, mas, Sir Hell ama bolo de abóbóra....... Halloween sem bolo de abóbora é como um vampiro sem presas...";
+	next;
+	mes "[Travessura]";
+	mes "Nós viemos procurar abóboras, pois nosso chefe está muito ocupado com outras coisas,";
+	next;
+	mes "[Travessura]";
+	mes "Se formos muito longe, corremos o risco de deixar o caixão...";
+	next;
+	mes "[Travessura]";
+	mes "^ff9000As abóboras estão no campo. Colete abóboras orgânicas ou não orgânicas para 30 pessoas e traga-as para o Chef Candycon em Niflheim.^000000";
+	next;
+	mes "[Travessura]";
+	mes "A abóbora orgânica é mais valiosa.";
+	mes "É três vezes melhor!";
+	return;
+}
+
+niflheim,181,173,5	script	Chef Candycon#2013HE	796,{
+	set .@pumpum, countitem(6805) + (countitem(6804)*3);
+	if (eve_bs == 1) {
+		if (.@pumpum > 29) {
+			mes "[Chef Candycon]";
+			mes "clang~clang~!";
+			next;
+			mes "[Chef Candycon]";
+			mes "Phew... quando vou terminar de fazer esse bolo? ...parece uma eternidade...";
+			next;
+			mes "[Chef Candycon]";
+			mes "Nossa Senhora! Eu vou enforcar qualquer um que sugerir fazer um torre de bolo de abóbóra da próxima vez.";
+			next;
+			mes "[Chef Candycon]";
+			mes "Embora Sir, Hell goste do bolo, ele não liga para qual abóbora é usada. Ele disse que a normal é boa, mas...";
+			next;
+			mes "[Chef Candycon]";
+			mes "SEMPRE disse que essa abóbora não é boa... só a orgânica é boa... que inferno, você é um cozinheiro?! Se você sabe tanto sobre cozinha, por que não faz você mesmo!!";
+			next;
+			mes "[Chef Candycon]";
+			mes "E nunca me ajudou a pegar abóbora, e ainda finge estar ocupado? UGH! tut~";
+			next;
+			mes "[Chef Candycon]";
+			mes "Meu Deus!!!";
+			mes "Hu....Humano!!";
+			mes "hub~ (respiração profunda)..";
+			next;
+			mes "[Chef Candycon]";
+			mes "s.....ser....h....u.... m....a....no....";
+			next;
+			mes "[Chef Candycon]";
+			mes "como...........você....chegou......nessa......";
+			mes "cidade.....dos.......... mortos.......";
+			mes "Ni....fle.......he...im........";
+			next;
+			mes "[Chef Candycon]";
+			mes "a....qui....";
+			mes "não.........é........";
+			mes "lugar..................";
+			mes "para..os....vi...vos.......";
+			next;
+			select("Fale sobre as abóboras.");
+			mes "[Chef Candycon]";
+			mes ".....A...........bó............bo....ra.....";
+			next;
+			mes "[Chef Candycon]";
+			mes "Já...aca...bou....";
+			mes "M.....mas....";
+			mes "vol...te......de...novo....";
+			next;
+			mes "[" + strcharinfo(0) + "]";
+			mes "Por que você não fala normalmente.";
+			next;
+			mes "[Chef Candycon]";
+			mes "......";
+			next;
+			mes "[Chef Candycon]";
+			mes "Eu....eu posso??";
+			next;
+			mes "[Chef Candycon]";
+			mes "Ah... Eu não deveria falar assim...  nós temos uma imagem....";
+			next;
+			mes "[Chef Candycon]";
+			mes "Falar assim deveria assustar as pessoas...heww... porém, eu não consigo aguentar, é muito abafado.";
+			next;
+			mes "[Chef Candycon]";
+			mes "Enfim! Não vou atrasar se essas abóboras não fugirem para Midgarts.";
+			next;
+			mes "[Chef Candycon]";
+			mes "Claro, estamos mortos, então somos muito fracos na presença do sol. Podemos virar um punhado de cinzas se procurarmos durante o dia.";
+			next;
+			mes "[Travessura]";
+			mes "Você sabia?! Como pôde pedir para a gente procurar abóboras?!";
+			next;
+			mes "[Chef Candycon]";
+			mes "Quê? Vocês conseguem andar livremente após o por-do-sol. E vocês tem asas e visão norturna... e o quê? Ultrassom...?!!!!";
+			next;
+			mes "[Gostosura]";
+			mes "Então eu não sai do caixão.";
+			next;
+			mes "[Travessura]";
+			mes "Ah...?!";
+			next;
+			mes "[Chef Candycon]";
+			mes "Gosh. Que sorte tivemos com seu esforço, considerando o processo após trazer as abóboras.";
+			next;
+			select("Dar as abóboras.");
+			mes "[Chef Candycon]";
+			mes "Vamos ver! Certo? É, está certo! Espere um pouco.";
+			next;
+			callsub L_GivePumpkins;
+			end;
+		} else {
+			mes "[Chef Candycon]";
+			mes "s.....ser....h....u.... m....a....no....";
+			next;
+			mes "[Chef Candycon]";
+			mes "como...........você....chegou......nessa......";
+			mes "como...........você....chegou......nessa.......";
+			mes "Ni....ffle.......he...im........";
+			next;
+			mes "[Chef Candycon]";
+			mes "a....qui....";
+			mes "não.........é........";
+			mes "lugar..................";
+			mes "para..os....vi...vos.......";
+			close;
+		}
+	} else if (eve_bs == 2) {
+		if (isbegin_quest(11378)) {
+			mes "[Chef Candycon]";
+			mes "Eh! Mais abóboras??";
+			mes "Diabos... sério... Quantas tem ainda?";
+			next;
+			mes "[Chef Candycon]";
+			mes "Bom, ^ff9000Eu preciso de todas as abóboras^000000!";
+			mes "Se não formos rápidos, vamos nos atrasar para o festival.";
+			next;
+			mes "^ff9000*****AVISO*****^000000";
+			mes "^ff9000Você dará todas as abóboras, [TODAS]!^000000";
+			mes "^ff9000Proceder?^000000";
+			next;
+			callsub L_GivePumpkins;
+			end;
+		} else {
+			mes "[Chef Candycon]";
+			mes "Yo! Obrigado pela entrega, assar bolos dia e noite.";
+			mes "Deitar na tumba não garante sono eterno. T.T ";
+			close;
+		}
+	} else {
+		mes "[Chef Candycon]";
+		mes "s.....ser....h....u.... m....a....no....";
+		next;
+		mes "[Chef Candycon]";
+		mes "como...........você....chegou......nessa......";
+		mes "cidade.....dos.......... mortos.......";
+		mes "Ni....fle.......he...im........";
+		next;
+		mes "[Chef Candycon]";
+		mes "a....qui....";
+		mes "não.........é........";
+		mes "lugar..................";
+		mes "para..os....vi...vos.......";
+		close;
+	}
+	end;
+
+L_GivePumpkins:
+	mes "[Chef Candycon]";
+	mes "Bom, ^ff9000Eu preciso de todas as abóboras^000000!";
+	mes "Se não formos rápidos, vamos nos atrasar para o festival.";
+	next;
+	mes "^ff9000*****AVISO*****^000000";
+	mes "^ff9000Você dará todas as abóboras, [TODAS]!^000000";
+	mes "^ff9000Proceder?^000000";
+	switch(select("Dar todas as abóbóras.:Cancelar.")) {
+	case 1:
+		set .@pumpum, countitem(6805) + (countitem(6804)*3);
+		if (.@pumpum > 29){
+			if (countitem(6805)) delitem 6805,countitem(6805); //INORGANIC_PUMPKIN
+			if (countitem(6804)) delitem 6804,countitem(6804); //ORGANIC_PUMPKIN
+			set eve_bs,2;
+			getitem 22669,1; //HALLOWEEN_G_BOX
+			erasequest 11378;
+			mes "[Chef Candycon]";
+			mes "Okay! Cave a abóbora assim~ e assado~!";
+			next;
+			mes "[Chef Candycon]";
+			mes "Legal! A abóbora foi moldada nessa forma? É para o Halloween! Halloween sem Jack'o lantern não é Halloween de verdade!";
+			next;
+			mes "[Chef Candycon]";
+			mes "Pegue isso, é uma recomepnsa por trazer as abóboras! Abra, pode ter alguma coisa divertida...";
+			close;
+		} else {
+			mes "[Chef Candycon]";
+			mes "Ooops onde está a abóbora? Escapou de novo?";
+			mes "Oh, céus...não... você deve pegar ela de novo...";
+			close;
+		}
+	case 2:
+		mes "[Chef Candycon]";
+		mes "eeh~~ Essas abóboras não tem utilidade~~";
+		close;
+	}
+}
+
+niflheim,182,177,3	script	Trick#2013HE	799,{
+	if (eve_bs == 1) {
+		mes "[Travessura]";
+		mes "É mesmo fresco fora do caixão?";
+		mes "Você pegou 30 abóboras?";
+		next;
+		mes "[Travessura]";
+		mes "Se pegar todas, entregue para o chefe ali.";
+		close;
+	} else if (eve_bs > 1) {
+		mes "[Travessura]";
+		mes "O que teria acontecido sem sua ajuda?~";
+		next;
+		mes "[Gostosura]";
+		mes "Talvez, Sir, Hell teria grelhado um morcedo, ao invés de fazer bolo de abóbora.";
+		next;
+		mes "[Travessura]";
+		mes "Credo....";
+		close;
+	} else {
+		mes "[Travessura]";
+		mes "Eu não preciso de doces!!";
+		mes "Eu vou é bagunçar tudo! Wahahahaa!";
+		close;
+	}
+	end;
+}
+
+niflheim,183,176,3	script	Treat#2013HE	799,{
+	if (eve_bs == 1) {
+		mes "[Gostosura]";
+		mes "......";
+		close;
+	} else if (eve_bs > 1) {
+		mes "[Gostosura]";
+		mes "Indo bem...?";
+		close;
+	} else {
+		mes "[Gostosura]";
+		mes "-giggle-";
+		close;
+	}
+}
+
+niflheim,179,168,5	script	Kentucky#2013HE	800,{
+	mes "[Kentucky]";
+	mes "Ho.. essas sementes tem um gosto bem forte.";
+	mes "Eu vou conseguir essas sementes, custe o que custar.";
+	close;
+}
+
+niflheim,177,166,8	script	Chicken#2013HE	800,{
+	mes "[Chicken]";
+	mes "Ei Kentucky!!";
+	mes "Você está comendo muito sozinho!";
+	close;
+}
+
+niflheim,198,175,5	script	Wandering soul#2013HE	802,{
+	mes "[Wandering soul]";
+	mes "-giggle-";
+	mes "The festival is about to begin...";
+	close;
+}
+
+niflheim,191,180,3	script	Wandering soul#2013HE2	802,{
+	mes "[Alma Penada]";
+	mes "Criaturas vivas não podem participar do festival em Niflheim. -giggle-";
+	close;
+}
+
+niflheim,181,181,5	script	Wandering soul#2013HE3	802,{
+	mes "[Alma Penada]";
+	mes "O festival trouxe vitalidade para a 'cidade dos mortos'....";
+	mes "Algo não soa estranho??";
+	close;
+}
+
+niflheim,183,162,5	script	Wandering soul#2013HE4	802,{
+	mes "[Alma Penada]";
+	mes "Em breve teremos os festival das almas!";
+	close;
+}

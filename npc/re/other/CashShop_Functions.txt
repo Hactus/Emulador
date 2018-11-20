@@ -1,0 +1,45 @@
+//===== Venus Script =========================================
+//= Cash Shop Functions
+//===== Por: =================================================
+//= rAthena Team / skb_ (CreativeSD Translation)
+//===== Versão atual: ========================================
+//= 1.0
+//===== Compatível com: ======================================
+//= rAthena Project / Venus-Emulator
+//===== Comentários Adicionais: ==============================
+//= 1.0 Moved VIP_Third_Class function
+//=		from other/CashShop_Functions. [Capuche]
+//============================================================
+
+// VIP Functions
+//============================================================
+function	script	VIP_Third_Class	{
+	if (!vip_status(VIP_STATUS_ACTIVE)) {
+		mes "[Voz do nada]";
+		mes "O acesso ao conteúdo Premium está disponível apenas para aqueles que possuem uma certa quantidade de Pedra das Valquírias.";
+		next;
+		if (countitem(6320) < 1) {
+			mes "[Voz do nada]";
+			mes "Para mudar para a terceira classe, você deve trazer 1 ^0000CCPedra das Valquírias^000000 ou ter uma conta Premium.";
+			//mes "Please visit our iShop to purchase the ^0000CCReset Stone^000000.";
+			close;
+		} else {
+			mes "[Voz do nada]";
+			mes "Você gostaria de participar desta missão por 1 ^0000CCPedra das Valquírias^000000?";
+			next;
+			switch(select("Sim:Não")) {
+			case 1:
+				mes "[Voz do nada]";
+				mes "Boa sorte, aventureiro.";
+				delitem 6320,1; //Premium_Reset_Stone
+				next;
+				break;
+			case 2:
+				mes "[Voz do nada]";
+				mes "Muito bem.";
+				close;
+			}
+		}
+	}
+	return;
+}

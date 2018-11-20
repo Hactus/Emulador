@@ -1,0 +1,190 @@
+prontera,147,162,6	script	Plagiador	4_F_SHADOWCHASER,{
+	
+	if(Class == 17 || Class == 4018 || Class == 4040 || Class == 4072 || Class == 4079 || Class == 4108){
+
+		mes $@nome$;
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "Caso tenha interesse, eu posso lhe ajudar a copiar alguma habilidade utilizando as habilidade Plágio e Mimitismo, caso já as possua, obviamente.";
+		next;
+		mes "Você deseja copiar alguma habilidade?";
+		switch(select("- Sim.:- Não, obrigado.")) {
+		
+		case 2:
+		next;
+		mes $@nome$;
+		mes "Tudo bem,";
+		mes "Estarei esperando caso pecise.";
+		close;
+		
+		case 1:
+		if (getskilllv(225))
+			.@a = 1;
+		if (getskilllv(2285))
+			.@b = 1;
+		.@c = .@a + .@b;
+
+		switch(.@c) {
+			case 2:
+			next;
+				mes $@nome$;
+				mes "Certo! Primeiramente preciso saber qual habilidade você deseja utilizar para copiar."; 
+				next;
+				setarray .@select$[1],"Plágio","Mimetismo";
+				.@select = select(.@select$[1],.@select$[2]);
+				break;
+			case 1:
+				if (.@a)
+					.@select = 1;
+				else
+					.@select = 2;
+				break;
+				
+			default:
+				next;
+				mes $@nome$;
+				mes "Você não possui as habilidades Plágio ou Mimitismo, volte quando aprendê-las.";
+				close3;
+		}
+
+		mes $@nome$;
+		mes "Perfeito! Agora selecione qual classe possui a habilidade desejada.";
+		if (.@select == 2) {
+			mes "Utilize como referência:";
+			mes "• ^b80015Vermelho:^000000 Plágio";
+			mes "• ^0da841Verde:^000000 Mimetismo";
+		}
+		next;
+		switch( select("- Espadachim e evoluções","- Mago e evoluções","- Arqueiro e evoluções","- Mercador e evoluções","- Gatuno e evoluções","- Noviço e evoluções","- Ninja e evoluções","- Taekwon e evoluções","- Arremessar Tomahawk") ){
+			case 1: //Espadachim
+				setarray .@plagios$[1],"- Crux Divinum","- Crux Magnun","- Escudo Bumerangue","- Golpe Fulminante","- Impacto Explosivo","- Impacto de Tyr","- Punição Divina";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Aegis Domini","- Aegis Inferi","- Escudo Compressor","- Impacto Flamejante","- Onda de Choque","- Vento Cortante";
+				setarray .@skillsid[1],253,254,251,5,7,62,250, //Plágio
+								2315,2323,2310,2006,2002,2005; //Mimetismo
+				setarray .@skillslv[1],10,10,5,10,10,10,5, //Plágio
+								3,5,5,5,5,5; //Mimetismo
+				break;
+			case 2: //Mago
+				setarray .@plagios$[1],"- Ataque Espiritual","- Barreira de Fogo","- Bolas de Fogo","- Chuva de Meteoros","- Coluna de Fogo","- Coluna de Pedra","- Congelar","- Esfera d'Água","- Fúria da Terra","- Ira de Thor","- Lanças de Fogo","- Lanças de Gelo","- Nevasca","- Relâmpago","- Supernova","- Tempestade de Raios","- Trovão de Júpiter";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Abalo Sísmico","- Castigo de Nerthus","- Chamas de Hela","- Cometa","- Corrente Elétrica","- Drenar Vida","- Esquife de Gelo","- Impacto Espiritual","- Implosão Tóxica","- Lanças dos Aesir","- Maldição de Jormungand","- Meteoro Escarlate","- Onda Psíquica","- Passos de Salamandra","- Passos de Sílfide","- Pó de Diamante","- Zero Absoluto";
+				setarray .@skillsid[1],11,18,17,83,34,90,88,86,91,85,19,14,89,20,81,21,84, //Plágio
+								2216,2446,2212,2213,2214,2210,2204,2202,2448,2454,2450,2211,2449,2443,2444,2447,2203; //Mimetismo
+				setarray .@skillslv[1],10,10,10,10,10,5,10,5,5,10,10,10,10,10,10,10,10, //Plágio
+								5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5; //Mimetismo
+				break;
+			case 3: //Arqueiro
+				setarray .@plagios$[1],"- Armadilha Atordoante","- Armadilha Explosiva","- Chuva de Flechas","- Disparo Violento","- Instalar Mina","- Rajada de Flechas";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Armadilha Glacial","- Armadilha Incendiária","- Bomba Relógio","- Disparo Certeiro","- Ressonância","- Ruído Estridente","- Tempestade de Flechas","- Temporal de Mil Flechas";
+				setarray .@skillsid[1],116,123,47,148,122,46, //Plágio
+								2254,2253,2239,2236,2414,2413,2233,2418; //Mimetismo
+				setarray .@skillslv[1],5,5,10,1,5,10, //Plágio
+								5,5,5,10,5,5,10,5; //Mimetismo
+				break;
+			case 4: //Mercadores
+				setarray .@plagios$[1],"- Fogo Grego","- Mammonita","- Terror Ácido";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Armadilha de Espinhos","- Erupção de Magma","- Erva Daninha","- Esporo Explosivo","- Planta Infernal","- Planta Sanguessuga";
+				setarray .@skillsid[1],229,42,230, //Plágio
+								2479,5006,2483,2481,2490,2480; //Mimetismo
+				setarray .@skillslv[1],5,10,5, //Plágio
+								5,5,10,5,5,5; //Mimetismo
+				break;
+			case 5: //Gatunos
+				setarray .@plagios$[1],"- Apunhalar","- Arremessar Pedra","- Chutar Areia","- Explosão Tóxica","- Faca Envenenada";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Acerto de Contas","- Ameaça Fantasma","- Cópia Explosiva","- Disparo Triplo","- Garra Sombria","- Lâminas Retalhadoras","- Passo Sombrio";
+				setarray .@skillsid[1],212,152,149,141,1004, //Plágio
+								2284,2034,2304,2288,5001,2022,2023; //Mimetismo
+				setarray .@skillslv[1],10,1,1,10,1, //Plágio
+								5,1,3,10,5,5,5; //Mimetismo
+				break;
+			case 6: //Noviços
+				setarray .@plagios$[1],"- Aspersio","- Benedictio Sanctissimi Sacramenti","- Combo Triplo","- Curar","- Disparo de Esferas Espirituais","- Esconjurar","- Impacto Psíquico","- Luz Divina","- Magnus Exorcismus","- Punho Supremo de Asura","- Revelação","- Santuário";
+				if (.@select == 2)
+					setarray .@mimetis$[1],"- Adoramus","- Chakra do Silêncio","- Curatio","- Explosão Espiritual","- Gemini Lumen","- Impacto Sísmico","- Investida de Shura","- Judex","- Portões do Inferno","- Punho do Dragão","- Rasteira","- Renovatio","- Rugido do Leão","- Soco Furacão","- Tempestade Espiritual";
+				setarray .@skillsid[1],68,69,263,28,267,77,266,156,79,271,24,70, //Plágio
+								2040,2344,2051,2332,2054,2328,2336,2038,2343,2326,2337,2050,2517,2327,2518; //Mimetismo
+				setarray .@skillslv[1],5,5,10,10,5,10,5,1,10,5,1,10, //Plágio
+								10,5,5,5,10,5,5,5,10,10,1,1,5,5,5; //Mimetismo
+				break;
+			case 7: //Ninjas
+				setarray .@plagios$[1],"- Brisa Cortante","- Corte da Névoa","- Corte das Sombras","- Descarga Elétrica","- Dragão Explosivo","- Escudo de Chamas","- Explosão de Moedas","- Grande Floco de Neve","- Lâmina de Vento","- Lança Congelante","- Pétalas Flamejantes","- Virar Tatami";
+				setarray .@skillsid[1],542,528,530,541,536,535,3008,539,540,537,534,527;
+				setarray .@skillslv[1],5,10,5,5,5,10,10,5,10,10,10,5;
+				break;
+			case 8: //Taekwons
+				setarray .@plagios$[1],"- Chute Aéreo";
+				setarray .@skillsid[1],421;
+				setarray .@skillslv[1],7;
+				break;
+			case 9:
+				setarray .@plagios$[1],"- Arremessar Tomahawk";
+				setarray .@skillsid[1],337;
+				setarray .@skillslv[1],1;
+				break;
+		}
+		
+		for(.@i = 1; .@i<getarraysize(.@plagios$); .@i++)
+			.@menu$ = .@menu$ + ((.@select == 2)?"^b80015":"") + .@plagios$[.@i] + "^000000" + ":";
+		if (.@select == 2) {
+			for(.@i = 1; .@i<getarraysize(.@mimetis$); .@i++)
+				.@menu$ = .@menu$ + "^0da841" + .@mimetis$[.@i] + "^000000" + ":";
+		}
+		
+		.@i = select(.@menu$);
+		
+		if (.@skillslv[.@i] != 1) {
+			mes $@nome$;
+			mes "Você deseja copiar a habilidade em seu nível máximo ou escolher um nível?";
+			next;
+			switch( select("Nível máximo.","Utilizar outro nível.") ){
+				case 1:
+					break;
+				case 2:
+					mes $@nome$;
+					mes "Que nível deseja copiar?";
+					mes "^777777Mínimo: 1^000000";
+					mes "^777777Máximo: "+.@skillslv[.@i]+"^000000";
+					next;
+					do {
+						input .@number;
+						if (.@number == 0)
+							break;
+					} while( (.@number < 1 ) || (.@number > .@skillslv[.@i]) );
+					if (.@number != 0)
+						.@skillslv[.@i] = .@number;
+					break;
+			}
+		}
+		mimic(.@skillsid[.@i], .@skillslv[.@i], (.@select-1));
+		
+		if (.@select) {
+			if (.@select == 2) {
+				if (.@mimetis$[(.@i-(getarraysize(.@plagios$)))+1] != "")
+					.@skill_name$ = .@mimetis$[(.@i-(getarraysize(.@plagios$)))+1];
+			}
+			else
+				.@skill_name$ = .@plagios$[.@i];
+		}
+		else
+			.@skill_name$ = .@plagios$[.@i];
+		
+		message strcharinfo(0),"A Habilidade "+.@skill_name$+" foi copiada com "+.@select$[.@select]+" no nível "+.@skillslv[.@i]+"!"; 
+		mes $@nome$;
+		mes "Pronto! volte sempre que quiser clonar alguma outra habilidade.";
+		mes " ";
+		mes "^a80c0c Sinto muito, mas você precisa relogar agora para evitar problemas.^000000";
+		atcommand "@kick "+strcharinfo(0)+"";
+		}
+
+}
+	mes $@nome$;
+	mes "Olá companheiro!";
+	mes "Sinto muito mas eu não posso te ajudar em nada";
+	close;
+		
+set $@nome$,"[^FF8000Plagiador^000000]"; // Nome do NPC que vai aparecer 
+
+}

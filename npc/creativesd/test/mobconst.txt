@@ -1,0 +1,5 @@
+-	script	mobconst	-1,{
+OnInit:
+	monster "prontera",150,150,"Bakonawa",BAKONAWA_1,1,"";
+	end;
+}

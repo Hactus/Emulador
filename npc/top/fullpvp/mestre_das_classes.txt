@@ -1,0 +1,1937 @@
+// 				CRIADO POR : RapiiDz													\\
+//				Adição de 3ª Classe : Ivar									   			\\
+//				Facebook: facebook.com/bielbomfim		 								\\
+//_______________________________________________________________________________________\\
+//																						 \\
+//				Direitos autorais : Ivar												 \\
+//_______________________________________________________________________________________\\
+//																						 \\
+//				Nao divulgue em qualquer outro Forum/site 								 \\
+//																						 \\
+//______________As Configurações do NPC está no Final____________________________________\\
+
+function	script	EscolherNivel	{
+next;
+mes $@nome$;
+mes "Por favor, escolha o nível de base desejado:";
+mes "(1 a 175 máx)";
+input .@blvlnum;
+next;
+mes $@nome$;
+mes "Por favor, insira o nível de classe desejado:";
+mes "(1 a 60 máx)";
+input .@jlvlnum;
+if ((.@blvlnum == 0) || (.@jlvlnum == 0)){
+next;
+mes $@nome$;
+mes "Por favor, escolha um Nível de Base/Classe maior que 0!";
+set #faltaupar,1;
+close;
+}
+next;
+mes $@nome$;
+mes "Feito!";
+BaseLevel = .@blvlnum;
+JobLevel = .@jlvlnum;
+set #faltaupar,0;
+close;
+}
+
+prontera,161,196,3	script	Mestra das Classes	4_F_SARAH,{
+
+	if ( #faltaupar == 1 ) { 
+	mes $@nome$;
+	mes "Vejo que você não possui os Níveis que deseja...";
+	goto EscolherNivel;
+	close;
+	}
+
+	if(Class == 4218 || Class == 4220){
+	mes $@nome$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+	mes "Gostaria de mudar de classe?";
+	next;
+	menu "Sim, por favor.",-,"Não, obrigado.",nao;
+	next;
+	mes $@nome$;
+	mes "Certo.";
+	mes "Escolha qual classe deseja se tornar:";
+	next;
+	menu "- Summoner.",Summoner,"- Summoner Baby",bSummoner,"- Nada, obrigado",nao;
+	}
+			
+// Sicário Dual Dagger Crítical			
+	if(Class == 4007){
+	mes $@nome$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+	mes "Você já distribuiu todos os pontos que precisava? Espero que sim.";
+	next;
+	mes "Deseja se tornar um Sicário agora?";
+	menu "Sim, por favor.",-,"Não, obrigado.",nao;
+	next;
+			mes $@nome$;
+			if(sex == 0)mes "Parabéns, você agora é uma Guillotine Cross!";
+			if(sex == 1)mes "Parabéns, você agora é um Guillotine Cross!";
+			jobchange 4065;
+			atcommand "@skpoint +300";
+			//atcommand "@blevel +999";
+			//atcommand "@joblevel +999";
+			goto EscolherNivel;
+			skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+			skill "TF_SPRINKLESAND",1,SKILL_PERM;
+			skill "TF_BACKSLIDING",1,SKILL_PERM;
+			skill "TF_PICKSTONE",1,SKILL_PERM;
+			skill "TF_THROWSTONE",1,SKILL_PERM;
+			skill "AS_SONICACCEL",1,SKILL_PERM;
+			skill "AS_VENOMKNIFE",1,SKILL_PERM;
+			getitem 5755,1;
+	close; }
+		
+		if(Class == 4029){
+		mes $@nome$;
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "Você já distribuiu todos os pontos que precisava? Espero que sim.";
+		next;
+		mes "Deseja se tornar um Sicário Baby agora?";
+		menu "Sim, por favor.",-,"Não, obrigado.",nao;
+		next;
+			mes $@nome$;
+			if(sex == 0)mes "Parabéns, você agora é uma Guillotine Cross Baby!";
+			if(sex == 1)mes "Parabéns, você agora é um Guillotine Cross Baby!";
+			jobchange 4101;
+			atcommand "@skpoint +300";
+			atcommand "@blevel +999";
+			atcommand "@joblevel +999";
+			skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+			skill "TF_SPRINKLESAND",1,SKILL_PERM;
+			skill "TF_BACKSLIDING",1,SKILL_PERM;
+			skill "TF_PICKSTONE",1,SKILL_PERM;
+			skill "TF_THROWSTONE",1,SKILL_PERM;
+			skill "AS_SONICACCEL",1,SKILL_PERM;
+			skill "AS_VENOMKNIFE",1,SKILL_PERM;
+			getitem 5755,1;
+			close;	} 
+	
+		if(Class > 0){
+		mes $@nome$;
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "Você está gostando da sua nova classe?";
+		next;
+		mes $@nome$;
+		mes "Sinto muito mas só posso usar minha magia uma vez por personagem";
+		close;
+		}
+	
+	
+	// Comum
+	
+	mes $@nome$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+	mes "Gostaria de mudar de classe?";
+	next;
+	menu "Sim, por favor.",-,"Não, obrigado.",nao;
+	next;
+	mes $@nome$;
+	mes "Tudo bem.";
+	mes "Escolha qual o tipo de classe deseja se tornar:";
+	next;
+	switch(select("- Classes Normais:- Classes Expandidas:- Baby's:- Nenhuma, obrigado"))
+	{
+	
+
+		if(Class > 0){
+		mes $@nome$;
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "Você está gostando da sua nova classe?";
+		next;
+		mes $@nome$;
+		mes "Sinto muito mas só posso usar minha magia uma vez por personagem";
+		close;
+		}
+
+		
+// Classes Normais
+case 1:
+mes $@nome$;
+mes "Perfeito.";
+mes "Escolha qual a classe pretendida:";
+next;
+switch(select("- Espadachim:- Mago:- Arqueiro:- Mercador:- Gatuno:- Noviço:- Nenhuma, obrigado")) {
+				
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Espadadchim você deseja:";
+				menu "- Cavaleiro Rúnico",rcavaleiro,"- Guardião Real",guardiao,"- Lorde",lorde,"- Paladino",paladino,"- Cavaleiro",cavaleiro,"- Templário",templario,"- Espadachim",swordman,"- Nenhuma, obrigado.",nao;
+
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mago você deseja:";
+				menu "- Arcano",arcano,"- Feiticeiro",feiticeiro,"- Arquimago",arquimago,"- Professor",professor,"- Bruxo",bruxo,"- Sábio",sabio,"- Mago",Magician,"- Nenhuma, obrigado.",nao;
+				
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Arqueiro você deseja:";
+				menu "- Sentinela",sentinela,"- Trovador e Musa",trovador,"- Atirador de Elite",atirador,"- Menestrel e Cigana",menestrel,"- Caçador",cacador,"- Bardo e Odalisca",bardo,"- Arqueiro",Archer,"- Nenhuma, obrigado.",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mercador você deseja:";
+				menu "- Mecânico",mecanico,"- Bioquímico",bio,"- Mestre-ferreiro",mestreferreiro,"- Criador",criador,"- Ferreiro",ferreiro,"- Alquimista",alquimista,"- Mercador",Merchant,"- Nenhuma, obrigado.",nao;
+				
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Gatuno você deseja:";
+				menu "- Guillotine Cross",cross,"- Renegado",renegado,"- Algoz",algoz,"- Desordeiro",desordeiro,"- Mercenário",mercenario,"- Arruaceiro",arruaceiro,"- Gatuno",Thief,"- Nenhuma, obrigado.",nao;
+			
+				case 6:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Noviço você deseja:";
+				menu "- Shura",shura,"- Arcebispo",arcebispo,"- Mestre",mestre,"- Sumo Sacerdote",sumo,"- Monge",monge,"- Sacerdote",sacerdote,"- Noviço",Acolyte,"- Nenhuma, obrigado.",nao;
+									
+				case 7:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+// Classes Expandidas
+case 2:
+next;
+mes $@nome$;
+mes "Agora escolha qual das Classes Expandidas você deseja:";
+switch(select("- Super Aprendiz:- Justiceiro:- Ninja:- Taekwon:- Nenhuma, obrigado")) {
+
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Você tem certeza que quer se tornar um Super Aprendiz?";
+				menu "- Sim.",superaprendiz,"- Vou pensar melhor...",nao;
+						
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Justiceiro você deseja:";
+				menu "- Rebelde",rebellion,"- Justiceiro",justiceiro,"- Nenhuma, obrigado",nao;
+								
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Ninja você deseja:";
+				menu "- Kagerou e Oboro",kagerou,"- Ninja",ninja,"- Nenhuma, obrigado",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Taekwon você deseja:";
+				menu "- Mestre Taekwon",mestretaekwon,"- Espiritualista",espiritualista,"- Taekwon",taekwon,"- Nenhuma, obrigado",nao;
+
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+// Baby's
+case 3:
+mes "Certo.";
+mes "Escolha qual o tipo de classe deseja se tornar Baby:";
+next;
+switch(select("- Classes Normais:- Classes Expandidas:- Nenhuma, obrigado")) {
+	
+// Classes normais baby
+	case 1:
+	mes $@nome$;
+	mes "Tudo bem.";
+	mes "Escolha qual a classe pretendida para se tornar um Baby:";
+	switch(select("- Espadachim:- Mago:- Arqueiro:- Mercador:- Gatuno:- Noviço:- Nenhuma, obrigado")){
+				
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Espadachim você deseja se tornar um Baby:";
+				menu "- Cavaleiro Rúnico Baby",brune,"- Guardião Real Baby",bguardiao,"- Templário Baby",babytemplario,"- Cavaleiro Baby",babycavaleiro,"- Espadachim Baby",babyespadachim,"- Nenhuma, obrigado.",nao;
+				
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mago você deseja se tornar um Baby:";
+				menu "- Arcano Baby",barcano,"- Feiticeiro Baby",bfeiticeiro,"- Bruxo Baby",babybruxo,"- Sábio Baby",babysabio,"- Mago Baby",babymago,"- Nenhuma, obrigado.",nao;
+				
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Arqueiro você deseja se tornar um Baby:";
+				menu "- Sentinela Baby",bsentinela,"- Trovador Baby e Musa Baby",btrovador,"- Caçador Baby",babycacador,"- Bardo Baby e Odalisca Baby",babybardo,"- Arqueiro Baby",babyarqueiro,"- Nenhuma, obrigado.",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Mercador você deseja se tornar um Baby:";
+				menu "- Mecânico Baby",bmecanico,"- Bioquímico Baby",bbio,"- Ferreiro Baby",babyferreiro,"- Alquimista Baby",babyalquimista,"- Mercador Baby",babymercador,"- Nenhuma, obrigado.",nao;
+						
+				case 5:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Gatuno você deseja se tornar um Baby:";
+				menu "- Sicário Baby",bcross,"- Renegado Baby",brenegado,"- Mercenário Baby",babymercenario,"- Arruaceiro Baby",babyarruaceiro,"- Gatuno Baby",babygatuno,"- Nenhuma, obrigado.",nao;
+			
+				case 6:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Noviço você deseja se tornar um Baby:";
+				menu "- Shura Baby",bshura,"- Arcebispo Baby",barcebispo,"- Monge Baby",babymonge,"- Sacerdote Baby",babysacerdote,"- Noviço Baby",babynovico,"- Nenhuma, obrigado.",nao;
+
+				case 7:
+				next;
+				mes $@nome$;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+				}
+
+// Classes Expansivas Baby
+
+	case 2:
+	next;
+	mes $@nome$;
+	mes "Tudo bem, agora escolha qual das Classes Expandidas você deseja se tornar baby:";
+	switch(select("- Aprendiz Baby:- Justiceiro Baby:- Ninja Baby:- Taekwon Baby:- Nenhuma, obrigado")) {
+
+				case 1:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Aprendiz Baby você deseja:";
+				menu "- Aprendiz Baby.",babyaprendiz,"- Super Aprendiz Baby", babysaprendiz,"- Vou pensar melhor...",nao;
+					
+				case 2:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Justiceiro você deseja:";
+				menu "- Rebelde",brebellion,"- Justiceiro",babyjusticeiro,"- Nenhuma, obrigado",nao;
+
+				case 3:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Ninja você deseja se tornar baby:";
+				menu "- Kagerou Baby e Oboro Baby",bkagerou,"- Ninja Baby",babyninja,"- Nenhuma, obrigado",nao;
+				
+				case 4:
+				next;
+				mes $@nome$;
+				mes "Tudo bem, agora escolha qual das evoluções de Taekwon você deseja se tornar baby:";
+				menu "- Mestre Taekwon Baby",bmestretaekwon,"- Espiritualista Baby",bespiritualista,"- Taekwon Baby",babytaekwon,"- Nenhuma, obrigado",nao;
+				
+				case 5:
+				next;
+				mes "Tudo bem,";
+				mes "Estarei esperando.";
+				close;
+}
+
+	case 3:
+	next;
+	mes "Tudo bem,";
+	mes "Estarei esperando.";
+	close;
+}
+
+case 4:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando.";
+close;
+}
+
+// -----------------------------CLASSES----------------------------- //
+
+// Doram
+						Summoner:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Summoner Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Summoner Baby!";
+						jobchange 4218;
+						atcommand "@allskill";
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						bSummoner:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Summoner Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Summoner Baby!";
+						jobchange 4220;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+// Classes Normais	
+					
+			// Espadachim
+						rcavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira Rúnica!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro Rúnico!";
+						jobchange 4060;
+						atcommand "@allskill";
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;		
+						skill "KN_CHARGEATK",1,SKILL_PERM;
+						getitem 5746,1;		
+						goto EscolherNivel;				
+						close;
+
+						guardiao:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guardiã Real!";
+						if(sex == 1)mes "Parabéns, você agora é um Guardião Real!";
+						jobchange 4073;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						skill "CR_SHRINK",1,SKILL_PERM;	
+						getitem 5757,1;	
+						goto EscolherNivel;
+						close;
+						
+						lorde:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Lady!";
+						if(sex == 1)mes "Parabéns, você agora é um Lorde!";
+						jobchange 4008;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						skill "KN_CHARGEATK",1,SKILL_PERM;
+						goto EscolherNivel;							
+						close;
+
+						paladino:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Paladina!";
+						if(sex == 1)mes "Parabéns, você agora é um Paladino!";
+						jobchange 4015;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						skill "CR_SHRINK",1,SKILL_PERM;	
+						goto EscolherNivel;					
+						close;
+
+						templario:
+						next;
+						if(sex == 0)mes "Parabéns, você agora é uma Templária!";
+						if(sex == 1)mes "Parabéns, você agora é um Templário!";
+						jobchange 14;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;
+						skill "CR_SHRINK",1,SKILL_PERM;	
+						goto EscolherNivel;					
+						close;
+
+						cavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro!";
+						jobchange 7;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;
+						skill "KN_CHARGEATK",1,SKILL_PERM;	
+						goto EscolherNivel;				
+						close;
+
+						swordman:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espadachim!";
+						if(sex == 1)mes "Parabéns, você agora é um Espadachim!";
+						jobchange 1;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						goto EscolherNivel;					
+						close;
+
+			// Mago
+						arcano:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcana!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcano!";
+						jobchange 4061;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+						getitem 5753,1;
+						goto EscolherNivel;
+						close;
+
+						feiticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Feiticeira!";
+						if(sex == 1)mes "Parabéns, você agora é um Feiticeiro!";
+						jobchange 4074;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "SA_CREATECON",1,SKILL_PERM;
+						skill "SA_ELEMENTWATER",1,SKILL_PERM;
+						skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+						skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+						skill "SA_ELEMENTWIND",1,SKILL_PERM;
+						getitem 5756,1;
+						goto EscolherNivel;
+						close;
+
+						arquimago:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arquimaga!";
+						if(sex == 1)mes "Parabéns, você agora é um Arquimago!";
+						jobchange 4010;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						professor:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Professora!";
+						if(sex == 1)mes "Parabéns, você agora é um Professor!";
+						jobchange 4017;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "SA_CREATECON",1,SKILL_PERM;
+						skill "SA_ELEMENTWATER",1,SKILL_PERM;
+						skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+						skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+						skill "SA_ELEMENTWIND",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						bruxo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bruxa!";
+						if(sex == 1)mes "Parabéns, você agora é um Bruxo!";
+						jobchange 9;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						sabio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sábia!";
+						if(sex == 1)mes "Parabéns, você agora é um Sábio!";
+						jobchange 16;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "SA_CREATECON",1,SKILL_PERM;
+						skill "SA_ELEMENTWATER",1,SKILL_PERM;
+						skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+						skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+						skill "SA_ELEMENTWIND",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						Magician:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Maga!";
+						if(sex == 1)mes "Parabéns, você agora é um Mago!";
+						jobchange 2;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+			// Arqueiro
+						sentinela:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sentinela!";
+						if(sex == 1)mes "Parabéns, você agora é um Sentinela!";
+						jobchange 4062;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "HT_PHANTASMIC",1,SKILL_PERM;
+						getitem 5748,1;
+						goto EscolherNivel;
+						close;
+
+						trovador:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Musa!";
+						jobchange 4076;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "DC_WINKCHARM",1,SKILL_PERM;
+						getitem 5758,1;
+						goto EscolherNivel;
+						}
+						if(sex == 1) {
+						mes "Parabéns, você agora é um Trovador!";
+						jobchange 4075;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "BA_PANGVOICE",1,SKILL_PERM;
+						getitem 5751,1;
+						goto EscolherNivel;
+						}
+						close;
+
+						atirador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Atidarora de Elite!";
+						if(sex == 1)mes "Parabéns, você agora é um Atirador de Elite!";
+						jobchange 4012;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "HT_PHANTASMIC",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						menestrel:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Cigana!";
+						jobchange 4021;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "DC_WINKCHARM",1,SKILL_PERM;
+						goto EscolherNivel;
+						}
+						if(sex == 1) {
+						mes "Parabéns, você agora é um Menestrel!";
+						jobchange 4020;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "BA_PANGVOICE",1,SKILL_PERM;
+						goto EscolherNivel;
+						}
+						close;
+
+						cacador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caçadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Caçador!";
+						jobchange 11;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "HT_PHANTASMIC",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						bardo:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Odalisca!";
+						jobchange 20;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "DC_WINKCHARM",1,SKILL_PERM;
+						goto EscolherNivel;
+						close; }
+						mes "Parabéns, você agora é um Bardo!";
+						jobchange 19;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "BA_PANGVOICE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						Archer:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arqueira!";
+						if(sex == 1)mes "Parabéns, você agora é um Arqueiro!";
+						jobchange 3;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+						
+			// Mercador
+						mecanico:
+						next;
+						mes $@nome$;
+						if(sex == 0) {	mes "Parabéns, você agora é uma Mecânica!"; 
+						getitem 5760,1; }
+						if(sex == 1) {	mes "Parabéns, você agora é um Mecânico!";
+						getitem 5749,1; }
+						jobchange 4064;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+						skill "BS_GREED",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						bio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bioquimica!";
+						if(sex == 1)mes "Parabéns, você agora é um Bioquimico!";
+						jobchange 4078;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "AM_BIOETHICS",1,SKILL_PERM;
+						goto EscolherNivel;
+						getitem 5752,1;
+						close;
+
+						mestreferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestre-Ferreira!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre-Ferreiro!";
+						jobchange 4011;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+						skill "BS_GREED",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						criador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Criadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Criador!";
+						jobchange 4019;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "AM_BIOETHICS",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						ferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ferreira!";
+						if(sex == 1)mes "Parabéns, você agora é um Ferreiro!";
+						jobchange 10;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+						skill "BS_GREED",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						alquimista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Alquimista!";
+						if(sex == 1)mes "Parabéns, você agora é um Alquimista!";
+						jobchange 18;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "AM_BIOETHICS",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						Merchant:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercadora!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercador!";
+						jobchange 5;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+			
+			// Gatuno
+						cross:
+						next;
+						mes $@nome$;
+						mes "Certo, e você deseja fazer um Sicário Dual Dagger Crítico, ou um Sicário comum?";
+						mes "O sicário Dual Dagger não terá todas as Habilidades adicionadas automaticamente, você é que terá que adicioná-las.";
+							menu "- Sicário Comum.",crosscomum,"- Sicário Dual Dagger Crítico.",crossdd,"- Nenhuma, obrigado.",nao;
+		
+				// Sicário comum		
+						crosscomum:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guillotine Cross!";
+						if(sex == 1)mes "Parabéns, você agora é um Guillotine Cross!";
+						jobchange 4065;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						getitem 5755,1;
+						goto EscolherNivel;
+						close;
+				// Sicário Crítico
+					crossdd:
+					next;
+					mes $@nome$;
+					mes "Bom, para virar um Sicário Dual Dagger Crítico você precisará vir conversar comigo por duas vezes.";
+					mes "Vou lhe transformar em um Gatuno, e você irá adicionar as habilidades desejadas e me procurar novamente, deseja continuar?";
+					menu "Sim, por favor.",-,"Não, obrigado.",nao;
+					next;
+					mes $@nome$;
+					if(sex == 0)mes "Parabéns, você agora é uma Gatuna!";
+					if(sex == 1)mes "Parabéns, você agora é um Gatuno!";
+					mes "Redistribua os pontos desejados e volte aqui em seguida";
+					jobchange 4007;
+					atcommand "@blevel +999";
+					atcommand "@joblevel +41";
+					atcommand "@skpoint +9";
+					close;
+			
+						
+						renegado:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Renegada!";
+						if(sex == 1)mes "Parabéns, você agora é um Renegado!";
+						jobchange 4079;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "RG_CLOSECONFINE",1,SKILL_PERM;
+						getitem 5750,1;
+						goto EscolherNivel;
+						close;
+
+						algoz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Algoz!";
+						if(sex == 1)mes "Parabéns, você agora é um Algoz!";
+						jobchange 4013;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						desordeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Desordeira!";
+						if(sex == 1)mes "Parabéns, você agora é um Desordeiro!";
+						jobchange 4018;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "RG_CLOSECONFINE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						mercenario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercenária!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercenário!";
+						jobchange 12;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						arruaceiro:
+						next;
+						if(sex == 0)mes "Parabéns, você agora é uma Arruaceira!";
+						if(sex == 1)mes "Parabéns, você agora é um Arruaceiro!";
+						jobchange 17;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "RG_CLOSECONFINE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						Thief:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Gatuna!";
+						if(sex == 1)mes "Parabéns, você agora é um Gatuno!";
+						jobchange 6;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+						
+			// Noviço
+
+						shura:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Shura!";
+						if(sex == 1)mes "Parabéns, você agora é um Shura!";
+						jobchange 4077;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "MO_KITRANSLATION",1,SKILL_PERM;
+						skill "MO_BALKYOUNG",1,SKILL_PERM;
+						getitem 5754,1;
+						goto EscolherNivel;
+						close;
+
+						arcebispo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcebispa!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcebispo!";
+						jobchange 4063;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "PR_REDEMPTIO",1,SKILL_PERM;
+						getitem 5747,1;
+						goto EscolherNivel;
+						close;
+
+						mestre:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestra!";
+						jobchange 4016;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "MO_KITRANSLATION",1,SKILL_PERM;
+						skill "MO_BALKYOUNG",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						sumo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sumo-Sacerdotiza!";
+						if(sex == 1)mes "Parabéns, você agora é um Sumo-Sacerdote!";
+						jobchange 4009;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "PR_REDEMPTIO",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						monge:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Monja!";
+						if(sex == 1)mes "Parabéns, você agora é um Monge!";
+						jobchange 15;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "MO_KITRANSLATION",1,SKILL_PERM;
+						skill "MO_BALKYOUNG",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						sacerdote:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sacerdotisa!";
+						if(sex == 1)mes "Parabéns, você agora é um Sacerdote!";
+						jobchange 8;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "PR_REDEMPTIO",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						Acolyte:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Noviça!";
+						if(sex == 1)mes "Parabéns, você agora é um Noviço!";
+						jobchange 4;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+// Classes Expansivas
+
+			// Super Aprendiz
+
+						superaprendiz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Super Aprendiz!";
+						if(sex == 1)mes "Parabéns, você agora é um Super Aprendiz!";
+						jobchange 4190;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "NV_TRICKDEAD",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+			
+			// Justiceiro						
+						rebellion:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Rebelde!";
+						if(sex == 1)mes "Parabéns, você agora é um Rebelde!";
+						jobchange 4215;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+								
+						justiceiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro!";
+						jobchange 24;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+						
+			// Ninja
+						ninja:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ninja!";
+						if(sex == 1)mes "Parabéns, você agora é um Ninja!";
+						jobchange 25;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						kagerou:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Oboro!";
+						jobchange 4212;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close; }
+						
+						mes "Parabéns, você agora é um Kagerou!";
+						jobchange 4211;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+			// Taekwon
+						mestretaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra Taekwon!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre Taekwon!";
+						jobchange 4047;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						espiritualista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espiritualista!";
+						if(sex == 1)mes "Parabéns, você agora é um Espiritualista!";
+						jobchange 4049;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+						
+						taekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Taekwon!";
+						if(sex == 1)mes "Parabéns, você agora é um Taekwon!";
+						jobchange 4046;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+// Babys
+			// Espadachim
+						brune:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caveleira Rúnica Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro Rúnico Baby!";
+						jobchange 4096;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;		
+						skill "KN_CHARGEATK",1,SKILL_PERM;	
+						getitem 5746,1;
+						goto EscolherNivel;
+						close;
+
+						bguardiao:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Guardiã Real Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Guardião Real Baby!";
+						jobchange 4102;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						skill "CR_SHRINK",1,SKILL_PERM;	
+						getitem 5757,1;		
+						goto EscolherNivel;				
+						close;
+
+						babytemplario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Templária Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Templário Baby!";
+						jobchange 4037;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;
+						skill "CR_SHRINK",1,SKILL_PERM;		
+						goto EscolherNivel;				
+						close;
+
+						babycavaleiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Cavaleira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Cavaleiro Baby!";
+						jobchange 4030;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;
+						skill "KN_CHARGEATK",1,SKILL_PERM;	
+						goto EscolherNivel;				
+						close;
+
+						babyespadachim:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espadashim Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Espadashim Baby!";
+						jobchange 4024;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "SM_MOVINGRECOVERY",1,SKILL_PERM;
+						skill "SM_FATALBLOW",1,SKILL_PERM;
+						skill "SM_AUTOBERSERK",1,SKILL_PERM;	
+						goto EscolherNivel;					
+						close;
+			
+			// Mago
+						barcano:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcana Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcano Baby!";
+						jobchange 4097;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+						getitem 5753,1;
+						goto EscolherNivel;
+						close;
+
+						bfeiticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Feiticeira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Feiticeiro Baby!";
+						jobchange 4103;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "SA_CREATECON",1,SKILL_PERM;
+						skill "SA_ELEMENTWATER",1,SKILL_PERM;
+						skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+						skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+						skill "SA_ELEMENTWIND",1,SKILL_PERM;
+						getitem 5756,1;
+						goto EscolherNivel;
+						close;
+
+						babybruxo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bruxa Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Bruxo Baby!";
+						jobchange 4032;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "WZ_SIGHTBLASTER",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babysabio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sábia Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sábio Baby!";
+						jobchange 4039;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						skill "SA_CREATECON",1,SKILL_PERM;
+						skill "SA_ELEMENTWATER",1,SKILL_PERM;
+						skill "SA_ELEMENTGROUND",1,SKILL_PERM;
+						skill "SA_ELEMENTFIRE",1,SKILL_PERM;
+						skill "SA_ELEMENTWIND",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babymago:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Maga Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mago Baby!";
+						jobchange 4025;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MG_ENERGYCOAT",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+			
+			// Arqueiro
+						bsentinela:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sentinela Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sentinela Baby!";
+						jobchange 4098;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "HT_PHANTASMIC",1,SKILL_PERM;
+						getitem 5748,1;
+						goto EscolherNivel;
+						close;
+
+						btrovador:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Musa Baby!";
+						jobchange 4105;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "DC_WINKCHARM",1,SKILL_PERM;
+						getitem 5758,1;
+						goto EscolherNivel;
+						}
+						if(sex == 1) {
+						mes "Parabéns, você agora é um Trovador Baby!";
+						jobchange 4104;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "BA_PANGVOICE",1,SKILL_PERM;
+						getitem 5751,1;
+						goto EscolherNivel;
+						}
+						close;
+
+						babycacador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Caçadora Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Caçador Baby!";
+						jobchange 4034;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "HT_PHANTASMIC",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babybardo:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Odalisca Baby!";
+						jobchange 4043;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "DC_WINKCHARM",1,SKILL_PERM;
+						goto EscolherNivel;
+						close; }
+						mes "Parabéns, você agora é um Bardo Baby!";
+						jobchange 4042;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						skill "BA_PANGVOICE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+							
+						babyarqueiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arqueira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arqueiro Baby!";
+						jobchange 4026;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AC_MAKINGARROW",1,SKILL_PERM;
+						skill "AC_CHARGEARROW",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+			
+			// Mercador
+						bmecanico:
+						next;
+						mes $@nome$;
+						if(sex == 0) {	mes "Parabéns, você agora é uma Mecânica Baby!"; 
+						getitem 5760,1; }
+						if(sex == 1) {	mes "Parabéns, você agora é um Mecânico Baby!";
+						getitem 5749,1; }
+						jobchange 4100;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+						skill "BS_GREED",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						bbio:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Bioquimica Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Bioquimico Baby!";
+						jobchange 4107;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "AM_BIOETHICS",1,SKILL_PERM;
+						getitem 5752,1;
+						goto EscolherNivel;
+						close;
+
+						babyferreiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Ferreira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Ferreiro Baby!";
+						jobchange 4033;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "BS_UNFAIRLYTRICK",1,SKILL_PERM;
+						skill "BS_GREED",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+							
+						babyalquimista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Alquimista Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Alquimista Baby!";
+						jobchange 4041;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						skill "AM_BIOETHICS",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babymercador:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercadora Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercador Baby!";
+						jobchange 4028;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "MC_CARTREVOLUTION",1,SKILL_PERM;
+						skill "MC_CHANGECART",1,SKILL_PERM;
+						skill "MC_CARTDECORATE",1,SKILL_PERM;
+						skill "MC_LOUD",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+						
+			// Gatuno
+						bcross:
+						next;
+						mes $@nome$;
+						mes "Certo, e você deseja fazer um Sicário Baby Dual Dagger Crítico, ou um Sicário Baby comum?";
+						mes "O sicário Dual Dagger não terá todas as Habilidades adicionadas automaticamente, você é que terá que adicioná-las.";
+						menu "- Sicário Comum.",babycrosscomum,"- Sicário Dual Dagger Crítico.",babycrossdd,"- Nenhuma, obrigado.",nao;
+		
+			// Sicário Baby Comum	
+						babycrosscomum:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sicária Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sicário Baby!";
+						jobchange 4101;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						getitem 5755,1;
+						goto EscolherNivel;
+						close;
+						
+			// Sicário Baby Crítico
+						babycrossdd:
+						next;
+						mes $@nome$;
+						mes "Bom, para virar um Sicário Dual Dagger Crítico você precisará vir conversar comigo por duas vezes.";
+						mes "Vou lhe transformar em um Gatuno, e você irá adicionar as habilidades desejadas e me procurar novamente, deseja continuar?";
+						menu "Sim, por favor.",-,"Não, obrigado.",nao;
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Gatuna!";
+						if(sex == 1)mes "Parabéns, você agora é um Gatuno!";
+						mes "Redistribua os pontos desejados e volte aqui em seguida";
+						jobchange 4029;
+						atcommand "@blevel +999";
+						atcommand "@joblevel +41";
+						atcommand "@skpoint +9";
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						getitem 5755,1;
+
+						close;
+					
+	
+						brenegado:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Renegada Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Renegado Baby!";
+						jobchange 4108;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "RG_CLOSECONFINE",1,SKILL_PERM;
+						getitem 5750,1;
+						goto EscolherNivel;
+						close;
+							
+						babymercenario:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mercenaria Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mercenario Baby!";
+						jobchange 4035;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "AS_SONICACCEL",1,SKILL_PERM;
+						skill "AS_VENOMKNIFE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babyarruaceiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arruaceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arruaceiro Baby!";
+						jobchange 4040;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						skill "RG_CLOSECONFINE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+							
+						babygatuno:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Gatuna Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Gatuno Baby!";
+						jobchange 4029;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "TF_SPRINKLESAND",1,SKILL_PERM;
+						skill "TF_BACKSLIDING",1,SKILL_PERM;
+						skill "TF_PICKSTONE",1,SKILL_PERM;
+						skill "TF_THROWSTONE",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+			// Noviço
+						bshura:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Shura Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Shura Baby!";
+						jobchange 4106;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "MO_KITRANSLATION",1,SKILL_PERM;
+						skill "MO_BALKYOUNG",1,SKILL_PERM;
+						getitem 5754,1;
+						goto EscolherNivel;
+						close;
+
+						barcebispo:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Arcebispa Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Arcebispa Baby!";
+						jobchange 4099;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "PR_REDEMPTIO",1,SKILL_PERM;
+						getitem 5747,1;
+						goto EscolherNivel;
+						close;
+						
+						babymonge:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Monja Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Monge Baby!";
+						jobchange 4038;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "MO_KITRANSLATION",1,SKILL_PERM;
+						skill "MO_BALKYOUNG",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babysacerdote:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Sacerdotiza Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Sacerdote Baby!";
+						jobchange 4031;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						skill "PR_REDEMPTIO",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+						babynovico:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Noviça Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Noviço Baby!";
+						jobchange 4027;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "AL_HOLYLIGHT",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+
+// Classes Expansivas Baby
+			// Aprendiz
+						babyaprendiz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Aprendiz Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Aprendiz Baby!";
+						jobchange 4023;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "NV_TRICKDEAD",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+						
+						babysaprendiz:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Super Aprendiz Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Super Aprendiz Baby!";
+						jobchange 4191;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						skill "NV_TRICKDEAD",1,SKILL_PERM;
+						goto EscolherNivel;
+						close;
+						
+			// Justiceiro
+						brebellion:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Rebelde Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Rebelde Baby!";
+						jobchange 4229;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						babyjusticeiro:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro Baby!";
+						jobchange 4228;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+						
+			// Ninja
+						bkagerou:
+						next;
+						mes $@nome$;
+						if(sex == 0) {
+						mes "Parabéns, você agora é uma Oboro Baby!";
+						jobchange 4224;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						close; }
+						mes "Parabéns, você agora é um Kagerou Baby!";
+						jobchange 4223;
+						atcommand "@allskill";
+						atcommand "@blevel +999";
+						atcommand "@joblevel +999";
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						babyninja:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Justiceira Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Justiceiro Baby!";
+						jobchange 4222;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+						
+			// Taekwon						
+						bmestretaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Mestra Taekwon Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Mestre Taekwon Baby!";
+						jobchange 4226;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+						bespiritualista:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Espiritualista Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Espiritualista Baby!";
+						jobchange 4227;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+						
+						babytaekwon:
+						next;
+						mes $@nome$;
+						if(sex == 0)mes "Parabéns, você agora é uma Taekwon Baby!";
+						if(sex == 1)mes "Parabéns, você agora é um Taekwon Baby!";
+						jobchange 4225;
+						atcommand "@allskill";
+
+						skill "ALL_INCCARRY",10,SKILL_PERM_GRANT;
+						goto EscolherNivel;
+						close;
+
+// Não, obrigado
+nao:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando.";
+close;
+
+
+
+
+// ---------------------------------------------------------------------- //
+
+//Configurações do NPC.
+Oninit:
+set $@needpoint,0; // -- Sem Necessidade -- \\
+set $@needequip,0; // -- Sem Necessidade -- \\
+set $@needzeny,0; // -- Sem Necessidade -- \\
+set $@questskill,0; // -- Sem Necessidade -- \\
+set $@nome$,"[^FF8000Mestra das Classes^000000]"; // Nome do NPC que vai aparecer 
+set $@level,175; // Edita o Level Base do seu sever
+set $@job,60; // Edita o nivel JOB do seu sever
+end;
+}

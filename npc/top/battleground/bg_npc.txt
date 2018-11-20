@@ -1,0 +1,331 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   Oficial de Batalhas                                              .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 4.7	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   NPC responsável por prover informações sobre o sistema.          .
+  *---------------------------------------------------------------------*/
+prontera,153,193,5	script	Batalhas Campais#npc	4_F_JOB_KNIGHT,{
+	.@loop_1 = 1;
+	while(.@loop_1)
+	{
+		mes "^FF0000[Oficial das Batalhas]^000000";
+		mes "Bem-vindo guerreiro, sou a ^0000FFOficial^000000 responsável pelas organização das ^FF0000Batalhas Campais^000000.";
+		mes "Em que posso ajudá-lo?";
+		next;
+		switch( select("- Sobre as Batalhas Campais.", "- Sobre os Campos de Batalhas.", "- Comandos de Interação.", "- Postos e Graduações.", "", "^FF0000- Cancelar.^000000") )
+		{
+			case 1:
+				mes "^FF0000[Oficial das Batalhas]^000000";
+				mes "Ao Oeste de ^0000FFArunafeltz^000000 fica localizado o ^0000FFReino de Maroll^000000, líderado por Grande Líder e um brilhante General.";
+				mes "Apesar de ser bem poderoso o ^FF0000Rei Marollo VII^000000 não era é imune ao tempo, e conforme os anos foi chegando, ele teve a necessidade de escolher um sucessor.";
+				next;
+				mes "^FF0000[Oficial das Batalhas]^000000";
+				mes "Pai de 9 filhos, apenas 2 deles se destacaram a bons candidatos à sucessão.";
+				mes "O talentoso e condecordado ^0000FFGeneral Guillaume Marollo^000000 e o brilhante carismático ^FF0000Diplomata Croix Marollo^000000.";
+				next;
+				mes "^FF0000[Oficial das Batalhas]^000000";
+				mes "Ambos os principes, incapazes de chegarem a um acordo, começou uma ameaça de dividir o Reino.";
+				mes "Para definir seu sucessor, o ^0000FFRei Morollo^000000 decidiu promover uma competição que determinaria qual dos dois herdaria a Coroa.";
+				next;
+				.@loop_2 = 1;
+				while(.@loop_2)
+				{
+					switch( select("^0000FF- Sobre o General Guillaume.^000000", "^FF0000- Sobre o Diplomata Croix Marollo.^000000", "^FFA500- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Como seu pai, um telentoso General, seu brasão é um ^0000FFLeão Azul^000000.";
+							next;
+							break;
+						case 2:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Como seu pai, um brilhante líder e carismático com seu povo, seu brasão é uma ^FF0000Águia Vermelha^000000.";
+							next;
+							break;
+						case 3:
+							.@loop_2 = 0;
+							break;
+						case 4:
+							.@loop_2 = 0;
+							.@loop_1 = 0;
+							break;
+					}
+				}
+				break;
+			case 2:
+				deletearray .@groups, getarraysize(.@groups);
+				query_sql "SELECT `group_id`, `name` FROM `bg_groups` WHERE `status`='1' ORDER BY `name` ASC", .@groups, .@gname$;
+				.@group_menu$ = "";
+				for( .@i=0; .@i < getarraysize(.@groups); .@i++ )
+					.@group_menu$ += (callfunc("bg_countarena",.@groups[.@i])?"- " + .@gname$[.@i] + ".:":":");
+
+				.@loop_2 = 1;
+				while(.@loop_2)
+				{
+					mes "^FF0000[Oficial das Batalhas]^000000";
+					mes "O Campo de Batalhas aonde acontece as competições são organizadas em Arenas com suas especificações e recompensas.";
+					mes "Selecione um grupo de arenas no qual deseja saber mais.";
+					next;
+					.@choose_1 = select(.@group_menu$+"^FFA500- Voltar.:^FF0000- Cancelar.^000000")-1;
+					
+					if( .@choose_1 == getarraysize(.@groups) )
+						break;
+					if( .@choose_1 > getarraysize(.@groups) )
+					{
+						.@loop_1 = 0;
+						break;
+					}
+					
+					deletearray .@bg_id, getarraysize(.@bg_id);
+					query_sql "SELECT `bg_id`, `arena_name` FROM `bg_arena` WHERE `group_id`='" + .@groups[.@choose_1] + "'", .@bg_id, .@aname$;
+					.@arena_menu$ = "";
+					for( .@i=0; .@i < getarraysize(.@bg_id); .@i++ )
+						.@arena_menu$ += "- " + .@aname$[.@i] + ".:";
+					
+					.@loop_3 = 1;
+					while(.@loop_3)
+					{
+						mes "^FF0000[Oficial das Batalhas]^000000";
+						mes "Especifique a arena das Batalhas em ^0000FF" + .@gname$[.@choose_1] + "^000000 em que deseja saber mais informações.";
+						next;
+						.@choose_2 = select(.@arena_menu$+"^FFA500- Voltar.:^FF0000- Cancelar.^000000")-1;
+					
+						if( .@choose_2 == getarraysize(.@bg_id) )
+							break;
+						if( .@choose_2 > getarraysize(.@bg_id) )
+						{
+							.@loop_1 = 0;
+							.@loop_2 = 0;
+							break;
+						}
+						
+						callsub bgDescription, .@bg_id[.@choose_2];
+						.@loop_4 = 1;
+						next;
+						while(.@loop_4)
+						{
+							switch( select("- Informações.", "^FFA500- Voltar.", "^FF0000- Cancelar.^000000") )
+							{
+								case 1:
+									callfunc "bg_info_npc", .@bg_id[.@choose_2], "Oficial das Batalhas";
+									break;
+								case 2:
+									.@loop_4 = 0;
+									break;
+								case 3:
+									.@loop_4 = 0;
+									.@loop_3 = 0;
+									.@loop_2 = 0;
+									.@loop_1 = 0;
+									break;
+							}
+						}
+					}
+				}
+				break;
+			case 3:
+				.@loop_2 = 1;
+				while(.@loop_2)
+				{
+					mes "^FF0000[Oficial das Batalhas]^000000";
+					mes "Os comandos permite que você interaja com as Batalhas Campais.";
+					mes "Sobre o que você deseja saber?";
+					next;
+					switch( select("- Comandos de Alistamento.", "- Comandos de Deserção.", "- Comandos de Listagem.", "- Comandos de Reportagem.", "^FFA500- Voltar.", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Caso você deseja se alistar em uma Batalha, digite em seu chat ^0000FF@bgregister^000000.";
+							mes "Este comando irá abrir uma tela de seleção de arenas, no qual você pode optar pela Arena e Exército que deseja se alistar.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Caso você necessite de um comando de entrada rápida, utilize o ^0000FF@bgjoin^000000.";
+							mes "Este comando irá te alocar em uma arena que esteja acontecendo as batalhas em um exército que capacite, ou em arena e Exército favorável para as Batalhas.";
+							next;
+							if( !callfunc("bg_getconfiginfo", "ARENA_MODE") )
+							{
+								mes "^FF0000[Oficial das Batalhas]^000000";
+								mes "Caso você esteja na fila de espera e deseja desconectar-se, sua posição será de preferencia e seu alistamento ficará agendado.";
+								next;
+							}
+							break;
+						case 2:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Caso você alistou-se em um Exército e está na fila de espera, digite em seu chat ^0000FF@bgunregister^000000.";
+							mes "Este comando irá remove-lo da fila de espera da Batalha em que você está alistado.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Caso você já esteja em uma batalha, utilize o ^0000FF@bgleave^000000.";
+							mes "Este comando irá te remover da batalha e irá realocar postos no Exército que você pertece.";
+							next;
+							break;
+						case 3:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Se você deseja visualizar uma lista de espera de uma determinada batalha e Exército, digite em seu chat ^0000FF@bgwaiting^000000.";
+							mes "Este comando irá listar, caso desejar filtrar por Exército os jogadores conectados que estão aguardando para uma determinada batalha.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Agora se você deseja visualizar uma lista de jogadores que estão participando de uma batalha, utilize o comando ^0000FF@bgplaying^000000.";
+							mes "Este comando irá listar todos os jogadores participando de uma batalha.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Se você deseja visualizar uma lista de posições, utilize o comando ^0000FF@bgranking^000000.";
+							mes "Você utilizar de filtros para deixar sua consulta cada vez mais aperfeiçoada.";
+							next;
+							break;
+						case 4:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Se você se deparar com um jogador ausente na Batalha, digite em seu chat ^0000FF@bgafk^000000 em seguida o nome do jogador.";
+							mes "Não é necessário você utilizar o nome todo do jogador e também não é permitido usar espaçamentos, então digite parte do jogador.";
+							mes "Caso ele esteja realmente ausente, o sistema irá remove-lo da Batalha.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Agora se um jogador do seu Exército está atrapalhando a batalha de alguma forma, utilize o comando ^0000FF@bgkick^000000 em seguida o nome do jogador.";
+							mes "Peça para seus companheiros de equipe utilizar o mesmo comando, é necessário apenas 50% da equipe para remover o jogador que está causando transtorno da Equipe.";
+							next;
+							break;
+						case 5:
+							.@loop_2 = 0;
+							break;
+						case 6:
+							.@loop_2 = 0;
+							.@loop_1 = 0;
+							break;
+					}
+				}
+				break;
+			case 4:
+				.@loop_2 = 1;
+				while(.@loop_2)
+				{
+					mes "^FF0000[Oficial das Batalhas]^000000";
+					mes "Os Postos e Graduções garante uma cadea não totalmente hierarquica mais sim atribuições ao Posto de maior elevação,";
+					mes "garantindo que os demais postos e graduções assegure essa atribuição, garantindo as habilidades de batalhas para auxilio do seu Exército.";
+					next;
+					switch( select("- Comandantes.", "- Outros Postos e Graduações.", "^FFA500- Voltar.", "^FF0000- Cancelar.^000000") )
+					{
+						case 1:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Comandantes tem a finalidade de auxiliar os demais jogadores com habilidades semelhantes a de Clãs.";
+							mes "Geralmente é o primeiro da lista de espera que é nomeado Comandante do Exército selecionado.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "As habilidades não são todas, mais as mais prioritárias que um mestre Clã utiliza para auxiliar os membros nas Guerra do Emperium.";
+							next;
+							break;
+						case 2:
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Os postos são definidos por oficialato sobre comando das habilidades.";
+							mes "Deles estão ^0000FFComandante/Coronel^000000 que é primeiro alistado, ^0000FFCapitão^000000 que é o segundo alistado e o ^0000FFTenente^000000 que é o terceiro.";
+							mes " ";
+							mes "Já as graduações são definidos por jogadores seguindo a ordem de alistamento  que estão no topo da lista de alistamento que tem mais chances de assumir o comando das habilidades.";
+							mes "Entre ele são o ^0000FFSargento^000000 que é o quarto jogador a se alistar e os ^0000FFSoldados^000000 que seguem a ordem de alistamento.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "Por qualquer motivo que seja, um jogador com um determinado posto é removido da partida, os demais por ordem de alistamento substitui sua posição, sempre garantindo que sempre haverá um Comandante para assumiar as habilidades.";
+							next;
+							mes "^FF0000[Oficial das Batalhas]^000000";
+							mes "As habilidades não são todas, mais as mais prioritárias que um mestre Clã utiliza para auxiliar os membros nas Guerra do Emperium.";
+							next;
+							break;
+						case 3:
+							.@loop_2 = 0;
+							break;
+						case 4:
+							.@loop_2 = 0;
+							.@loop_1 = 0;
+							break;
+					}
+				}
+				break;
+			case 5:
+				mes "^FF0000[Oficial das Batalhas]^000000";
+				mes "A loja KvM está em desenvolvimento.";
+				next;
+				break;
+			case 6:
+				.@loop_1 = 0;
+				break;
+		}
+	}
+	mes "^FF0000[Oficial das Batalhas]^000000";
+	mes "Tudo bem, volte quando desejar saber mais sobre as Batalhas Campais.";
+	close;
+	
+	callsub bgDescription, 14;
+	close;
+	
+bgDescription:
+	switch(getarg(0))
+	{
+		case 1:
+		case 2:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Objetivo dos Exércitos destruír o ^0000FFDepósito de Suprimentos^000000 do inimigo.";
+			mes "No mapa de batalha existe ^0000FFBarreiras^000000 no qual pode ser destruída e reconstruídas, tabém existe a ^0000FFBandeira Neutra^000000, no qual a equipe que a destruír ganhará um ponto estratégico no mapa.";
+			mes "^FF0000Caso seja morto, você é reposto em combate em 10 segundos.^000000";
+			return;
+		case 3:
+		case 4:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Objetivo dos Exércitos é destruír o ^0000FFCristal^000000 do inimigo, mais antes devem destruír os ^0000FFGuardiões^000000 que Guarnecem eles.";
+			mes "^FF0000Caso seja morto, você é posto em combate em 10 segundos.^000000";
+			return;
+		case 5:
+		case 6:
+		case 7:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Ambos Exércitos devem se enfrentar, o Exército que estiver com ^0000FFmenos membros derrotados^000000 ou que ^0000FFderrotar todos inimigos^000000 vence a partida.";
+			mes "^FF0000Caso seja morto, fale com o Tenente responsável pelo seu Exército.^000000";
+			return;
+		case 8:
+		case 9:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Ambos Exércitos devem capturar a ^0000FFBandeira^000000 do seu adversário, existe ^FF00005 bandeiras^000000 no qual todas são localizadas no mini-mapa, pondendo ser receptada.";
+			next;
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Caso você recapture uma ^0000FFBandeira^000000, ela deve ser ^0000FFrecolocada no mastro equivalente a ela, um ponto amarelo irá aparecer no mini-mapa indicando o mastro^000000.";
+			next;
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "^0000FFPontos azuis indicam bandeiras de Guillaume^000000, ^FF0000e vermelhos de Croix^000000, para capturar uma bandeira basta passar por cima dela, um ponto e amarelo irá aparecer em seu mini-mapa, que é a sua base aonde deve levar ela.";
+			mes "^FF0000Caso seja morto, você derruba a bandeira que tiver capturado ou recapturado e volta a sua base novamente ao combate.^000000";
+			return;
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "^0000FFSimula a Guerra do Emperium Tradicional^000000, no qual um dos Exércitos ^0000FFé designado a defender o Emperium enquanto a outra ataca^000000.";
+			mes "Há guardiões no mapa para ajudar a defesa, quando o Exército atacante destroí o Emperium, a equipe passa a defender o mesmo, o ^0000FFdireito de empate é de quem começa defendendo^000000.";
+			mes "^FF0000Caso você seja morto, você será posto em batalha novamente em 10 segundos.^000000";
+			return;
+		case 14:
+		case 15:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "^0000FFSimula a Guerra do Emperium Segunda Edição^000000, no qual um dos Exércitos ^0000FFé designadp a defender o Emperium enquanto a outra ataca^000000. Como na Segunda Edição da Guerra você deve ^0000FFreconstruír Barreiras e Runas Guardiões^000000, para maior defesa da fortaleza e invocação dos Guardiões, quando o Exército atacante destroí o Emperium, a equipe passa a defender o mesmo, o direito de empate é de quem começa defendendo.";
+			mes "^FF0000Caso você seja morto, você será posto em batalha novamente em 10 segundos.^000000";
+			return;
+		default:
+			mes "^FF0000[Oficial das Batalhas]^000000";
+			mes "Não temos informações sobre esta batalha.";
+			return;
+	}
+}
+						

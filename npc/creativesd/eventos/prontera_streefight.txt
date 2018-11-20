@@ -1,0 +1,439 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2018 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Evento Luta de Ruas                                          .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                            Versão: 1.0  .
+  .                                                                 .
+  . Compatível:	rAthena e derivações.                    	        .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .    Evento no qual os jogadores irão lutar na Cidade de Prontera .
+  .  em pontos especificos para não atrapalhar outros jogadores.    .
+  *-----------------------------------------------------------------*/
+-	script	PvP In Cell#prt_main	-1,{
+OnInit:
+	// Configurações
+	//
+	// Habilitar Recompensas?
+	// 0: Desativa.
+	// 1: Todas recompensas configuradas serão entregues.
+	// 2: Uma recompensa aleatória será entregue.
+	set .EnableRewards, 1;
+	
+	// Configurações de Recompensas
+	// Itens que os jogadores ganharam ao eliminar um jogador.
+	// setarray .Rewards$[0], "<item_id/var>", <type>, <amount>, "<name>",...
+	//
+	//	<type>:
+	//		0: Item
+	//		1: Variável (Suporta apenas variáveis numéricas)
+	//
+	setarray .Rewards$[0],
+		"Zeny", 1, 100000, "Zeny(s)",
+		41001, 0, 25, getitemname(41001)
+	;
+	
+	// Prontera - Reset
+	setcell "prontera", 116, 148, 130, 150, cell_pvp, 0;
+	setcell "prontera", 102, 249, 114, 237, cell_pvp, 0;
+	setcell "prontera", 43, 281, 55, 269, cell_pvp, 0;
+	setcell "prontera", 187, 166, 199, 154, cell_pvp, 0;
+	
+	bindatcmd "evsfon", "PvP In Cell#prt_main::OnStart", 99;
+	bindatcmd "evsfoff", "PvP In Cell#prt_main::OnEnd", 99;
+	end;
+	
+OnClock1000:
+OnClock1600:
+OnClock2100:
+	donpcevent "PvP In Cell#prt_main::OnStart";
+	end;
+	
+OnClock1020:
+OnClock1620:
+OnClock2120:
+	donpcevent "PvP In Cell#prt_main::OnEnd";
+	end;
+	
+OnStart:
+	if( $@EVSFPRT ) end;
+	
+	// Prontera
+	setcell "prontera", 116, 148, 130, 150, cell_pvp, 1;
+	setcell "prontera", 102, 249, 114, 237, cell_pvp, 1;
+	setcell "prontera", 43, 281, 55, 269, cell_pvp, 1;
+	setcell "prontera", 187, 166, 199, 154, cell_pvp, 1;
+	
+	// Announce
+	announce "[Evento]: Guardas atenção! Está havendo lutas nas ruas de Prontera!", bc_blue|bc_all;
+	
+	// Do Event
+	donpcevent "::OnCityPvPEnable";
+	
+	// Start Effects
+	initnpctimer;
+	
+	// Set Flag
+	set $@EVSFPRT, 1;
+	end;
+	
+OnEnd:
+	if( !$@EVSFPRT ) end;
+	
+	// Prontera
+	setcell "prontera", 116, 148, 130, 150, cell_pvp, 0;
+	setcell "prontera", 102, 249, 114, 237, cell_pvp, 0;
+	setcell "prontera", 43, 281, 55, 269, cell_pvp, 0;
+	setcell "prontera", 187, 166, 199, 154, cell_pvp, 0;
+	
+	// Announce
+	announce "[Evento]: Guarda: Comandante, as lutas foram encerradas em Prontera!", bc_blue|bc_all;
+	
+	// Do Event
+	donpcevent "::OnCityPvPDisable";
+	
+	// Stop Effects
+	stopnpctimer;
+	
+	// Set Flag
+	set $@EVSFPRT, 0;
+	end;
+
+OnPCKillEvent:
+	if( !.EnableRewards ) end;
+	getmapxy .@map$, .@x, .@y, UNITTYPE_PC;
+	if( .@map$ == "prontera" && checkcell (.@map$,.@x,.@y,cell_pvp) )
+	{
+		if( .EnableRewards == 2 ) {
+			set .@i, rand(0,(.@size-1));
+			set .@i, .@i*4;
+			set .@amount, atoi(.Rewards$[.@i+2]);
+			set .@type, atoi(.Rewards$[.@i+1]);
+			if( .@type == 1 ) {
+				setd .Rewards$[.@i], getd(.Rewards$[.@i]) + .@amount;
+				set .@flag, 1;
+			}
+			else {
+				set .@item_id, atoi(.Rewards$[.@i]);
+				if( checkweight(.@item_id, .@amount) ) {
+					getitem .@item_id, .@amount;
+					set .@flag, 1;
+				}
+			}
+			
+			if( .@flag )
+				dispbottom "Parabéns você recebeu " + .@amount + "x " + .Rewards$[.@i+3] + " como recompensa.";
+		}
+		else {
+			// Count items
+			freeloop(1);
+			for( set .@i,0; .@i < getarraysize(.Rewards$); set .@i, .@i + 4 ) {
+				set .@amount, atoi(.Rewards$[.@i+2]);
+				set .@type, atoi(.Rewards$[.@i+1]);
+				if( .@type == 1 )
+					set .@flag, .@flag + 1;
+				else {
+					set .@item_id, atoi(.Rewards$[.@i]);
+					if( checkweight(.@item_id, .@amount) ) {
+						getitem .@item_id, .@amount;
+						set .@flag, .@flag + 1;
+					}
+				}
+			}
+			
+			// Get Rewards
+			if( .@flag ) {
+				for( set .@i,0; .@i < getarraysize(.Rewards$); set .@i, .@i + 4 ) {
+					set .@amount, atoi(.Rewards$[.@i+2]);
+					set .@type, atoi(.Rewards$[.@i+1]);
+				
+					if( atoi(.Rewards$[.@i+1]) == 1 )
+						setd .Rewards$[.@i], getd(.Rewards$[.@i]) + .Rewards$[.@i+2];
+					else {
+						set .@item_id, atoi(.Rewards$[.@i]);
+						if( checkweight(.@item_id, .@amount) == 0 )
+							continue;
+					}
+					dispbottom "Parabéns você recebeu " + .@amount + "x " + .Rewards$[.@i+3] + " como recompensa.";
+				}
+			}
+			freeloop(0);
+		}
+	}
+	end;
+	
+OnTimer35000:
+	setnpctimer 0;
+	donpcevent "::OnCityCellPvpEff";
+	end;
+}
+
+-	script	PvP In Cell#cell_prt	-1,{	
+OnCityCellPvpEff:
+	specialeffect EF_CHAINGEHOLY;
+	end;
+	
+OnInit:
+OnCityPvPDisable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnCityPvPEnable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+-	script	PvP In Cell#alert_prt	-1,{
+OnTouch:
+	announce "Tenha cuidado, você está em uma Área PVP!", bc_blue|bc_self;
+	end;
+	
+OnInit:
+OnCityPvPDisable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnCityPvPEnable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+-	script	Área PvP#cell_pvp_prt	2_BULLETIN_BOARD,{
+	mes "^FF0000[Área PvP]^000000";
+	mes "Cuidado!";
+	mes "Jogadores costumam duelar nesta área, fora dos olhos dos ^0000FFguardas de Prontera^000000.";
+	mes "Foi dado a ordem aos ^0000FFguardas de Prontera^000000 para abolir essa selvageria.";
+	close;
+}
+
+// Boards
+prontera,116,148,4	duplicate(Área PvP#cell_pvp_prt)	Área PvP#pvp_cell_prt_1-1	2_BULLETIN_BOARD
+prontera,116,232,4	duplicate(Área PvP#cell_pvp_prt)	Área PvP#pvp_cell_prt_2-1	2_BULLETIN_BOARD
+prontera,56,267,4	duplicate(Área PvP#cell_pvp_prt)	Área PvP#pvp_cell_prt_3-1	2_BULLETIN_BOARD
+prontera,200,152,4	duplicate(Área PvP#cell_pvp_prt)	Área PvP#pvp_cell_prt_4-1	2_BULLETIN_BOARD
+
+// Alert
+prontera,124,155,0	duplicate(PvP In Cell#alert_prt)	pvp_cell_alert#prt_1-1	-1,6,4
+prontera,108,241,0	duplicate(PvP In Cell#alert_prt)	pvp_cell_alert#prt_2-1	-1,6,6
+prontera,49,277,0	duplicate(PvP In Cell#alert_prt)	pvp_cell_alert#prt_3-1	-1,6,6
+prontera,193,160,0	duplicate(PvP In Cell#alert_prt)	pvp_cell_alert#prt_4-1	-1,6,6
+
+// Effects
+// Prontera 1 - Mid - Bottom Left
+prontera,118,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-01	139
+prontera,122,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-02	139
+prontera,126,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-03	139
+prontera,130,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-04	139
+
+prontera,118,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-05	139
+prontera,122,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-06	139
+prontera,126,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-07	139
+prontera,130,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-08	139
+
+prontera,118,150,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-09	139
+prontera,122,150,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-10	139
+prontera,126,150,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-11	139
+prontera,130,150,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_1-12	139
+
+// Prontera 2 - Mid - Top Left
+prontera,102,249,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-01	139
+prontera,106,249,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-02	139
+prontera,110,249,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-03	139
+prontera,114,249,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-04	139
+
+prontera,102,245,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-05	139
+prontera,106,245,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-06	139
+prontera,110,245,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-07	139
+prontera,114,245,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-08	139
+
+prontera,102,241,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-09	139
+prontera,106,241,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-10	139
+prontera,110,241,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-11	139
+prontera,114,241,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-12	139
+
+prontera,102,237,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-13	139
+prontera,106,237,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-14	139
+prontera,110,237,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-15	139
+prontera,114,237,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-16	139
+
+prontera,102,233,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-17	139
+prontera,106,233,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-18	139
+prontera,110,233,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-19	139
+prontera,114,233,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_2-20	139
+
+// Prontera 3 - Top - Top Left
+prontera,43,281,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-01	139
+prontera,47,281,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-02	139
+prontera,51,281,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-03	139
+prontera,55,281,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-04	139
+
+prontera,43,277,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-05	139
+prontera,47,277,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-06	139
+prontera,51,277,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-07	139
+prontera,55,277,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-08	139
+
+prontera,43,273,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-09	139
+prontera,47,273,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-10	139
+prontera,51,273,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-11	139
+prontera,55,273,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-12	139
+
+prontera,43,269,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-13	139
+prontera,47,269,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-14	139
+prontera,51,269,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-15	139
+prontera,55,269,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_3-16	139
+
+// Prontera 4 - Mid - Mid Right
+prontera,187,166,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-01	139
+prontera,191,166,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-02	139
+prontera,195,166,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-03	139
+prontera,199,166,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-04	139
+
+prontera,187,162,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-05	139
+prontera,191,162,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-06	139
+prontera,195,162,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-07	139
+prontera,199,162,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-08	139
+
+prontera,187,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-09	139
+prontera,191,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-10	139
+prontera,195,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-11	139
+prontera,199,158,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-12	139
+
+prontera,187,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-13	139
+prontera,191,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-14	139
+prontera,195,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-15	139
+prontera,199,154,0	duplicate(PvP In Cell#cell_prt)	pvp_cell#prt_4-16	139
+
+// Guides
+// Prontera
+prontera,171,196,3	script	Lutas em Prontera#guide	4_M_MONK,{
+	mes "^FF0000[Guia de Lutas]^000000";
+	mes "Você sabia que aqui na Cidade de Prontera tem lutas de rua?";
+	next;
+	mes "^FF0000[Guia de Lutas]^000000";
+	mes "... não conte a ninguém os Guardas de Prontera não podem saber!";
+	mes "Mas vejo que você é uma pessoa bacana, não iria nos delatar e irei te mostrar os pontos de lutas.";
+	next;
+	set .@loop_1, 1;
+	while(.@loop_1)
+	{
+		switch( select("- Ponto de Luta 1.", "- Ponto de Luta 2.", "- Ponto de Luta 3.", "- Ponto de Luta 4.", "^FF0000- Cancelar.^000000") )
+		{
+			case 1:
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Este ponto fica localizado aqui perto, basta entrar no <NAVI>beco da esquerda<INFO>prontera,116,148,0,000,0</INFO></NAVI> e pronto você chega lá.";
+				mes "Vou marcar em seu mini-mapa para você.";
+				viewpoint 0,116,148,1,0xFFFF00;
+				next;
+				break;
+			case 2:
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Este ponto fica localizado aqui perto, basta subir e entrar no <NAVI>beco da esquerda<INFO>prontera,116,232,0,000,0</INFO></NAVI> e pronto você chega lá.";
+				mes "Vou marcar em seu mini-mapa para você.";
+				viewpoint 0,116,232,2,0xFFFF00;
+				next;
+				break;
+			case 3:
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Este ponto fica localizado aqui perto, basta entrar no <NAVI>beco da direita<INFO>prontera,200,152,0,000,0</INFO></NAVI> e pronto você chega lá.";
+				mes "Vou marcar em seu mini-mapa para você.";
+				viewpoint 0,200,152,3,0xFFFF00;
+				next;
+				break;
+			case 4:
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Este ponto fica localizado um pouco longe, fica ao <NAVI>noroeste<INFO>prontera,56,267,0,000,0</INFO></NAVI> da cidade.";
+				mes "Vou marcar em seu mini-mapa para você.";
+				viewpoint 0,56,267,4,0xFFFF00;
+				next;
+				break;
+			default:
+				set .@loop_1,0;
+				break;
+		}
+		
+		if( .@loop_1 )
+		{
+			mes "^FF0000[Guia de Lutas]^000000";
+			mes "Deseja mais alguma coisa?";
+			next;
+		}
+	}
+	mes "^FF0000[Guia de Lutas]^000000";
+	mes "Muito bem, tome cuidado ao cruzar um Ponto de Luta!";
+	close;
+}
+
+event_room,120,88,3	script	Lutas em Prontera#evroom	4_F_MONK,{
+	set .@loop_1,1;
+	while(.@loop_1)
+	{
+		set .@EnableRewards, getvariableofnpc(.EnableRewards, "PvP In Cell#prt_main");
+		mes "^FF0000[Guia de Lutas]^000000";
+		mes "Você sabia que na ^0000FFCidade de Prontera^000000 tem lutas de rua?";
+		next;
+		switch( select("- Conte-me mais.", (.@EnableRewards?"^0000FF- Recompensas.^000000":""), "^FF0000- Saír.^000000") ) {
+			case 1:
+				emotion ET_SMILE;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Bem... vou te explicar como funciona...";
+				mes "Os Guardas de Prontera são muitos mesquinhos e não permite as lutas na cidade de Prontera.";
+				next;
+				emotion ET_KEK;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Então quando estiver acontecendo sempre um Guarda irá anunciar que está acontecendo lutas na Cidade.";
+				next;
+				emotion ET_HELP;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Para você pode entrar nas batalhas, você deve entrar em um ponto de luta.";
+				mes "Fale com o <NAVI>Guia de Lutas<INFO>prontera,171,196,0,000,0</INFO></NAVI> em Prontera que ele irá te mostrar os pontos de luta.";
+				next;
+				emotion ET_SMILE;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Você só pode bater em outro jogador dentro dos ponto de luta.";
+				mes "E de vez em quando luzes irão piscar sinalizando o bloco de ponto de luta, mais você será avisado caso entre em um por engano.";
+				next;
+				if( .@EnableRewards ) {
+					emotion ET_OK;
+					mes "^FF0000[Guia de Lutas]^000000";
+					mes "Você pode ganhar recompensas ao eliminar outros jogadores, mais você tem que estar dentro do ponto de lutas.";
+					next;
+				}
+				emotion ET_BEST;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "É isso ai, agora que você já sabe como funciona, já pode participar das lutas em Prontera.";
+				next;
+				break;
+			case 2:
+				emotion ET_OK;
+				mes "^FF0000[Guia de Lutas]^000000";
+				mes "Lembre-se, você deve estar dentro do ponto de luta ao eliminar o jogador!";
+				if( .@EnableRewards == 1 )
+					mes "Ao eliminar o jogador você irá ganhar:";
+				else
+					mes "De forma aleatória, ao eliminar o jogador você pode ganhar:";
+							
+				copyarray .@Rewards$[0], getvariableofnpc(.Rewards$, "PvP In Cell#prt_main"), getarraysize(getvariableofnpc(.Rewards$, "PvP In Cell#prt_main"));
+				for( set .@i, 0; .@i < getarraysize(.@Rewards$); set .@i, .@i + 4 )
+					mes " - " + .@Rewards$[.@i+2] + "x ^0000FF" + .@Rewards$[.@i+3] + "^000000.";
+				next;
+				break;
+			case 3:
+				set .@loop_1, 0;
+				break;
+		}
+	}
+	mes "^FF0000[Guia de Lutas]^000000";
+	mes "Muito bem, tome cuidado ao cruzar um Ponto de Luta!";
+	close;
+}

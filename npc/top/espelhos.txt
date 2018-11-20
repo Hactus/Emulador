@@ -1,0 +1,47 @@
+vip,81,262,4	script	Caçador de MvP	4_CAT_SAILOR5,{
+
+@espelhosdodia = 0;
+@esp = 0;
+mes "Olá! Eu possuo uma grande quantidade de Goma de Mascar para distribuir aos players VIPs";
+mes "Caso tenha interesse, é só vir fazer a sua retirada diariamente.";
+next;
+mes "Todavia, não são itens negociáveis e não podem ir para o Armazém,";
+mes "As Gomas de Mascar que você pegar com um personagem";
+mes "só estarão disponíveis nele.";
+mes "Você só poderá pegar mais espelhos";
+mes "Daqui a 24 horas.";
+mes "Deseja continuar?";
+next;
+switch(select("- Sim","- Não")){
+
+case 1:
+
+query_sql "SELECT `account_id`,`amount` FROM `vip_daily` WHERE `account_id` = '"+ getcharid(3) +"'", @acc, @esp;
+
+if( #espelhodelay > gettimetick(2) ) {
+mes "Você só pode pegar espelhos 1x em 24h.";
+close;
+}
+if( @esp >= 5) {
+	mes "Você possui a quantidade limite de '5' Gomas de Mascar por conta.";
+	close;
+}
+set @espelhosdodia, 5 - @esp;
+getitembound 12210,@espelhosdodia,bound_account;
+set #espelhodelay,gettimetick(2)+10800;
+mes "Você ganhou "+@espelhosdodia+" Goma(s)";
+if(@acc == 0 ) {
+	query_sql "INSERT INTO `vip_daily` (`account_id`, `nameid`, `amount`) VALUES ("+ getcharid(3) +",'12214','5')";
+close;}
+query_sql "UPDATE `vip_daily` SET `amount` = `amount`+"+@espelhosdodia+" WHERE `account_id`="+getcharid(3)+"";
+close;
+
+case 2: mes "Volte quando precisar!";
+close;
+}
+}
+
+function	script	espelho	{
+query_sql "UPDATE `vip_daily` SET `amount`=`amount`-1 WHERE `account_id`='"+ getcharid(3) +"'";
+end;
+}

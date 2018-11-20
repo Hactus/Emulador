@@ -1,0 +1,201 @@
+prontera,168,173,3	script	Minerador	850,{
+.@nomenpc$ = "[Minerador]";
+
+mes .@nomenpc$;
+mes "Olá ^5566FF"+strcharinfo(0)+"^000000!";
+mes "Eu posso trocar seu minério comum por um Perfeito ou Enriquecido.";
+mes "Qual minério deseja adquirir?";
+switch(select("Elunium.:Oridecon.:Bradium Perfeito.:Carnium Perfeito.:Nenhum.")){
+next;
+case 1:
+
+mes .@nomenpc$;
+mes "Certo.";
+mes "Deseja adquirir qual tipo de Elunium?";
+switch(select("Elunium Enriquecido.:Elunium Perfeito.:Nenhum.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem, cada Elunium Enriquecido custará 500 Elunium.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(985) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 985,500;
+mes .@nomenpc$;
+mes "Prontinho, aqui está.";
+getitem 7619,1;
+next;
+mes .@nomenpc$;
+mes "Até a próxima!";
+close;
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 2:
+mes .@nomenpc$;
+mes "Tudo bem, cada Elunium Perfeito custará 500 Elunium.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(985) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 985,500;
+mes "Prontinho, aqui está.";
+getitem 6241,1;
+next;
+mes "Até a próxima!";
+close;
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 3:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+
+case 2:
+mes .@nomenpc$;
+mes "Certo.";
+mes "Deseja adquirir qual tipo de Oridecon?";
+switch(select("Oridecon Enriquecido.:Oridecon Perfeito.:Nenhum.")){
+next;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem, cada Oridecon Enriquecido custará 500 Oridecon.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(984) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 984,500;
+mes "Prontinho, aqui está.";
+getitem 7620,1;
+next;
+mes "Até a próxima!";
+close;
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 2:
+mes .@nomenpc$;
+mes "Tudo bem, cada Oridecon Perfeito custará 500 Oridecon.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(984) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 984,500;
+mes "Prontinho, aqui está.";
+getitem 6240,1;
+next;
+mes "Até a próxima!";
+close;
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+
+case 3:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 3:
+
+mes .@nomenpc$;
+mes "Tudo bem, cada Bradium Perfeito custará 500 Bradiuns.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(6224) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 6224,500;
+mes .@nomenpc$;
+mes "Prontinho, aqui está.";
+getitem 6226,1;
+next;
+mes .@nomenpc$;
+mes "Até a próxima!";
+close;
+
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+
+case 4:
+
+mes .@nomenpc$;
+mes "Tudo bem, cada Carnium Perfeito custará 500 Carniuns.";
+mes "Tem certeza que deseja realizar a troca?";
+switch(select("Sim.:Não.")){
+next;
+case 1:
+if ((countitem(6223) < 500)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 6223,500;
+mes .@nomenpc$;
+mes "Prontinho, aqui está.";
+getitem 6225,1;
+next;
+mes .@nomenpc$;
+mes "Até a próxima!";
+close;
+case 2:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}
+case 5:
+mes .@nomenpc$;
+mes "Ok. Até logo!";
+close;
+}}

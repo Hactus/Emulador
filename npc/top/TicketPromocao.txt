@@ -1,0 +1,87 @@
+//  _________________________________________________________
+// /                                                         \
+// |      ___           ___           ___           ___      |
+// |     /__/\         /  /\         /  /\         /__/|     |
+// |    |  |::\       /  /::\       /  /::\       |  |:|     |
+// |    |  |:|:\     /  /:/\:\     /  /:/\:\      |  |:|     |
+// |  __|__|:|\:\   /  /:/~/::\   /  /:/~/:/    __|  |:|     |
+// | /__/::::| \:\ /__/:/ /:/\:\ /__/:/ /:/___ /__/\_|:|____ |
+// | \  \:\~~\__\/ \  \:\/:/__\/ \  \:\/:::::/ \  \:\/:::::/ |
+// |  \  \:\        \  \::/       \  \::/~~~~   \  \::/~~~~  |
+// |   \  \:\        \  \:\        \  \:\        \  \:\      |
+// |    \  \:\        \  \:\        \  \:\        \  \:\     |
+// |     \__\/         \__\/         \__\/         \__\/     |
+// |---------------------------------------------------------|
+// | Nome do Script: Ticket de Promoção                      |
+// |---------------------------------------------------------|
+// | Criado por: Mark [kenshin_rh@hotmail.com]               |
+// |---------------------------------------------------------|
+// | Versões: 1.0         Roda com: brA/eA/Cronus            |
+// |---------------------------------------------------------|
+// | Descrição:                                              |
+// |  - Ticket de Promoção baseado no bRO.                   |
+// |  - Basta alterar no final do script os itens, qtd e %   |
+// |  - O npc anuncia quem recebe itens com chance de 3% ou  |
+// |    menor.                                               |
+// |---------------------------------------------------------|
+// | Changelog:               	                             |
+// | 1.0 Script Criado [Mark]                                |
+// \_________________________________________________________/
+
+prontera,141,226,4	script	Promoções Especiais	96,{
+	function	F_Ticket;
+	mes "[Mercadora de Promoções]";
+	mes "Olá, aproveitando sua passagem pela cidade?!";
+	mes "Eu sou a mercadora responsável por trocar os ^0000FFTickets de Promoção^000000 por prêmios aleatórios.";
+	next;
+	mes "[Mercadora de Promoções]";
+	mes "Você gostaria de trocar agora?";
+	next;
+	if(select("Sim:Não") == 2) {
+		mes "[Mercadora de Promoções]";
+		mes "Quando quiser trocar um ticket, basta vir e falar comigo!";
+		mes "Até mais!";
+		close;
+	} else {
+		if(!countitem(7608)) {
+			mes "[Mercadora de Promoções]";
+			mes "Hm, você precisa ter o ^0000FFTicket de Promoção^000000 para receber um dos itens...";
+			close;
+		} else {
+			mes "[Mercadora de Promoções]";
+			mes "OK! Vamos ver como anda sua sorte!";
+			next;
+			mes "[Mercadora de Promoções]";
+			mes "Um... Dois... Três!";
+			next;
+			if(!countitem(7608)) close;
+			delitem 7608,1;
+			F_Ticket;
+			mes "[Mercadora de Promoções]";
+			mes "Prontinho! Aqui está seu item!";
+			next;
+			mes "[Mercadora de Promoções]";
+			mes "Se quiser trocar outro ticket, basta falar comigo novamente!";
+			mes "Até mais!";
+			close;
+		}
+	}
+	
+	function	F_Ticket	{
+		set .@rand,rand(0,1000);
+		// Coloque aqui os prêmios seguindo a ordem: ItemID,Quantidade,Chance(1 = 0.1% 10 = 1% 100 = 10%...)
+		// Obs: A soma das chances deve ser igual a 1000 = 100%
+		// Ex: 601,1,100,602,1,300,603,5,250,604,10,150,605,1,200 -> Soma das chances igual a 1000 = 100%
+		setarray .@ticket[1],14601,15,55,12922,1,55,12794,2,55,6380,5,55,16770,2,50,12787,5,40,7444,20,40,12412,8,40,12424,15,40,12427,15,40,6230,1,35,6234,1,35,2589,1,25,22106,1,25,28902,1,25,5985,1,25,2137,1,25,2384,1,25,19024,1,25,28372,1,25,5825,1,25,2979,1,25,19083,1,25,19268,1,25,28916,1,20,20514,1,20,31395,1,20,31299,1,20,2027,1,20,5918,1,20,19306,1,20,31176,1,20;
+		for(set .@i,3; .@i <= getarraysize(.@ticket); set .@i,.@i+3){
+			if(.@rand > .@a && .@rand <= .@a+.@ticket[.@i]){
+				getitem .@ticket[.@i-2],.@ticket[.@i-1];
+				if(.@ticket[.@i] <= 30) 
+					announce "Atenção Heróis! "+strcharinfo(0)+" acabou de receber '"+getitemname(.@ticket[.@i-2])+"' da NPC Promoções Especiais!",8;
+				break;
+			} else
+				set .@a,.@a+.@ticket[.@i];
+		}
+		return;
+	}
+}

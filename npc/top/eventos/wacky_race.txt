@@ -1,0 +1,1589 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2018 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Evento Wacky Race (Corrida Maluca)                           .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                            Versão: 1.0  .
+  .                                                                 .
+  . Compatível:	rAthena e derivações.                    	        .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .    Evento Corrida Maluca dinâmico e com Power Ups.              .
+  *-----------------------------------------------------------------*/
+-	script	WackyRace#main	-1,{
+OnDefaults:
+	deletearray $@WR_CHAMPIONS$;
+	deletearray $@WR_StartLine$;
+	deletearray $@WR_FinishLine$;
+	deletearray $@WR_ReturnWarp$;
+	deletearray $@WR_BlockItem;
+	deletearray $@WR_PowerUps;
+	deletearray $@WR_Reward_1st$;
+	deletearray $@WR_Reward_2nd$;
+	deletearray $@WR_Reward_3rd$;
+	deletearray $@WR_Reward_con$;
+OnInit:
+	// Configurações do Evento
+	// -------------------------------------------------------
+	// GroupId para gerenciar o evento.
+	// Ligar/Desligar
+	set $@WR_GroupID, 99;
+	
+	// Linha de Partida
+	setarray $@WR_StartLine$[0], "turbo_n_1", 54, 364;
+	
+	// Linha de Chegada
+	setarray $@WR_FinishLine$[0], "turbo_n_1", 383, 161;
+	
+	// Mapa no qual irá os jogadores após o evento.
+	setarray $@WR_ReturnWarp$[0], "prontera", 156, 191;
+	
+	// Mínimo de Jogadores para começar o evento.
+	// O mínimo é 1 (um), nunca ponha 0 (zero).
+	set $@WR_MinPlayer, 1;
+	
+	// Máximo de Jogadores que podem entrar no evento.
+	// 0 (zero) Desativa esta opção.
+	set $@WR_MaxPlayer, 10;
+	
+	// Nível mínimo de Base para entrar no evento.
+	set $@WR_BaseLevel, 50;
+	
+	// Máximo de Tempo (em minutos) que os jogadores podem terminar o percurso.
+	//
+	// 0 Irá desativar esta opção, o Clock deve ser feito manualmente.
+	set $@WR_MaxTimer, 15;
+	
+	// Tempo de espera para os jogadores entrarem no evento (em minutos).
+	set $@WR_Waiting, 1;
+	
+	// Bloquear entrada após dar a largada?
+	//	0: Não bloquear
+	//	1: Bloquear
+	set $@WR_BlockStart, 0;
+	
+	// Proibir Montarias?
+	// 	0: Não remover
+	//	1: Remover Carrinho, Peco Peco, Grifo, Dragão, Warg e MadoGear.
+	//	2: Remover Montarias (de todas as Classes)
+	//	3: Remover Ambos
+	set $@WR_Mount, 3;
+	
+	// Itens Bloqueados
+	setarray $@WR_BlockItem[0], 12016, 662, 12028, 2410, 12622, 23277, 6124;
+	
+	// Desativar Uso de Habilidades?
+	//	0: Não
+	//	1: Sim
+	set $@WR_BlockSkill, 1;
+	
+	// Desativar Uso de Itens Consumíveis?
+	//	0: Não
+	//	1: Sim
+	set $@WR_BlockConsumption, 1;
+	
+	// Desativar Galho Seco?
+	//	0: Não
+	//	1: Sim
+	set $@WR_BlockBranch, 1;
+	
+	// Remover Buffs?
+	//	0: Não
+	//	1: Sim
+	set $@WR_RemoveBuffs, 1;
+	
+	
+	// Configurações de Armadilhas e Power Ups
+	// -------------------------------------------------------
+	// Habilitar Traps?
+	set $@WR_EnableTraps, 1;
+	
+	// Restaurar Traps?
+	// ! Warps não são considerada Traps !
+	// Após a trap ser usada, restaura a Traps para que outros jogadores caiam nela.
+	//	0: Não restaurar Traps
+	//	1: Restaurar Traps (configurado para 15 segundos
+	//	2: Não remover Traps
+	set $@WR_RestoreTraps, 1;
+	
+	// Habilitar Power Ups?
+	set $@WR_EnablePowerUps, 1;
+	
+	// Restaurar Power Ups?
+	// Após ser pego, restaurar o Power Up para que outros jogadores peguem?
+	//	0: Não resturar Power Ups
+	//	1: Restaurar Power Ups (configurado para 15 segundos)
+	//	2: Não remover Power Ups
+	set $@WR_RestorePowerUps, 1;
+	
+	// Configurações de Power Ups
+	setarray $@WR_PowerUps[0],
+		// Configurações de Ganho de Agilidade (em milisegundos)
+		// <min_timer>, <max_timer>,<lvl_min>,<lvl_max>
+		2000, 5000, 1, 5,
+		
+		// Configurações de Danos tirado em outros Jogadores.
+		// <min_percent>,<max_percent>,<max_player>,<area>
+		//	min: 1%
+		//	max: 100%
+		5, 35, 3, 10,
+		
+		// Configurações de Porings Bomb arremessado aos jogadores envolta
+		// <max_player>, <min_per_player>, <max_per_player>, <area>
+		2, 1, 2, 10,
+		
+		// Tempo de invencibilidade
+		// Infelizmente esta configuração deve ser feito na mão!
+		// Linha xxx
+		
+		// Proteção contra Congelamento (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Confusão (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Petrificação (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Sono (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Atordoamento (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Cegueira (a quantidade que será ganha)
+		// <min>,<max>
+		1, 3,
+		
+		// Proteção contra Maldição (a quantidade que será ganha)
+		1, 3,
+		
+		// Cura de HP
+		// <min_percent>,<max_percent>
+		5, 35,
+
+		// Proteção contra Danos de Armadilhas.
+		//	- Irá Bloquear Bombs Porings.
+		//	- Irá Previnir danos de armadilhas.
+		// <min>,<max>
+		1, 3
+	;
+	
+	// Configurações de Recompensas
+	// -------------------------------------------------------
+	// Habilitar Recompensas?
+	//	0: Desativado.
+	//	1: Todas recompensas configuradas serão entregues.
+	//	2: Uma recompensa aleatória será entregue.
+	set $@WR_EnableRewards,1;
+	
+	// Exemplo de Configurações de recompensas
+	// setarray $@WR_Reward_<ref>$[0], "<item_id/var>", <type>, <amount>, "<name>",...
+	//
+	//	<type>:
+	//		0: Item
+	//		1: Variável (Suporta apenas variáveis numéricas)
+	//
+	
+	// Recompensas para o 1º Lugar
+	setarray $@WR_Reward_1st$[0],
+			41001, 0, 100, getitemname(41001)
+	;
+	
+	// Recompensas para o 2º Lugar
+	setarray $@WR_Reward_2nd$[0],
+			41001, 0, 50, getitemname(41001)
+	;
+	
+	// Recompensas para o 3º Lugar
+	setarray $@WR_Reward_3rd$[0],
+			41001, 0, 25, getitemname(41001)
+	;
+	
+	// Recompensas de Consolação
+	// Comente as linhas abaixo '//' para desativar esta opção.
+	setarray $@WR_Reward_con$[0],
+			41001, 0, 5, getitemname(41001)
+	;
+	
+	// Não altere a partir desta linha!!
+	mapwarp $@WR_StartLine$[0], $@WR_ReturnWarp$[0], atoi($@WR_ReturnWarp$[1]), atoi($@WR_ReturnWarp$[2]);
+	
+	// Delete Invisible Wall
+	if( checkwall("wr_startline_1") )
+		delwall "wr_startline_1";
+	
+	//Gerenciador de Eventos
+	set $verimaluca,0;
+	end;
+
+OnHour01:
+OnHour08:
+OnHour16:
+OnStart:
+
+//Gerenciador de Eventos
+		set $verimaluca,1;
+		
+	// The event is happening!
+	if( $@WR_FLAG )
+		end;
+		
+	// * Special Mapflags
+	// No Skill
+	if( $@WR_BlockSkill ) {
+		if( !getmapflag($@WR_StartLine$[0], mf_noskill) )
+			setmapflag $@WR_StartLine$[0], mf_noskill;
+	}
+	else {
+		if( getmapflag($@WR_StartLine$[0], mf_noskill) )
+			removemapflag $@WR_StartLine$[0], mf_noskill;
+	}
+	// No Consumption
+	if( $@WR_BlockConsumption ) {
+		if( !getmapflag($@WR_StartLine$[0], mf_noitemconsumption) )
+			setmapflag $@WR_StartLine$[0], mf_noitemconsumption;
+	}
+	else {
+		if( getmapflag($@WR_StartLine$[0], mf_noitemconsumption) )
+			removemapflag $@WR_StartLine$[0], mf_noitemconsumption;
+	}
+	// No Branch
+	if( $@WR_BlockBranch ) {
+		if( !getmapflag($@WR_StartLine$[0], mf_nobranch) )
+			setmapflag $@WR_StartLine$[0], mf_nobranch;
+	}
+	else {
+		if( getmapflag($@WR_StartLine$[0], mf_nobranch) )
+			removemapflag $@WR_StartLine$[0], mf_nobranch;
+	}
+	
+	initnpctimer;
+	set $@WR_FLAG, 1;
+	set .TimerCount, 0;
+	announce "[Evento Corrigada Maluca]: O Evento está aberto, corram para arena!", bc_all, "0xFFFF00";
+	donpcevent "::OnWRFlag01Enable";
+	if( $@WR_EnableTraps )
+		donpcevent "::OnWRTrap01Enable";
+	if( $@WR_EnablePowerUps )
+		donpcevent "::OnWRPuP01Enable";
+	if( !checkwall("wr_startline_1") )
+		setwall $@WR_StartLine$[0], 61, 350, 30, 0, 0, "wr_startline_1";
+	end;
+	
+OnTimer60000:
+	stopnpctimer;
+	set .TimerCount, .TimerCount+1;
+	if( .TimerCount >= $@WR_Waiting || ($@WR_MaxPlayer && getmapusers("turbo_n_1") >= $@WR_MaxPlayer) ) {
+		if( getmapusers("turbo_n_1") < $@WR_MinPlayer ) {
+			announce "[Corrida Maluca]: O Evento foi cancelado por falta de jogadores!", bc_all, "0xFFFF00";
+			set $@WR_FLAG, 0;
+			donpcevent "WackyRace#main::OnEnd";
+		}
+		else {
+			// Start Events
+			set $@WR_FLAG, 2;
+			if( $@WR_BlockStart )
+			announce "[Corrida Maluca]: O Evento está completo, boa sorte participantes!", bc_all, "0xFFFF00";
+			//Gerenciador de Eventos
+			set $verimaluca,0;
+			sleep 3000;
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Todos prontos? Em 5 segundos, será dada a largada!", bc_all, "0xFFFF00";
+			sleep 1000;
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Em 4 segundos será dada a largada!", bc_all, "0xFFFF00";
+			sleep 1000;
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Em 3 segundos será dada a largada!", bc_all, "0xFFFF00";
+			sleep 1000;
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Em 2 segundos será dada a largada!", bc_all, "0xFFFF00";
+			sleep 1000;
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Em 1 segundos será dada a largada!", bc_all, "0xFFFF00";
+			sleep 1000;
+			// Remove Wall
+			if( checkwall("wr_startline_1") )
+				delwall "wr_startline_1";
+
+			// Set Flag and Start Timer Event
+			set $@WR_FLAG, 3;
+			deletearray $WR_CHAMPIONS$;
+			donpcevent "::OnWRFlag01Show";
+			mapannounce "turbo_n_1", "[Corrida Maluca]: Foi dado a largada! Boa Sorte participantes!!", bc_all, "0xFFFF00";
+			if( $@WR_MaxTimer )
+				donpcevent "WackyRace#timer::OnStart";
+				
+			sleep 4000;
+			donpcevent "::OnWRFlag01Disable";
+		}
+	}
+	else {
+		initnpctimer;		
+		set .@count, $@WR_Waiting-.TimerCount;
+		announce "[Corrida Maluca]: Em " + .@count + " minuto(s) o Evento irá começar!", bc_all, "0xFFFF00";
+	}
+	end;
+	
+OnFinish:
+	set $@WR_FLAG,4;
+	mapwarp "turbo_n_1", $@WR_FinishLine$[0], atoi($@WR_FinishLine$[1]), atoi($@WR_FinishLine$[2]);
+	sleep 3000;
+	mapannounce "turbo_n_1", "[Corrida Maluca]: A corrida terminou!", bc_all, "0xFFFF00";
+	sleep 3000;
+	if( $@WR_EnableRewards ) {
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Fale com a assistente para sair da Arena!", bc_all, "0xFFFF00";
+		sleep 3000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 30 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 3000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Aqueles que não falarem com a assistente, não irá pegar premiações se disponível!", bc_all, "0xFFFF00";
+		sleep 12000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 15 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 3000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Aqueles que não falarem com a assistente, não irá pegar premiações se disponível!", bc_all, "0xFFFF00";
+		sleep 7000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 5 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 4 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 3 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 2 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 1 segundo a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		donpcevent "WackyRace#main::OnEnd";
+	}
+	else {
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Fale com a nossa assistente para sair da Arena!", bc_all, "0xFFFF00";
+		sleep 3000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 30 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 15000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 15 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 10000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 5 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 4 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 3 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 2 segundos a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		mapannounce "turbo_n_1", "[Corrida Maluca]: Em 1 segundo a Arena do evento será esvaziada automaticamente!", bc_all, "0xFFFF00";
+		sleep 1000;
+		donpcevent "WackyRace#main::OnEnd";
+	}
+	end;
+	
+OnStopGM:
+	// Stop by GameMaster
+	if( $@WR_FLAG == 1 )
+	announce "[Corrida Maluca]: O Evento foi encerrado pela equipe de GameMaster!", bc_all, "0xFFFF00";
+	donpcevent "WackyRace#main::OnEnd";
+	end;
+	
+OnEnd:
+	// End Events
+	stopnpctimer;
+	set $@WR_FLAG,0;
+	deletearray $@WR_CHAMPIONS,0;
+	donpcevent "::OnWRFlag01Disable";
+	donpcevent "::OnWRTrap01Disable";
+	donpcevent "::OnWRPuP01Disable";
+	donpcevent "WackyRace#timer::OnEnd";
+	donpcevent "WackyRace#main::OnDefaults";
+	sleep 3000;
+	announce "[Corrida Maluca]: Evento encerrado, obrigado a todos participantes!", bc_all, "0xFFFF00";
+	//Gerenciador de Eventos
+	set $verimaluca,0;
+	end;
+}
+
+// Timer Evento
+-	script	WackyRace#timer	-1,{
+OnStart:
+	// Init timer
+	set .TimerCount,0;
+	initnpctimer;
+	end;
+
+OnTimer60000:
+	stopnpctimer;
+	set .TimerCount, .TimerCount + 1;
+	if( .TimerCount >= $@WR_MaxTimer )
+		donpcevent "WackyRace#main::OnFinish";
+	else
+		initnpctimer;
+	end;
+	
+OnEnd:
+	stopnpctimer;
+	end;
+}
+		
+// Event	
+turbo_n_1,63,350,0	script	WackyRace#startingline	-1,1,30,{
+//OnTouch:
+	if( $@WR_FLAG != 3 ) {
+		dispbottom "Você não pode queimar a largada!", 0xFF8C00;
+		sleep2 1000;
+		warp $@WR_StartLine$[0], atoi($@WR_StartLine$[1]), atoi($@WR_StartLine$[2]);
+	}
+	end;
+}
+
+turbo_n_1,63,351,0	script	#wc_flagline_1-1	HIDDEN_NPC,{
+	end;
+
+OnInit:
+OnWRFlag01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRFlag01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnWRFlag01Show:
+	emotion ET_BR_FLAG;
+	end;
+	
+}
+
+turbo_n_1,63,353,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-2	HIDDEN_NPC
+turbo_n_1,63,355,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-3	HIDDEN_NPC
+turbo_n_1,63,357,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-4	HIDDEN_NPC
+turbo_n_1,63,359,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-5	HIDDEN_NPC
+turbo_n_1,63,361,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-6	HIDDEN_NPC
+turbo_n_1,63,363,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-7	HIDDEN_NPC
+turbo_n_1,63,365,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-8	HIDDEN_NPC
+turbo_n_1,63,367,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-9	HIDDEN_NPC
+turbo_n_1,63,369,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-10	HIDDEN_NPC
+turbo_n_1,63,371,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-11	HIDDEN_NPC
+turbo_n_1,63,373,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-12	HIDDEN_NPC
+turbo_n_1,63,375,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-13	HIDDEN_NPC
+turbo_n_1,63,377,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-14	HIDDEN_NPC
+turbo_n_1,63,379,0	duplicate(#wc_flagline_1-1)	#wc_flagline_1-15	HIDDEN_NPC
+
+turbo_n_1,370,61,0	script	WackyRace#finishline	-1,0,30,{
+OnTouch:
+	if( $@WR_FLAG != 3 )
+		end;
+		
+	set .@size, getarraysize($@WR_CHAMPIONS);
+	if( .@size < 3 ) {
+		set $@WR_CHAMPIONS[.@size], getcharid(0);
+		set $WR_CHAMPIONS$[.@size], strcharinfo(0);
+		set .@size, .@size + 1;
+		announce "[Corrida Maluca]: " + strcharinfo(0) + " é o " + .@size + "º colocado na Corrida Maluca! Parabéns!!", bc_all, "0xFFFF00";
+	}
+	
+	// Finish Event
+	if( .@size < 3 )
+		warp $@WR_FinishLine$[0], atoi($@WR_FinishLine$[1]), atoi($@WR_FinishLine$[2]);
+	else
+		donpcevent "WackyRace#main::OnFinish";
+	end;
+}
+
+turbo_n_1,169,364,0	script	WackyRace#warp_1-1	WARPNPC,1,1,{
+	set .@i,rand(1,4);
+	if( .@i == 1 )
+		warp "turbo_n_1", 210, 368;
+	else if( .@i == 2 )
+		warp "turbo_n_1", 211, 355;
+	else if( .@i == 3 )
+		warp "turbo_n_1", 247, 386;
+	else
+		warp "turbo_n_1", 251, 353;
+	end;
+}
+
+turbo_n_1,233,367,0	warp	WackyRace#warp_1-2	1,1,turbo_n_1,316,365
+turbo_n_1,385,366,0	warp	WackyRace#warp_1-3	1,1,turbo_n_1,11,267
+turbo_n_1,114,191,0	warp	WackyRace#warp_1-4	1,1,turbo_n_1,251,200
+turbo_n_1,217,212,0	warp	WackyRace#warp_1-5	1,1,turbo_n_1,268,275
+turbo_n_1,389,275,0	warp	WackyRace#warp_1-6	1,1,turbo_n_1,4,91
+turbo_n_1,96,19,0	warp	WackyRace#warp_1-7	1,1,turbo_n_1,176,10
+turbo_n_1,223,65,0	warp	WackyRace#warp_1-8	1,1,turbo_n_1,306,46
+
+// Wooden Box
+turbo_n_1,227,379,0	script	#wr_warp_1-9	-1,1,1,{
+OnTouch:
+	set .@i, rand(1,20);
+	if( .@i == 1 )
+		warp "turbo_n_1", 216, 378;
+	else if( .@i == 2 )
+		warp "turbo_n_1", 218, 360;
+	else if( .@i == 4 )
+		warp "turbo_n_1", 223, 361;
+	else if( .@i == 5 )
+		warp "turbo_n_1", 243, 342;
+	else if( .@i == 6 )
+		warp "turbo_n_1",247,364;
+	end;
+}
+
+turbo_n_1,237,380,0	duplicate(#wr_warp_1-9)	#wr_warp_1-10	-1,1,1,{
+turbo_n_1,227,367,0	duplicate(#wr_warp_1-9)	#wr_warp_1-11	-1,1,1,{
+turbo_n_1,231,360,0	duplicate(#wr_warp_1-9)	#wr_warp_1-12	-1,1,1,{
+turbo_n_1,225,349,0	duplicate(#wr_warp_1-9)	#wr_warp_1-13	-1,1,1,{
+turbo_n_1,249,352,0	duplicate(#wr_warp_1-9)	#wr_warp_1-14	-1,1,1,{
+turbo_n_1,253,364,0	duplicate(#wr_warp_1-9)	#wr_warp_1-15	-1,2,2,{
+
+// Traps
+turbo_n_1,118,377,0	script	WakyRace#trap_a_1-1	-1,44,1,{
+	end;
+	
+OnTouch:
+	set .@i,rand(1,3);
+	if( .@i == 1 )
+		warp "turbo_n_1", 72, 372;
+	else if( .@i == 2 )
+		warp "turbo_n_1", 72, 365;
+	else
+		warp "turbo_n_1", 72, 357;
+	end;
+}
+
+// Traps 1
+turbo_n_1,77,375,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-2	-1,3,1
+turbo_n_1,82,375,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-3	-1,1,1
+turbo_n_1,82,372,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-4	-1,0,2
+turbo_n_1,83,372,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-5	-1,0,2
+turbo_n_1,97,374,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-6	-1,1,2
+turbo_n_1,98,374,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-7	-1,1,2
+turbo_n_1,122,372,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-8	-1,2,4
+turbo_n_1,125,374,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-9	-1,0,4
+turbo_n_1,132,374,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-10	-1,7,2
+turbo_n_1,156,374,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-11	-1,6,2
+turbo_n_1,163,375,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-12	-1,0,3
+turbo_n_1,164,377,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_a_1-13	-1,1,1
+turbo_n_1,76,369,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-1	-1,2,2
+turbo_n_1,79,369,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-2	-1,0,2
+turbo_n_1,77,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-3	-1,3,0
+turbo_n_1,85,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-4	-1,5,1
+turbo_n_1,87,363,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-5	-1,2,1
+turbo_n_1,88,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-6	-1,2,5
+turbo_n_1,92,370,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-7	-1,1,3
+turbo_n_1,98,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-8	-1,4,1
+turbo_n_1,109,371,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-9	-1,7,2
+turbo_n_1,110,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-10	-1,7,0
+turbo_n_1,113,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-11	-1,3,2
+turbo_n_1,117,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-12	-1,0,5
+turbo_n_1,123,364,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-13	-1,6,1
+turbo_n_1,136,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-14	-1,8,1
+turbo_n_1,136,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-15	-1,8,0
+turbo_n_1,144,370,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-16	-1,2,3
+turbo_n_1,147,370,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-17	-1,0,3
+turbo_n_1,155,369,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-18	-1,7,0
+turbo_n_1,155,368,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-19	-1,7,0
+turbo_n_1,151,367,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-20	-1,3,0
+turbo_n_1,153,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-21	-1,1,0
+turbo_n_1,155,367,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_b_1-22	-1,0,1
+turbo_n_1,78,362,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-1	-1,4,1
+turbo_n_1,78,359,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-2	-1,4,1
+turbo_n_1,83,362,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-3	-1,0,1
+turbo_n_1,88,359,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-4	-1,5,1
+turbo_n_1,89,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-5	-1,1,1
+turbo_n_1,92,390,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-6	-1,1,1
+turbo_n_1,92,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-7	-1,1,1
+turbo_n_1,98,364,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-8	-1,6,1
+turbo_n_1,98,362,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-9	-1,6,0
+turbo_n_1,106,364,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-10	-1,2,2
+turbo_n_1,107,360,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-11	-1,1,2
+turbo_n_1,109,360,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-12	-1,0,2
+turbo_n_1,112,361,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-13	-1,3,1
+turbo_n_1,116,359,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-14	-1,0,2
+turbo_n_1,117,359,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-15	-1,0,2
+turbo_n_1,116,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-16	-1,0,2
+turbo_n_1,117,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-17	-1,0,2
+turbo_n_1,129,360,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-18	-1,12,1
+turbo_n_1,129,358,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-19	-1,12,0
+turbo_n_1,132,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-20	-1,2,1
+turbo_n_1,137,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-21	-1,2,1
+turbo_n_1,147,363,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-22	-1,16,1
+turbo_n_1,149,365,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-23	-1,1,0
+turbo_n_1,158,362,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-24	-1,1,4
+turbo_n_1,154,360,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-25	-1,2,2
+turbo_n_1,161,360,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-26	-1,1,2
+turbo_n_1,161,365,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-27	-1,1,0
+turbo_n_1,160,366,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_c_1-28	-1
+turbo_n_1,79,353,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-1	-1,5,2
+turbo_n_1,85,354,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-2	-1,0,1
+turbo_n_1,99,353,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-3	-1,14,0
+turbo_n_1,99,352,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-4	-1,14,0
+turbo_n_1,99,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-5	-1,3,3
+turbo_n_1,103,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-6	-1,0,3
+turbo_n_1,108,354,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-7	-1,5,1
+turbo_n_1,112,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-8	-1,0,1
+turbo_n_1,113,356,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-9	-1,0,1
+turbo_n_1,123,353,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-10	-1,3,2
+turbo_n_1,127,353,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-11	-1,0,2
+turbo_n_1,145,352,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-12	-1,17,1
+turbo_n_1,152,354,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-13	-1,10,1
+turbo_n_1,145,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-14	-1,1,2
+turbo_n_1,148,357,0	duplicate(WakyRace#trap_a_1-1)	WakyRace#trap_d_1-15	-1,1,2
+
+// Sand Hill Traps
+turbo_n_1,322,354,0	script	WakyRace#sandhill_1-1	-1,3,3,{
+	end;
+	
+OnTouch:
+	switch( rand(1,10) )
+	{
+		case 1:
+		case 9:
+			if( WRConfusionProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRConfusionProtection, WRConfusionProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Confusão mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRConfusionProtection )
+					dispbottom "Você ainda possuí +" + WRConfusionProtection + " Proteção contra Confusão.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_CONFUSION,8000,0;
+				emotion ET_PROFUSELY_SWEAT;
+			}
+			break;
+		case 2:
+			if( WRStoneProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRStoneProtection, WRStoneProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Petrificação mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRConfusionProtection )
+					dispbottom "Você ainda possuí +" + WRStoneProtection + " Proteção contra Petrificação.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_STONE,4000,0;
+				emotion ET_PROFUSELY_SWEAT;
+			}
+			break;
+		case 4:
+			if( WRSleepProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRSleepProtection, WRSleepProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Sono mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRSleepProtection )
+					dispbottom "Você ainda possuí +" + WRSleepProtection + " Proteção contra Sono.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_SLEEP,4000,0;
+				emotion ET_SLEEPY;
+			}
+			break;
+		case 6:
+			if( WRFreezeProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRFreezeProtection, WRFreezeProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Congelamento mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRFreezeProtection )
+					dispbottom "Você ainda possuí +" + WRFreezeProtection + " Proteção contra Congelamento.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_FREEZE,4000,0;
+				emotion ET_PROFUSELY_SWEAT;
+			}
+			break;
+		case 8:
+			if( WRStunProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRStunProtection, WRStunProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Atordoamento mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRStunProtection )
+					dispbottom "Você ainda possuí +" + WRStunProtection + " Proteção contra Atordoamento.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_STUN,4000,0;
+				emotion ET_PROFUSELY_SWEAT;
+			}
+			break;
+		case 10:
+			if( WRCurseProtection ) {
+				specialeffect2 EF_GUARD;
+				set WRCurseProtection, WRCurseProtection - 1;
+				dispbottom "Você caiu em uma armadilha que causa Maldição mais foi salvo pela Proteção.", 0xFF8C00;
+				if( WRCurseProtection )
+					dispbottom "Você ainda possuí +" + WRCurseProtection + " Proteção contra Maldição.", 0xFF8C00;
+			}
+			else {
+				sc_start SC_CURSE,80000,0;
+				emotion ET_PROFUSELY_SWEAT;
+			}
+			break;
+	}
+	
+	// Traps Restore and Disable
+	if( $@WR_RestoreTraps < 2 )
+		disablenpc strnpcinfo(0);
+	if( $@WR_RestoreTraps == 1 )
+		initnpctimer;
+
+	end;
+	
+OnTimer15000:
+	stopnpctimer;
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+OnWRTrap01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRTrap01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+turbo_n_1,323,360,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-2	-1,3,3
+turbo_n_1,324,365,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-3	-1,1,1
+turbo_n_1,325,370,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-4	-1,3,3
+turbo_n_1,325,375,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-5	-1,1,1
+turbo_n_1,329,377,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-6	-1,3,3
+turbo_n_1,338,372,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-7	-1,3,3
+turbo_n_1,341,364,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-8	-1,3,3
+turbo_n_1,325,359,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-9	-1,2,2
+turbo_n_1,341,355,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-10	-1,1,1
+turbo_n_1,350,355,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-11	-1,3,3
+turbo_n_1,348,363,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-12	-1,1,1
+turbo_n_1,347,370,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-13	-1,2,2
+turbo_n_1,349,377,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-14	-1,9,9
+turbo_n_1,362,372,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-15	-1,3,3
+turbo_n_1,364,365,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-16	-1,1,1
+turbo_n_1,363,357,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-17	-1,3,3
+turbo_n_1,374,358,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-18	-1,2,2
+turbo_n_1,371,367,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-19	-1,3,3
+turbo_n_1,371,376,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-20	-1,1,1
+turbo_n_1,379,375,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-21	-1,3,3
+turbo_n_1,382,363,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-22	-1,2,2
+turbo_n_1,381,354,0	duplicate(WakyRace#sandhill_1-1)	WakyRace#sandhill_1-23	-1,1,1
+
+// Water Maze Traps
+turbo_n_1,13,266,0	script	WakyRace#watermaze_1-1	-1,0,2,{
+	end;
+	
+OnTouch:
+	if( WRBlindProtection ) {
+		specialeffect2 EF_GUARD;
+		set WRBlindProtection, WRBlindProtection - 1;
+		dispbottom "Você caiu em uma armadilha que causa Cegueira mais foi salvo pela Proteção.", 0xFF8C00;
+		if( WRBlindProtection )
+			dispbottom "Você ainda possuí +" + WRBlindProtection + " Proteção contra Cegueira.", 0xFF8C00;
+	}
+	else {
+		emotion ET_PROFUSELY_SWEAT;
+		sc_start SC_BLIND,60000,0;
+	}
+	
+	// Traps Restore and Disable
+	if( $@WR_RestoreTraps < 2 )
+		disablenpc strnpcinfo(0);
+	if( $@WR_RestoreTraps == 1 )
+		initnpctimer;
+
+	end;
+	
+OnTimer15000:
+	stopnpctimer;
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+OnWRTrap01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRTrap01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+turbo_n_1,24,268,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-2	-1,1,0
+turbo_n_1,20,258,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-3	-1,1,0
+turbo_n_1,23,251,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-4	-1,0,1
+turbo_n_1,36,270,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-5	-1,1,0
+turbo_n_1,22,239,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-6	-1,1,0
+turbo_n_1,38,239,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-7	-1,0,1
+turbo_n_1,37,237,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-8	-1,1,0
+turbo_n_1,55,247,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-9	-1,0,1
+turbo_n_1,55,246,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-10	-1,1,0
+turbo_n_1,63,253,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-11	-1,0,1
+turbo_n_1,36,216,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-12	-1,1,0
+turbo_n_1,20,209,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-13	-1,1,0
+turbo_n_1,28,195,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-14	-1,1,0
+turbo_n_1,82,264,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-15	-1,1,0
+turbo_n_1,47,185,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-16	-1,0,1
+turbo_n_1,53,207,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-17	-1,1,0
+turbo_n_1,54,208,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-18	-1,0,1
+turbo_n_1,81,247,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-19	-1,0,1
+turbo_n_1,105,257,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-20	-1,0,1
+turbo_n_1,95,242,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-21	-1,0,1
+turbo_n_1,77,232,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-22	-1,2,0
+turbo_n_1,67,222,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-23	-1,2,0
+turbo_n_1,83,206,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-24	-1,0,1
+turbo_n_1,95,224,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-25	-1,0,1
+turbo_n_1,106,220,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-26	-1,2,0
+turbo_n_1,93,191,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-27	-1,1,0
+turbo_n_1,94,192,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-28	-1,0,1
+turbo_n_1,46,214,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-29	-1,0,1
+turbo_n_1,16,247,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-30	-1,1,0
+turbo_n_1,58,268,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-31	-1,1,1
+turbo_n_1,36,253,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-32	-1,1,0
+turbo_n_1,69,238,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-33	-1,1,1
+turbo_n_1,58,268,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-34	-1,1,1
+turbo_n_1,74,188,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-35	-1,2,0
+turbo_n_1,99,207,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-36	-1,1,1
+turbo_n_1,74,188,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-37	-1,2,0
+turbo_n_1,111,188,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-38	-1,1,0
+turbo_n_1,51,232,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-39	-1,1,1
+turbo_n_1,30,232,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-40	-1,1,1
+turbo_n_1,92,256,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-41	-1,1,1
+turbo_n_1,79,220,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-42	-1,1,1
+turbo_n_1,51,192,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-43	-1,1,1
+turbo_n_1,22,227,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-44	-1,1,1
+turbo_n_1,51,232,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-45	-1,1,1
+turbo_n_1,42,258,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-46	-1,1,0
+turbo_n_1,45,271,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-47	-1,2,1
+turbo_n_1,72,207,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-48	-1,1,1
+turbo_n_1,33,192,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-49	-1,0,1
+turbo_n_1,90,241,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-50	-1,1,0
+turbo_n_1,236,3,0	duplicate(WakyRace#watermaze_1-1)	WakyRace#watermaze_1-51	-1,3,0
+
+// Cube Line Traps
+turbo_n_1,324,279,0	script	WakyRace#cubeline_1-1	45,1,1,{
+	end;
+	
+OnTouch:
+	set .@i, rand(1,8);
+	if( .@i > 0 && .@i < 3 )
+		warp "turbo_n_1", 370, 292;
+	else if( .@i > 2 &&.@i < 5 )
+		warp "turbo_n_1", 295, 293;
+	else if( .@i > 4 && .@i < 7 )
+		warp "turbo_n_1", 355, 292;
+	else
+		warp "turbo_n_1", 279, 292;
+	end;
+}
+
+turbo_n_1,332,279,0	script	WakyRace#cubeline_1-2	45,1,1,{
+	end;
+	
+OnTouch:
+	set .@i, rand(1,8);
+	if( .@i > 0 && .@i < 3 )
+		warp "turbo_n_1", 287, 256;
+	else if( .@i > 2 &&.@i < 5 )
+		warp "turbo_n_1", 303, 256;
+	else if( .@i > 4 && .@i < 7 )
+		warp "turbo_n_1", 347, 256;
+	else
+		warp "turbo_n_1", 363, 256;
+	end;
+}
+
+turbo_n_1,324,270,0	script	WakyRace#cubeline_1-3	45,1,1,{
+	end;
+	
+OnTouch:
+	set .@i, rand(1,8);
+	if( .@i > 0 && .@i < 3 )
+		warp "turbo_n_1", 279, 292;
+	else if( .@i > 2 &&.@i < 5 )
+		warp "turbo_n_1", 311, 292;
+	else if( .@i > 4 && .@i < 7 )
+		warp "turbo_n_1", 347, 256;
+	else
+		warp "turbo_n_1", 370, 292;
+	end;
+}
+
+turbo_n_1,332,270,0	script	WakyRace#cubeline_1-4	45,1,1,{
+	end;
+	
+OnTouch:
+	set .@i, rand(1,7);
+	if( .@i > 0 && .@i < 3 )
+		warp "turbo_n_1", 363, 256;
+	else if( .@i > 2 &&.@i < 5 )
+		warp "turbo_n_1", 295, 293;
+	else if( .@i > 4 && .@i < 7 )
+		warp "turbo_n_1", 355, 292;
+	else
+		warp "turbo_n_1", 287, 256;
+	end;
+}
+
+// Invisible Labyrinth
+turbo_n_1,179,55,0	script	WakyRace#invilaby_1-1	-1,1,1,{
+	end;
+	
+OnTouch:
+	emotion ET_QUESTION;
+	end;
+}
+
+turbo_n_1,184,45,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-2	-1,1,1
+turbo_n_1,181,30,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-3	-1,1,1
+turbo_n_1,186,28,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-4	-1,1,1
+turbo_n_1,183,19,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-5	-1,1,1
+turbo_n_1,191,37,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-6	-1,1,1
+turbo_n_1,173,25,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-7	-1,1,1
+turbo_n_1,201,21,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-8	-1,1,1
+turbo_n_1,222,21,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-9	-1,1,1
+turbo_n_1,214,39,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-10	-1,1,1
+turbo_n_1,222,48,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-11	-1,1,1
+turbo_n_1,214,60,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-12	-1,1,1
+turbo_n_1,209,61,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-13	-1,1,1
+turbo_n_1,208,56,0	duplicate(WakyRace#invilaby_1-1)	WakyRace#invilaby_1-14	-1,1,1
+turbo_n_1,178,63,0	script	WakyRace#invilaby_1-15	-1,1,1,{
+	end;
+	
+OnTouch:
+	emotion ET_SURPRISE;
+	end;
+}
+
+turbo_n_1,182,40,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-16	-1,1,1
+turbo_n_1,176,29,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-17	-1,1,1
+turbo_n_1,180,25,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-18	-1,1,1
+turbo_n_1,201,157,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-19	-1,1,1
+turbo_n_1,203,65,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-20	-1,1,1
+turbo_n_1,208,52,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-21	-1,1,1
+turbo_n_1,208,26,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-22	-1,1,1
+turbo_n_1,191,30,0	duplicate(WakyRace#invilaby_1-15)	WakyRace#invilaby_1-23	-1,1,1
+turbo_n_1,187,55,0	script	WakyRace#invilaby_1-24	-1,1,1,{
+	end;
+	
+OnTouch:
+	emotion ET_PROFUSELY_SWEAT;
+	if( rand(1,4) == 3 )
+		emotion ET_SURPRISE;
+	end;
+}
+
+turbo_n_1,176,45,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-25	-1,1,1
+turbo_n_1,222,26,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-26	-1,1,1
+turbo_n_1,219,39,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-27	-1,1,1
+turbo_n_1,222,45,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-28	-1,1,1
+turbo_n_1,222,61,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-29	-1,1,1
+turbo_n_1,222,65,0	duplicate(WakyRace#invilaby_1-24)	WakyRace#invilaby_1-30	-1,1,1
+
+// Finish Step
+turbo_n_1,307,55,0	script	WakyRace#fstep_1-1	139,1,1,{
+OnTouch:
+	if( WRDamageProtection ) {
+		specialeffect2 EF_GUARD;
+		set WRDamageProtection, WRDamageProtection - 1;
+		dispbottom "Você caiu em uma armadilha que causa Dano mais foi salvo pela Proteção.", 0xFF8C00;
+		if( WRDamageProtection )
+			dispbottom "Você ainda possuí +" + WRDamageProtection + " Proteção contra Dano.", 0xFF8C00;
+	}
+	else {
+		specialeffect EF_BLASTMINEBOMB;
+		set .@i, rand(4,10);
+		if( .@i > 0 && .@i < 4 )
+			percentheal -1,0;
+		else if( .@i > 4 && .@i < 8 )
+			percentheal -5,0;
+		else
+			percentheal -2,0;
+	}
+	
+	// Traps Restore and Disable
+	if( $@WR_RestoreTraps < 2 )
+		disablenpc strnpcinfo(0);
+	if( $@WR_RestoreTraps == 1 )
+		initnpctimer;
+
+	end;
+	
+OnTimer15000:
+	stopnpctimer;
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+OnWRTrap01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRTrap01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+turbo_n_1,307,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-2	139,1,1
+turbo_n_1,307,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-3	139,1,1
+turbo_n_1,307,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-4	139,1,1
+turbo_n_1,307,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-5	139,1,1
+turbo_n_1,307,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-6	139,1,1
+turbo_n_1,312,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-7	139,1,1
+turbo_n_1,312,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-8	139,1,1
+turbo_n_1,312,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-9	139,1,1
+turbo_n_1,312,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-10	139,1,1
+turbo_n_1,312,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-11	139,1,1
+turbo_n_1,312,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-12	139,1,1
+turbo_n_1,316,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-13	139,1,1
+turbo_n_1,316,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-14	139,1,1
+turbo_n_1,316,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-15	139,1,1
+turbo_n_1,316,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-16	139,1,1
+turbo_n_1,316,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-17	139,1,1
+turbo_n_1,316,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-18	139,1,1
+turbo_n_1,320,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-19	139,1,1
+turbo_n_1,320,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-20	139,1,1
+turbo_n_1,320,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-21	139,1,1
+turbo_n_1,320,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-22	139,1,1
+turbo_n_1,320,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-23	139,1,1
+turbo_n_1,320,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-24	139,1,1
+turbo_n_1,324,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-25	139,1,1
+turbo_n_1,324,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-26	139,1,1
+turbo_n_1,324,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-27	139,1,1
+turbo_n_1,324,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-28	139,1,1
+turbo_n_1,324,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-29	139,1,1
+turbo_n_1,324,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-30	139,1,1
+turbo_n_1,328,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-31	139,1,1
+turbo_n_1,328,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-32	139,1,1
+turbo_n_1,328,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-33	139,1,1
+turbo_n_1,328,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-34	139,1,1
+turbo_n_1,328,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-35	139,1,1
+turbo_n_1,328,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-36	139,1,1
+turbo_n_1,332,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-37	139,1,1
+turbo_n_1,332,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-38	139,1,1
+turbo_n_1,332,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-39	139,1,1
+turbo_n_1,332,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-40	139,1,1
+turbo_n_1,332,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-41	139,1,1
+turbo_n_1,332,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-42	139,1,1
+
+turbo_n_1,336,56,0	script	WakyRace#fstep_1-43	-1,1,1,{
+OnTouch:
+	if( WRFreezeProtection ) {
+		specialeffect2 EF_GUARD;
+		set WRFreezeProtection, WRFreezeProtection - 1;
+		dispbottom "Você caiu em uma armadilha que causa Cegueira mais foi salvo pela Proteção.", 0xFF8C00;
+		if( WRFreezeProtection )
+			dispbottom "Você ainda possuí +" + WRFreezeProtection + " Proteção contra Cegueira.", 0xFF8C00;
+	}
+	else {
+		specialeffect EF_FREEZING;
+		set .@i, rand(4,10);
+		if( .@i > 0 && .@i < 4 )
+			percentheal -1,0;
+		else if( .@i > 4 && .@i < 8 ) {
+			percentheal -5,0;
+			sc_start SC_FREEZE,3000,0;
+		}
+		else {
+			sc_start SC_FREEZE,4000,0;
+			percentheal -2,0;
+		}
+	}
+	
+	// Traps Restore and Disable
+	if( $@WR_RestoreTraps < 2 )
+		disablenpc strnpcinfo(0);
+	if( $@WR_RestoreTraps == 1 )
+		initnpctimer;
+
+	end;
+	
+OnTimer15000:
+	stopnpctimer;
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+OnWRTrap01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRTrap01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+turbo_n_1,336,52,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-44	139,1,1
+turbo_n_1,336,48,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-45	139,1,1
+turbo_n_1,336,44,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-46	139,1,1
+turbo_n_1,336,50,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-47	139,1,1
+turbo_n_1,336,36,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-48	139,1,1
+turbo_n_1,340,55,0	duplicate(WakyRace#fstep_1-43)	WakyRace#fstep_1-49	139,1,1
+turbo_n_1,340,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-50	139,1,1
+turbo_n_1,340,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-51	139,1,1
+turbo_n_1,340,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-52	139,1,1
+turbo_n_1,340,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-53	139,1,1
+turbo_n_1,340,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-54	139,1,1
+turbo_n_1,344,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-55	139,1,1
+turbo_n_1,344,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-56	139,1,1
+turbo_n_1,344,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-57	139,1,1
+turbo_n_1,344,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-58	139,1,1
+turbo_n_1,344,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-59	139,1,1
+turbo_n_1,344,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-60	139,1,1
+turbo_n_1,348,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-61	139,1,1
+turbo_n_1,348,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-62	139,1,1
+turbo_n_1,348,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-63	139,1,1
+turbo_n_1,348,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-64	139,1,1
+turbo_n_1,348,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-65	139,1,1
+turbo_n_1,348,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-66	139,1,1
+turbo_n_1,352,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-67	139,1,1
+turbo_n_1,352,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-68	139,1,1
+turbo_n_1,352,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-69	139,1,1
+turbo_n_1,352,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-70	139,1,1
+turbo_n_1,352,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-71	139,1,1
+turbo_n_1,352,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-72	139,1,1
+turbo_n_1,356,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-73	139,1,1
+turbo_n_1,356,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-74	139,1,1
+turbo_n_1,356,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-75	139,1,1
+turbo_n_1,356,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-76	139,1,1
+turbo_n_1,356,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-77	139,1,1
+turbo_n_1,356,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-78	139,1,1
+turbo_n_1,360,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-79	139,1,1
+turbo_n_1,360,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-80	139,1,1
+turbo_n_1,360,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-81	139,1,1
+turbo_n_1,360,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-82	139,1,1
+turbo_n_1,360,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-83	139,1,1
+turbo_n_1,360,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-84	139,1,1
+turbo_n_1,364,55,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-85	139,1,1
+turbo_n_1,364,51,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-86	139,1,1
+turbo_n_1,364,47,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-87	139,1,1
+turbo_n_1,364,43,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-88	139,1,1
+turbo_n_1,364,39,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-89	139,1,1
+turbo_n_1,364,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-90	139,1,1
+turbo_n_1,368,56,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-91	139,1,1
+turbo_n_1,368,52,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-92	139,1,1
+turbo_n_1,368,48,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-93	139,1,1
+turbo_n_1,368,44,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-94	139,1,1
+turbo_n_1,368,40,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-95	139,1,1
+turbo_n_1,368,36,0	duplicate(WakyRace#fstep_1-1)	WakyRace#fstep_1-96	139,1,1
+
+// Power Ups 1
+turbo_n_1,118,370,2	script	WakyRace#pup_a_1-1	1249,1,1,{
+	end;
+
+OnTouch:
+	set .@i, 2;//rand(0,12);
+	switch(.@i) {
+		// Increment Agi
+		case 0:
+			set .@timer, rand($@WR_PowerUps[0],$@WR_PowerUps[1]);
+			set .@lvl, rand($@WR_PowerUps[2],$@WR_PowerUps[3]);
+			specialeffect2 EF_INCAGILITY;
+			sc_start SC_SPEEDUP0,.@timer,.@lvl;
+			set .@timer, .@timer/1000;
+			dispbottom "Você ganhou " + .@timer + " segundos de Velocidade Nv. " + .@lvl + "!", 0xFF8C00;
+			break;
+			
+		// Player Remove HP
+		case 1:
+			specialeffect2 EF_MAGNUM2;
+			getmapxy .@map$, .@x, .@y, UNITTYPE_PC;
+			set .@p, $@WR_PowerUps[6] > 1 ? rand(1, $@WR_PowerUps[6]) : 1;
+			//getplayersrange .@map$, .@x, .@y, $@WR_PowerUps[7];
+			
+			set .@count, 0;
+			for( set .@i, 0; .@i < .@area_players_count && .@count < .@p; set .@i, .@i + 1 ) {
+				if( .@area_players_cid[.@i] == getcharid(0) )
+					continue;
+				
+				set .@per, rand($@WR_PowerUps[4],$@WR_PowerUps[5]);
+				set .@var, getvar(WRDamageProtection, .@area_players_cid[.@i]);
+				if( .@var > 0 ) {
+					set WRDamageProtection, (.@var-1), .@area_players_cid[.@i];
+					dispbottom "Você bloqueou o Dano de " + strcharinfo(0) + ".", 0xFF8C00, .@area_players_cid[.@i];
+					dispbottom rid2name(.@area_players_aid[.@i]) + " bloqueou seu Dano.", 0xFF8C00;
+				}
+				else {
+					set .@per, rand($@WR_PowerUps[4],$@WR_PowerUps[5]);
+					specialeffect2 EF_HEAL2;
+					percentheal -(.@per), 0, .@area_players_cid[.@i];
+					dispbottom "Você causou Dano em " + .@per + "% de dano em " + rid2name(.@area_players_aid[.@i]) + "!", 0xFF8C00;
+					set .@count, .@count + 1;
+				}
+			}
+				
+			if( .@count )
+				dispbottom "Você causou Dano em " + .@count + " jogadores!", 0xFF8C00;
+			break;
+			
+		// Summoner Poring Bomb
+		case 2:
+			specialeffect2 EF_MAGNUM2;
+			getmapxy .@map$, .@x, .@y, UNITTYPE_PC;
+			set .@p, $@WR_PowerUps[8] > 1 ? rand(1, $@WR_PowerUps[8]) : 1;
+			set .@a, rand($@WR_PowerUps[9], $@WR_PowerUps[10]);
+			//getplayersrange .@map$, .@x, .@y, $@WR_PowerUps[11];
+			
+			if( .@area_players_count <= 0 ) {
+				set .@a, .@p*.@a;
+				areamonster .@map$, .@x1, .@y1, .@x2, .@y2, "Bomb Poring", 1904, .@a;
+				dispbottom "Você soltou (" + .@a + ") Bomb Poring como armadilha!", 0xFF8C00;
+			}
+			else {
+				set .@count, 0;
+				for( set .@i, 0; .@i < .@area_players_count && .@count < .@p; set .@i, .@i + 1 ) {
+					if( .@area_players_cid[.@i] == getcharid(0) )
+						continue;
+					
+					set .@var, getvar(WRDamageProtection, .@area_players_cid[.@i]);
+					if( .@var > 0 ) {
+						set WRDamageProtection, (.@var-1), .@area_players_cid[.@i];
+						dispbottom "Você bloqueou os Bomb Poring de " + strcharinfo(0) + ".", 0xFF8C00, .@area_players_cid[.@i];
+						dispbottom rid2name(.@area_players_aid[.@i]) + " bloqueou seus Bomb Poring.", 0xFF8C00;
+					}
+					else {
+						getmapxy .@map2$, .@x2, .@y2, UNITTYPE_PC, .@area_players_name$[.@i];
+						set .@count, .@count + 1;
+						monster .@map2$, .@x2, .@y2, "Bomb Poring", 1904, .@a;
+					}
+				}
+				
+				if( .@count < .@p ) {
+					set .@p, .@p - .@count;
+					set .@a, .@p*.@a;
+					set .@x1, .@x-$@WR_PowerUps[11];
+					set .@y1, .@y-$@WR_PowerUps[11];
+					set .@x2, .@x+$@WR_PowerUps[11];
+					set .@y2, .@y+$@WR_PowerUps[11];
+					areamonster .@map$, .@x1, .@y1, .@x2, .@y2, "Bomb Poring", 1904, .@a;
+					dispbottom "Você soltou (" + .@a + ") Bomb Poring como armadilha!", 0xFF8C00;
+				}
+			}
+			break;
+			
+		// Invincible Timer
+		case 3:
+			specialeffect2 EF_MAGNIFICAT;
+			initnpctimer "WackyRace#invincible", 1;
+			dispbottom "Você está imune por 10 segundos.", 0xFF8C00;
+			atcommand "@monsterignore "+strcharinfo(0);
+			break;
+
+		// Frozen Protection
+		case 4:
+			set .@a, rand($@WR_PowerUps[12],$@WR_PowerUps[13]);
+			if( getstatus(SC_FREEZE) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_FREEZE;
+				dispbottom "Você foi Descongelado.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRFreezeProtection, WRFreezeProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Congelamento.", 0xFF8C00;
+			}
+			break;
+			
+		// Confusion Protection
+		case 5:
+			set .@a, rand($@WR_PowerUps[14],$@WR_PowerUps[15]);
+			if( getstatus(SC_CONFUSION) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_CONFUSION;
+				dispbottom "Você não está mais Confuso.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRConfusionProtection, WRConfusionProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Confusão.", 0xFF8C00;
+			}
+			break;
+			
+		// Stone Protection
+		case 6:
+			set .@a, rand($@WR_PowerUps[16],$@WR_PowerUps[17]);
+			if( getstatus(SC_STONE) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_STONE;
+				dispbottom "Agora você não está mais Petrificado.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRStoneProtection, WRStoneProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Petrificação.", 0xFF8C00;
+			}
+			break;
+			
+		// Sleep Protection
+		case 7:
+			set .@a, rand($@WR_PowerUps[18],$@WR_PowerUps[19]);
+			if( getstatus(SC_SLEEP) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_SLEEP;
+				dispbottom "Agora você Acordou.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRSleepProtection, WRSleepProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Sono.", 0xFF8C00;
+			}
+			break;
+			
+		// Stun Protection
+		case 8:
+			set .@a, rand($@WR_PowerUps[20],$@WR_PowerUps[21]);
+			if( getstatus(SC_STUN) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_STUN;
+				dispbottom "Seu atordoamento passou.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRStunProtection, WRStunProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Atordoamento.", 0xFF8C00;
+			}
+			break;
+			
+		// Blind Protection
+		case 9:
+			set .@a, rand($@WR_PowerUps[22],$@WR_PowerUps[23]);
+			if( getstatus(SC_BLIND) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_BLIND;
+				dispbottom "Sua cegueira passou.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRBlindProtection, WRBlindProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Cegueira.", 0xFF8C00;
+			}
+			break;
+			
+		// Curse Protection
+		case 10:
+			set .@a, rand($@WR_PowerUps[24],$@WR_PowerUps[25]);
+			if( getstatus(SC_CURSE) ) {
+				specialeffect2 EF_HEAL2;
+				sc_end SC_CURSE;
+				dispbottom "Sua maldição passou.", 0xFF8C00;
+				set .@a, .@a - 1;
+			}
+			
+			if( .@a ) {
+				specialeffect2 EF_GUARD;
+				set WRCurseProtection, WRCurseProtection + .@a;
+				dispbottom "Você ganhou +" + .@a + " Proteção contra Maldição.", 0xFF8C00;
+			}
+			break;
+
+		// HP Restore
+		case 11:
+			specialeffect2 EF_HEAL2;
+			set .@per, rand($@WR_PowerUps[26],$@WR_PowerUps[27]);
+			percentheal .@per,0;
+			dispbottom .@per + "% do seu HP foi restaurado.", 0xFF8C00;
+			break;
+			
+		// Damage Protection 
+		case 12:
+			set .@a, rand($@WR_PowerUps[28],$@WR_PowerUps[29]);
+			specialeffect2 EF_GUARD;
+			set WRDamageProtection, WRDamageProtection + .@a;
+			dispbottom "Você ganhou +" + .@a + " Proteção contra Dano.", 0xFF8C00;
+			break;
+			
+		default:
+			break;
+	}
+	
+	// Power Ups Restore and Disable
+	if( $@WR_RestorePowerUps < 2 )
+		disablenpc strnpcinfo(0);
+	if( $@WR_RestorePowerUps == 1 )
+		initnpctimer;
+
+	end;
+	
+OnTimer15000:
+	stopnpctimer;
+	enablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+OnWRPuP01Disable:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnWRPuP01Enable:
+	enablenpc strnpcinfo(0);
+	end;
+}
+
+-	script	WackyRace#invincible	-1,{
+OnTimer10000:
+	atcommand "@monsterignore "+strcharinfo(0);
+	end;
+}
+
+turbo_n_1,113,363,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_a_1-2	1249,1,1
+turbo_n_1,118,354,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_a_1-3	1249,1,1
+turbo_n_1,348,371,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_b_1-1	1249,1,1
+turbo_n_1,355,366,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_b_1-2	1249,1,1
+turbo_n_1,349,361,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_b_1-3	1249,1,1
+turbo_n_1,29,267,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-1	1249,1,1
+turbo_n_1,41,233,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-2	1249,1,1
+turbo_n_1,48,214,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-3	1249,1,1
+turbo_n_1,64,219,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-4	1249,1,1
+turbo_n_1,54,265,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-5	1249,1,1
+turbo_n_1,63,254,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-6	1249,1,1
+turbo_n_1,77,231,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-7	1249,1,1
+turbo_n_1,87,264,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-8	1249,1,1
+turbo_n_1,108,269,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-9	1249,1,1
+turbo_n_1,105,223,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-10	1249,1,1
+turbo_n_1,87,195,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-11	1249,1,1
+turbo_n_1,34,193,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_c_1-12	1249,1,1
+turbo_n_1,190,211,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_d_1-1	1249,1,1
+turbo_n_1,241,217,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_d_1-2	1249,1,1
+turbo_n_1,206,224,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_d_1-3	1249,1,1
+turbo_n_1,287,257,0	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_e_1-1	1249,1,1
+turbo_n_1,302,257,0	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_e_1-2	1249,1,1
+turbo_n_1,329,274,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_e_1-3	1249,1,1
+turbo_n_1,354,292,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_e_1-4	1249,1,1
+turbo_n_1,370,292,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_e_1-5	1249,1,1
+turbo_n_1,45,69,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_f_1-1	1249,1,1
+turbo_n_1,50,50,2	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_f_1-2	1249,1,1
+turbo_n_1,190,28,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_g_1-1	1249,1,1
+turbo_n_1,209,45,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_g_1-2	1249,1,1
+turbo_n_1,213,61,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_g_1-3	1249,1,1
+turbo_n_1,337,54,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_h_1-1	1249,1,1
+turbo_n_1,337,46,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_h_1-2	1249,1,1
+turbo_n_1,337,38,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_h_1-3	1249,1,1
+turbo_n_1,241,369,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-1	1249,1,1
+turbo_n_1,226,368,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-2	1249,1,1
+turbo_n_1,231,356,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-3	1249,1,1
+turbo_n_1,230,343,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-4	1249,1,1
+turbo_n_1,246,354,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-5	1249,1,1
+turbo_n_1,253,358,4	duplicate(WakyRace#pup_a_1-1)	WakyRace#pup_i_1-6	1249,1,1
+
+// Exit
+turbo_n_1,384,169,3	script	Corrida Maluca#exit	4_M_NEWOZ,{
+	if( $@WR_FLAG >= 3 ) {
+		set .@idx, 4;
+		setarray .@ref$[1], "1st", "2nd", "3rd", "con";
+		for( set .@i,0; .@i < 3; set .@i,.@i+1 ) {
+			if( $@WR_CHAMPIONS[.@i] == getcharid(0) ) {
+				set .@idx, .@i+1;
+				break;
+			}
+		}
+		
+		// Get Size 
+		copyarray .@Rewards$[0], getd("$@WR_Reward_"+.@ref$[.@idx]+"$[0]"), getarraysize(getd("$@WR_Reward_"+.@ref$[.@idx]+"$"));
+		set .@size, (getarraysize(.@Rewards$)/4);
+		mes "^FF8C00[Corrida Maluca]^000000";
+		if( $@WR_EnableRewards == 0 || .@size <= 0 )
+			set .@flag, 0;
+		else {
+			set .@flag, 0;
+			if( $@WR_EnableRewards == 2 ) {
+				set .@i, rand(0,(.@size-1));
+				set .@i, .@i*4;
+				set .@amount, atoi(.@Rewards$[.@i+2]);
+				set .@type, atoi(.@Rewards$[.@i+1]);
+				if( .@type == 1 ) {
+					setd .@Rewards$[.@i], getd(.@Rewards$[.@i]) + .@amount;
+					set .@flag, 1;
+				}
+				else {
+					set .@item_id, atoi(.@Rewards$[.@i]);
+					if( checkweight(.@item_id, .@amount) ) {
+						getitem .@item_id, .@amount;
+						set .@flag, 1;
+					}
+				}
+				
+				if( .@flag ) {
+					if( .@idx < 4 )
+						mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, você subiu ao pódio na ^0000FF" + .@idx + "ª Colocação^000000, e recebeu como prêmio:";
+					else
+						mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, você não subiu ao pódio mais recebeu como prêmio de consolação:";
+					
+					mes "^0000FF" + .@amount + "x^000000 " + .@Rewards$[.@i+3];
+				}
+			}
+			else {
+				// Count items
+				freeloop(1);
+				for( set .@i,0; .@i < getarraysize(.@Rewards$); set .@i, .@i + 4 ) {
+					set .@amount, atoi(.@Rewards$[.@i+2]);
+					set .@type, atoi(.@Rewards$[.@i+1]);
+					if( .@type == 1 )
+						set .@flag, .@flag + 1;
+					else {
+						set .@item_id, atoi(.@Rewards$[.@i]);
+						if( checkweight(.@item_id, .@amount) ) {
+							getitem .@item_id, .@amount;
+							set .@flag, .@flag + 1;
+						}
+					}
+				}
+				
+				// Get Rewards
+				if( .@flag ) {
+					if( .@idx < 4 )
+						mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, você subiu ao pódio na ^0000FF" + .@idx + "ª Colocação^000000, e recebeu como prêmio:";
+					else
+						mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, você não subiu ao pódio mais recebeu como prêmio de consolação:";
+					
+					for( set .@i,0; .@i < getarraysize(.@Rewards$); set .@i, .@i + 4 ) {
+						set .@amount, atoi(.@Rewards$[.@i+2]);
+						set .@type, atoi(.@Rewards$[.@i+1]);
+					
+						if( atoi(.@Rewards$[.@i+1]) == 1 )
+							setd .@Rewards$[.@i], getd(.@Rewards$[.@i]) + .@Rewards$[.@i+2];
+						else {
+							set .@item_id, atoi(.@Rewards$[.@i]);
+							if( checkweight(.@item_id, .@amount) == 0 )
+								continue;
+						}
+						mes "^0000FF" + .@Rewards$[.@i+2] + "x^000000 " + .@Rewards$[.@i+3];
+					}
+				}
+				freeloop(0);
+			}
+		}
+		if( !.@flag ) {
+			if( .@idx < 4 )
+				mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, embora você subiu ao pódio na ^0000FF" + .@idx + "ª Colocação^000000, não há prêmios a ser entregues.";
+			else
+				mes "Parabéns ^0000FF" + strcharinfo(0) + "^000000, embora tenha participado da Corrida eu não tenho nada para lhe dar como consolação.";
+		}
+		close2;
+	}
+	warp $@WR_ReturnWarp$[0], atoi($@WR_ReturnWarp$[1]), atoi($@WR_ReturnWarp$[2]);
+	end;
+}
+
+// MapFlags
+turbo_n_1	mapflag	nomemo
+turbo_n_1	mapflag	nowarp
+turbo_n_1	mapflag	nowarpto
+turbo_n_1	mapflag	noicewall
+turbo_n_1	mapflag	nomemo
+turbo_n_1	mapflag	noreturn
+turbo_n_1	mapflag	noteleport
+turbo_n_1	mapflag	nostorage
+turbo_n_1	mapflag	noguildstorage

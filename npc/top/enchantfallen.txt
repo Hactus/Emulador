@@ -1,0 +1,252 @@
+prontera,183,193,3	script	Encantador de Asas	4_M_OLDFRIAR,{
+disable_items;
+if (checkweight(1201,1) == 0) {
+mes "Você está carregando muitos itens, por favor, Tem que reduzi-los e voltar!";
+close;
+}
+if (MaxWeight - Weight < 10000) {
+mes "Você tem excesso de peso, por favor, reduzi-lo e voltar!";
+close;
+}
+if (getequipid(EQI_GARMENT) == 2589) {
+if(getequipcardid(EQI_GARMENT,1)){
+if (getequiprefinerycnt(EQI_GARMENT)>=7) {
+if(getequipcardid(EQI_GARMENT,2)) {
+if (getequiprefinerycnt(EQI_GARMENT)>=9) {
+if(getequipcardid(EQI_GARMENT,3)) {
+goto jExit;
+}
+else { // third slot array
+set .@menu$, "Encantar Arcanjo Caído";
+}
+} else
+goto jExit;
+}
+else { //second slot array
+set .@menu$, "Encantar Arcanjo Caído";
+}
+}
+else {
+jExit: set .@menu$, "";
+}
+}
+else { // first slot array
+set .@menu$, "Encantar Arcanjo Caído";
+}
+} else
+set .@menu$, "";
+set .@sem$, "Você não possui os itens necessário para o encantamento!";
+
+mes "[Valquíria Obscura]";
+mes "Se você tiver uma Arcanjo Caído, eu posso encantar essas inúteis ranhuras por 1 milhão de zeny e 1 ^FF0000"+getitemname(6307)+"^000000.";
+mes "Equipe sua Arcanjo Caído para ver o Menu de Encanto!";
+next;
+
+switch(select("O que é isso?:"+.@menu$+":Limpar Encantamento")) {
+case 1:
+switch(select("Pare de falar:O que você vai fazer?")) {
+case 1:
+mes "[Valquíria Obscura]";
+mes "O que você disse?";
+close;
+case 2:
+mes "[Valquíria Obscura]";
+mes "Eu posso encantar estatísticas especiais em sua Arcanjo Caído se ??você pagar 1.000.000 zeny.";
+next;
+mes "Eu posso encantar uma vez se atualizado +6 ou inferior.";
+mes "duas vezes se atualizado +7 ou +8.";
+mes "e 3 vezes se atualizado +9 ou superior.";
+mes "[Valquíria Obscura]";
+close;
+}
+case 2:
+if (Zeny < 1000000) { //zeny amount
+mes "[Valquíria Obscura]";
+mes "Eu não posso fazê-lo se você não pode pagar!";
+close;
+}
+if (countitem(6307) < 1){
+mes "[Valquíria Obscura]";
+mes .@sem$;
+close;
+end;
+}
+
+mes "[Valquíria Obscura]";
+mes "Selecione a categoria de encantar";
+next;
+switch(select("Fighting:Magic:Archer:Critical:Max HP:Max SP:ASPD:Str:Agi:Dex:Vit:Int:Luk")) {//dito tayo sir
+set .@i, rand(1,15);
+
+case 1: //Fighting
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4821;
+else if (.@i < 4) set .@enchant,4820;
+else if (.@i < 8) set .@enchant,4808;
+else set .@enchant,4809;
+goto eStart;
+
+case 2: //Magic
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4828;
+else if (.@i < 4) set .@enchant,4827;
+else if (.@i < 8) set .@enchant,4826;
+else set .@enchant,4812;
+goto eStart;
+
+case 3: //Archer
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4835;
+else if (.@i < 4) set .@enchant,4834;
+else if (.@i < 8) set .@enchant,4833;
+else set .@enchant,4832;
+goto eStart;
+
+case 4: //Critical
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4866;
+else if (.@i < 4) set .@enchant,4865;
+else if (.@i < 8) set .@enchant,4864;
+else set .@enchant,4863;
+goto eStart;
+
+case 5: //Max Hp
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4868;
+else if (.@i < 4) set .@enchant,4867;
+else if (.@i < 8) set .@enchant,4862;
+else set .@enchant,4861;
+goto eStart;
+
+case 6: //Max SP
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4801;
+else if (.@i < 4) set .@enchant,4871;
+else if (.@i < 8) set .@enchant,4800;
+else set .@enchant,4870;
+goto eStart;
+
+case 7: //ASPD
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4807;
+else if (.@i < 4) set .@enchant,4873;
+else if (.@i < 8) set .@enchant,4872;
+else set .@enchant,4869;
+goto eStart;
+
+case 8: // Str
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4853;
+else if (.@i < 4) set .@enchant,4704;
+else if (.@i < 8) set .@enchant,4703;
+else set .@enchant,4702;
+goto eStart;
+
+case 9: // Agi
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4854;
+else if (.@i < 4) set .@enchant,4733;
+else if (.@i < 8) set .@enchant,4732;
+else set .@enchant,4731;
+goto eStart;
+
+case 10: // Dex
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4857;
+else if (.@i < 4) set .@enchant,4724;
+else if (.@i < 8) set .@enchant,4723;
+else set .@enchant,4722;
+goto eStart;
+
+case 11: // Vit
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4855;
+else if (.@i < 4) set .@enchant,4744;
+else if (.@i < 8) set .@enchant,4743;
+else set .@enchant,4742;
+goto eStart;
+
+case 12: // Int
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4856;
+else if (.@i < 4) set .@enchant,4714;
+else if (.@i < 8) set .@enchant,4713;
+else set .@enchant,4712;
+goto eStart;
+
+case 13: // Luk
+if(getequipcardid(EQI_GARMENT,2)) set .@enchant,4858;
+else if (.@i < 4) set .@enchant,4754;
+else if (.@i < 8) set .@enchant,4753;
+else set .@enchant,4752;
+goto eStart;
+
+eStart: specialeffect2 EF_REPAIRWEAPON;
+progressbar "ffff00",2;
+if (getequipisequiped(EQI_GARMENT) == 0) {
+mes "[Valquíria Obscura]";
+mes "O Arcanjo Caído foi retirado!";
+close;
+}
+if (getequipid(EQI_GARMENT) != 2589) {
+mes "[Valquíria Obscura]";
+mes "Não retire o item!";
+close;
+}
+Zeny -= 1000000;
+// find slot to enchant
+if(getequipcardid(EQI_GARMENT,1)){
+if(getequipcardid(EQI_GARMENT,2)) {
+set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,2);
+getitem2 2589,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],.@enchant; //Archangel_Wing
+delitem	6307,1;
+}
+else { //second slot array
+set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,3);
+getitem2 2589,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@enchant,.@equip_card[3]; //Archangel_Wing
+delitem	6307,1;
+}
+}
+else { // first slot array
+set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0),getequipcardid(EQI_GARMENT,2),getequipcardid(EQI_GARMENT,3);
+getitem2 2589,1,1,.@equip_refine,0,.@equip_card[0],.@enchant,.@equip_card[2],.@equip_card[3]; //Archangel_Wing
+delitem	6307,1;
+}
+delequip EQI_GARMENT;
+mes "[Valquíria Obscura]";
+mes "Leve-o!";
+mes "Eu acredito que você vai se tornar o dominador do novo mundo!";
+close;
+}
+case 3:
+mes "[Valquíria Obscura]";
+mes "Redefinição de encantamento requer ^0000ff3 unidades de Fruta do Gato^000000. A asa não será danificado, exceto para a capacidade encantado.";
+next;
+if(select("Deixe-me considerar ...:Ok, eu posso redefinir seu encantamento.") == 1) {
+mes "[Valquíria Obscura]";
+mes "Ok! Leve o seu tempo a considerar!";
+close;
+}
+specialeffect2 EF_REPAIRWEAPON;
+progressbar "ffff00",2;
+if (getequipisequiped(EQI_GARMENT) == 0) {
+mes "[Valquíria Obscura]";
+mes "A Arcanjo Caído foi Retirada!";
+close;
+}
+if (getequipid(EQI_GARMENT) != 2589) {
+mes "[Valquíria Obscura]";
+mes "Oh... você equipou A Arcanjo Caído!";
+close;
+}
+if (countitem(6417) < 3) {
+mes "[Valquíria Obscura]";
+mes "Eu não posso fazê-lo se você não pode pagar!";
+close;
+}
+if ((getequipcardid(EQI_GARMENT,3) < 4700) && (getequipcardid(EQI_GARMENT,2) < 4700) && (getequipcardid(EQI_GARMENT,1) < 4700)) { // Armor Enchant System
+mes "[Valquíria Obscura]";
+mes "Este equipamento não foi encantada, por favor verificá-lo novamente!";
+close;
+}
+set .@equip_refine, getequiprefinerycnt(EQI_GARMENT);
+setarray .@equip_card[0], getequipcardid(EQI_GARMENT,0);//,getequipcardid(EQI_GARMENT,1),getequipcardid(EQI_GARMENT,2);
+delitem 6417,3; //Silvervine
+delequip EQI_GARMENT;
+getitem2 2589,1,1,.@equip_refine,0,.@equip_card[0],.@equip_card[1],.@equip_card[2],0; //Archangel_Wing
+mes "[Valquíria Obscura]";
+mes "Leve-o!";
+close;
+}
+}

@@ -1,0 +1,97 @@
+//===== rAthena Script =======================================
+//= Card Removal NPC
+//===== By: ==================================================
+//= TyrNemesis^
+//===== Current Version: =====================================
+//= 1.2a
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= Removes cards from equipped items.
+//===== Additional Comments: =================================
+//= 1.0 First version. [TyrNemesis^]
+//= 1.2 Optimized and fixed getequipname menu. [Kisuka]
+//= 1.2a Added 'disable_items' command. [Euphy]
+//============================================================
+
+-	script	Removedora de Cartas	-1,{
+OnRemovedor:
+	set .zenycost,200000;    // base cost of the card remover services (in Zeny)
+	set .percardcost,25000;  // cost per card of the card remover services (in Zeny)
+	set .faildestroy,0;      // should the card remover have a chance of failure that destroys items? (1=yes, 0=no)
+
+	disable_items;
+	mes "[Removedora de Cartas]";
+	mes "Olá meu jovem, eu tenho o poder de remover cartas de seus equipamentos, gostaria de utilizar deste meu serviço?";
+	next;
+	switch(select("Sim, por favor.:Quanto isto custa?:Não, obrigado.")) {
+	case 1:
+		mes "[Removedora de Cartas]";
+		mes "Muito bem, de qual item você quer remover cartas?";
+		next;
+
+		setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+		for( set .@i,1; .@i <= 10; set .@i,.@i+1 ) {
+			if( getequipisequiped(.@indices[.@i]) )
+				set .@menu$, .@menu$ + F_getpositionname(.@indices[.@i]) + "-[" + getequipname(.@indices[.@i]) + "]";
+			set .@menu$, .@menu$ + ":";
+		}
+		set .@part, .@indices[ select(.@menu$) ];
+		if(!getequipisequiped(.@part)) {
+			mes "[Removedora de Cartas]";
+			mes "Jovem você não tem nenhum item ai.";
+			close;
+		}
+		if(getequipcardcnt(.@part) == 0) {
+			mes "[Removedora de Cartas]";
+			mes "Jovem, você não está carregando nenhuma carta neste item.";
+			close;
+		}
+		set .@cardcount,getequipcardcnt(.@part);
+		
+		if (!checkweight(1202,(.@cardcount+1))) { 
+			mes "^3355FFSó um minuto!";
+			mes "Eu não posso oferecer meus";
+			mes "serviços a você";
+			mes "porque você está carregando";
+			mes "muitas coisas. Coloque algumas";
+			mes "coisas na Kafra e volte depois~";
+			close;
+		}
+		mes "[Removedora de Cartas]";
+		mes "Este item tem " + .@cardcount + " cartas. Para eu realizar minha mágica eu vou precisar de " + (.zenycost+(.@cardcount * .percardcost)) + " zenys.";
+		next;
+		if(select("Muito bem, vamos lá.: Esqueça.") == 2) {
+			mes "[Removedora de Cartas]";
+			mes "Muito bem, volte quando quiser.";
+			close;
+		}
+		if((zeny < (.zenycost+(.@cardcount * .percardcost)))) {
+			mes "[Removedora de Cartas]";
+			mes "Você não tem dinheiro suficiente.";
+			close;
+		}
+		next;
+		mes "[Removedora de Cartas]";
+		mes "Muito bem, vamos começar.";
+		set Zeny, Zeny - (.zenycost+(.@cardcount * .percardcost));
+		
+		// Replace the constants in the next 3 lines with failure chance values defined in refine_db.txt
+		// First value = Total failure chance (item and cards destroyed)
+		// Second value = Partial failure chance (one or the other is destroyed, player decides which one is safe)
+		// Third value = Harmless failure chance (all that's lost is your investment)
+		next;
+		successremovecards .@part;
+		mes "[Removedora de Cartas]";
+		mes "O processo foi um completo sucesso. Volte sempre.";
+		close;
+	case 2:
+		mes "[Removedora de Cartas]";
+		mes "Custa "+callfunc("F_InsertComma",.zenycost)+" zenys, mais "+callfunc("F_InsertComma",.percardcost)+" zenys por cada carta a ser removida.";
+		close;
+	case 3:
+		mes "[Removedora de Cartas]";
+		mes "Muito bem.Volte quando precisar de meus serviços.";
+		close;
+	}
+}

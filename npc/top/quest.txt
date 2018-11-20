@@ -1,0 +1,1881 @@
+prontera,0,0,0	script	quest#1	-1,{
+OnInit:
+hideoffnpc "Túmulo#1";
+	hideonnpc	"Pedaço de Alma#1";
+	hideonnpc	"Pedaço de Alma#2";
+	hideonnpc	"Pedaço de Alma#3";
+	hideonnpc	"Pedaço de Alma#4";
+	hideonnpc	"Loki";
+	hideonnpc	"Thanatos";
+	}
+	
+//prontera,165,177,0	script	Homem Ensanguentado	4_M_DIEMAN,{
+	//set	.@n$,"["+strnpcinfo(1)+"]";
+	//set .@s$, "["+strcharinfo(0)+"]";
+	
+	//if(final_quest	>	0){
+	//mes	"Não há mais nada o que fazer aqui.";
+	//next;
+	//mes "É melhor ir falar com o Ancião Heyligh em Morroc.";
+	//close;
+	//end;
+//	}
+	
+	//mes .@n$;
+	//mes "Hrrg...";
+	//next;
+	//mes .@s$;
+	//mes "O que houve com você?!";
+	//next;
+	//mes .@n$;
+	//mes "Arrgh...ele está voltaaando...";
+	//next;
+	//mes .@s$;
+	//mes "O que? Quem está voltando? Como assim?";
+	//next;
+	//mes .@n$;
+	//mes "O Imperador...ele...Hgguhh...Aaahh...";
+	//next;
+	//mes .@s$;
+	//mes "Por favor senhor, me fale como posso te ajudar!";
+	//next;
+	//mes .@n$;
+	//mes "Não há como me ajudar....ajude Midgard...fale com Ancião Heyligh em Morroc.";
+	//mes "Eu estava indo avisar ele que não teremos chance... *Coof* *Coof*";
+	//next;
+	//mes .@n$;
+	//mes "Leve esse recado a ele...";
+	//next;
+	//mes "^FF0000 Ele conseguiu escapar, ele quebrou os selos que o mantinham preso^000000";
+	//mes "^FF0000 Ele voltará e destruirá todos nós!^000000";
+	//next;
+	//mes .n$;
+	//mes "Entregue esse recado a ele. Eu não possss....mais...Harrgg...";
+	//next;
+	//mes .@s$;
+	//mes "Mas então tente me dizer qual é o seu nome!";
+	//next;
+	//mes .n$;
+	//mes "Eu sou Allan....fale a Heyligh...hhaaarrgg.";
+	//final_quest	=	1;
+	//close;
+	//end;
+//}
+
+morocc,163,118,0	script	Ancião#1	4_M_OLDFRIAR,{
+if(final_quest	<	1){
+	set	.n$,"["+strnpcinfo(1)+"]";
+	set .s$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";
+	
+		mes .n$;
+		mes "O que você quer garoto?";
+		next;
+		mes .n$;
+		mes "Não vê que estou em um momento de oração?";
+		mes "Não quero incômodos agora, saia já daqui!";
+		next;
+		warp	"prontera",150,150;
+		close;
+		}
+		
+else{ if(final_quest	==	2){
+	set	.n$,"["+strnpcinfo(1)+"]";
+	set .s$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";
+		mes .r$;
+		mes "Fale com ^FF0000Joshua^000000 no castelo principal de Prontera.";
+		next;
+		mes .r$;
+		mes "Ele é responsável pelo recrutamento. Depois venha falar comigo novamente.";
+		close;
+}
+}
+		if(final_quest	==	3){
+	set	.n$,"["+strnpcinfo(1)+"]";
+	set .s$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";
+
+		mes .s$;
+		mes "Heyligh, eu fui até Joshua, as coisas não são boas....";
+		next;
+		mes .r$;
+		mes "Hmn? Como assim?";
+		next;
+		mes .n$;
+		mes "Então, eu o encontrei, só que ele não estava mais com vida...Acredito que ele se matou, pois ele deixou um bilhete em seu paletó.";
+		next;
+		mes .r$;
+		mes "Jo...Joshua, morto? Mas isso não faz sentido, ele estava feliz com tudo. O que diz no bilhete?";
+		next;
+		mes .n$;
+		mes "Eu vou lhe mostrar.";
+		next;
+		mes "^FF0000Queridos irmãos...venho por meio desta deixar aqui destacado que não poderão mais contar com meu apoio na Cruzada.^000000";
+		mes "^FF0000Eu andei vasculhando algumas informações e acabei de perceber que ninguém terá chances contra Morroc.^000000";
+		mes "^FF0000Ao meu velho amigo Heyligh, saiba que nós nos veremos um dia. Se você acha que fazer aquilo que estava pensando em fazer vai adiantar em algo...^000000";
+		mes "^FF0000Faça sem te medo...Adeus meu amigo.^000000";
+		next;
+		mes "...";
+		next;
+		mes .r$;
+		mes "Droga...";
+		next;
+		mes .n$;
+		mes "O que ele quis dizer com...'Fazer aquilo'?";
+		next;
+		mes .r$;
+		mes "Jovem, eu sou muito mais velho do que aparento...";
+		next;
+		mes .r$;
+		mes "Eu sei uma forma de ir até o templo de Morroc. Se conseguirmos derrota-lo em seu templo, antes de ele vir pra cá...Não havera maneiras de ele retornar.";
+		next;
+		mes .n$;
+		mes "Pefeito! Vamos fazer isso então...";
+		next;
+		mes .r$;
+		mes "Haha, não se iluda com a notícia jovem. Não pense que será fácil. Eu só abrirei o portal, e para isso você precisará trabalhar muito.";
+		next;
+		mes .n$;
+		mes "Ein? Como assim?";
+		next;
+		mes .r$;
+		mes "Encontre o ^FF0000Bruxo Dorinho^000000 em Geffen. Ele é meu velho amigo, ele te dirá o que fazer.";
+		mes "Diga a ele que eu preciso dele, e ele me deve uns favores.";
+		mes "Boa sorte.";
+		final_quest	=	4;
+		close;
+		}
+		else{if(final_quest	==	4){
+		mes .r$;
+		mes "Encontre o ^FF0000Bruxo Dorinho^000000 em Geffen. Ele é meu velho amigo, ele te dirá o que fazer.";
+		mes "Diga a ele que eu preciso dele, e ele me deve uns favores.";
+		mes "Boa sorte.";		
+		close;		
+		}
+		}
+		set	.n$,"["+strnpcinfo(1)+"]";
+		set .s$, "["+strcharinfo(0)+"]";
+		set .r$,	"[Heyligh]";
+	
+		mes "Tantos anos...tantos anos me dediquei...";
+		next;
+		mes "E agora isso vai acontecer....eu não posso acreditar...";
+		next;
+		mes .s$;
+		mes "Com licença senhor...";
+		next;
+		mes .n$;
+		mes "Hmm?...O que você quer, por que me interromper no meu momento de oração?!";
+		next;
+		mes .s$;
+		mes "Eu procuro por Heyligh, sabe onde eu o encontro?";
+		next;
+		mes .n$;
+		mes "Sou eu mesmo garoto, o que você quer?";
+		next;
+		mes .s$;
+		mes "Allan me mandou falar com o senhor, ele pediu para lhe entregar um recado.";
+		next;
+		mes .r$;
+		mes "Allan? Então ele retornou?! Eu preciso falar com ele! Onde ele está?";
+		next;
+		mes .s$;
+		mes "Na verdade senhor, ele não está mais entre nós...";
+		next;
+		mes .r$;
+		mes "O que? Como assim? Do que está falando garoto?!";
+		next;
+		mes .s$;
+		mes "Allan morreu enquanto fala comigo, pelo o que parecia, ele veio de uma batalha e não conseguiu resistir.";
+		next;
+		mes .r$;
+		mes "...E qual foi o recado garoto, o que ele disse?";
+		next;
+		mes .s$;
+		mes "Primeiro ele falou algo sobre a volta de um Imperador.";
+		next;
+		mes .s$;
+		mes "Depois eu anotei o que ele falou, e ele falou isso:";
+		next;
+		mes "^FF0000 Ele conseguiu escapar, ele quebrou os selos que o mantinham preso^000000";
+		mes "^FF0000 Ele voltará e destruirá todos nós!^000000";	
+		next;
+		mes .s$;
+		mes "Eu não faço a mínima ideia do que possa ser...";
+		next;
+		mes .r$;
+		mes "Oh meu Deus...então ele estava lá...eu falei que não iria acabar bem...";
+		next;
+		mes .s$;
+		mes "O que exatamente está acontecendo?";
+		next;
+		mes .r$;
+		mes "Garoto, não sei se conhece a história dessa cidade...mas eu vou resumir";
+		next;
+		mes "Houve um tempo em que nós eramos livres para fazer-mos o bem aqui em Morroc. O grande Imperador Morroc e o Rei de Prontera se uniam para trazer a segurança a Rune-Midgard.";
+		mes "O Imperador comandava bravamente essa cidade, era conhecida como A Jóia do Deserto de Sograt por suas conquistas, e quando Morroc inaugurou a guilda dos Mercenários aqui, a cidade ficou muito mais protegida.";
+		next;
+		mes "Mas foi por pouco tempo...";
+		next;
+		mes "Logo que deram o nome da cidade devido aos grandes feitos do Imperador, o poder começou a consumi-lo e ele se perdeu na cobiça de poder.";
+		mes "Ele se tornou um tirano ditador, matava homens, mulheres e crianças que não obedeciam seus mandamentos.";
+		mes "Então o Rei de Prontera tomou como decisão prender Morroc";
+		next;
+		mes "Enviou seu leal guerreiro Thanatos para aniquilar Morroc.";
+		next;
+		mes "O povo de Morroc decidiu por manter o nome da cidade, em homenagem ao imperador que um dia já foi um homem bom, o povo não esquece seus grandes feitos.";
+		mes "Assim que Morroc foi morto por Thanatos, todos acreditavam que ele estaria realmente morto. Estavam enganados. Antes de morrer ele fez um pacto com Hela, deusa do submundo.";
+		mes "Ele pediu para que se morresse, quem o matasse ficaria amaldiçoado para a eternidade em uma Torre.";
+		mes "Então alguns anos depois, um religoso Rayan Mohr que era um reverendo do Orfanato das Organizações Dandelion desapareceu, e estranhamente na mesma época, crianças do orfanato também começaram desaparecer.";
+		next;
+		mes "Então descobriram que Mohr estava sacrificando crianças para trazer o espírito de Morroc a este mundo novamente.";
+		mes "E foi o que aconteceu, o espírito foi solto e veio a este mundo em forma de demônio.";
+		mes "Causando tudo isso que você vê.";
+		next;
+		mes .s$;
+		mes "Sim, mas o espírito de Morroc já foi selado, como agora ele pode estar voltando?";
+		next;
+		mes .r$;
+		mes "Foi isso que Allan foi descobrir, há relatos de que um grupo de feiticeiras seguidoras de Morroc estavam quebrando os selos que mantinham o Imperador selado.";
+		next;
+		mes .r$;
+		mes "E parece que está acontecendo, os selos estão se quebrando...se já não foram quebrados.";
+		next;
+		mes .s$;
+		mes "E agora, o que podemos fazer?";
+		next;
+		mes .r$;
+		mes "É arriscado garoto, mas o Rei de Prontera está abrindo inscrições para uma cruzada contra o Imperador.";
+		next;
+		mes .r$;
+		mes "Se você deseja ir, fale com ^FF0000Joshua^000000, ele é o responsável pelos registros de novos soldados.";
+		next;
+		mes .r$;
+		mes "Joshua se encontra no Castelo Central de Prontera, em alguns dos aposentos.";
+		mes "Encontre-o, registre-se e depois venha falar comigo no arredor de Prontera ao sul.";
+		final_quest =	2;		
+		next;
+		mes .s$;
+		mes "Certo, eu farei isso.";
+		close;
+}
+
+
+prt_castle,30,168,0	script	Joshua	4_M_LIEMAN,{
+		if(final_quest	==	3){
+		mes "Não há mais nada o que fazer aqui.";
+		mes "É melhor ir falar com Heyligh novamente em Morroc.";
+		close;
+		}
+		if(final_quest	>=	4){
+		close;
+		end;
+		}
+		mes "*O homem está morto...*";
+		next;
+		mes "Há um bilhete em seu paletó....";
+		next;
+		getitem	7526,1;
+		final_quest	= 3;
+		mes "É melhor voltar e entregar a Heyligh...";
+		hideoffnpc "Ancião#2";		
+		close;
+
+}
+
+
+
+geffen,116,128,0	script	Dorinho#3	4_GEFFEN_11,{
+	if(final_quest	<	4){
+	mes "[Dorinho]";
+	mes "Haaaaiiiiiiii!!!! Sihss Van morheeumuuuu haaaaaaaaaaaaaiiiiiii!";
+	next;
+	mes "*Nossa ele é estranho. Melhor não falar com ele...*";
+	close;
+	}
+	
+else{
+if(final_quest	==	5){
+
+	set .s$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";	
+	
+	mes .r$;
+	mes "Em um dos calabouços de Payon, mais precisamente no 4º andar. Existe um túmulo e neste tumo há um ritual.";
+	next;
+	mes .r$;
+	mes "Você deve ler o ritual com os seguintes itens na mão.";
+	next;
+	mes "^FF0000"+getitemname(523)+"^000000";
+	mes "^FF0000"+getitemname(2743)+"^000000";
+	mes "^FF0000"+getitemname(2110)+"^000000";
+	next;
+	mes .r$;
+	mes "Cuide-se jovem. Sugiro que consiga mais guerreiros para lhe ajudar.";
+	next;
+	mes .r$;
+	mes "Quando conseguir o Fragmento. Me encontre em Juno, ao leste. Lá iremos para o próximo.";
+	next;
+	mes .r$;
+	hideoffnpc	"Túmulo#1";	
+	mes "Boa sorte garoto.";
+	close;
+
+}}	
+
+		if(final_quest	>=	6){
+		close;
+		end;
+		}
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";	
+	
+	mes .r$;
+	mes "O PODER DO SOL! NA PALMA DA MINHA MÃO! NINGUÉM VAI MAIS ME DETER HAHAHA!";
+	next;
+	mes .n$;
+	mes "Com licença, senhor!";
+	next;
+	mes .r$;
+	mes "Hã?! Quem é você? Como ousa me interromper num momento de pura magia! Que ultraje!";
+	next;
+	mes .n$;
+	mes "Eu venho em nome do Ancião Heyligh!";
+	next;
+	mes .r$;
+	mes "Queee High light coisa nenhuma! Fale à aquele velho que eu não quero conversa com ele!";
+	next;
+	mes .n$;
+	mes "Então o conhece?";
+	next;
+	mes .r$;
+	mes "Infelizmente sim! Me diga o que quer muleque! Eu não tenho tempo a perder aqui. Estou ocupado ganhando forças com a natureza!";
+	next;
+	mes .n$;
+	mes "Morroc está voltando! E Heyligh falou para eu vir falar com você por que sabe de algo... E deve favores a ele!";
+	next;
+	mes .r$;
+	mes "Eu não devo nada a aquele velho! Mas espera ai...Você falou...Morroc?";
+	next;
+	mes .n$;
+	mes "Sim, ele está prestes a voltar...E heyligh sabe como abrir um portal. Ele falou que precisa de você...";
+	next;
+	mes .r$;
+	mes "Hm...então ele quer realmente tentar...Certo muleque é o seguinte...O que Heyligh quer fazer é abrir uma porta dimensional entre este mundo ridículo, e o templo de Morroc.";
+	next;
+	mes .n$;
+	mes "Certo, mas ele disse que precisa de você. E onde eu entro nisso?";
+	next;
+	mes .r$;
+	mes "Se você parar de falar e me deixar concluir quem saiba você descubra!";
+	next;
+	mes .r$;
+	mes "Enfim. Para abrir o tal portal, é necessário uma tarefa, e não é fazer conta de 2+2 da escola da tia tetéia. É uma tarefa que somente os mais fortes guerreiros poderão enfrentar.";
+	next;
+	mes .r$;
+	mes "Morroc é esperto, mas nem tanto. Para evitar que sua alma seja sempre selada, ele distribuiu sua alma em 6 partes fundamentais.";
+	next;
+	mes .r$;
+	mes "Cada parte de sua alma está alojada dentro de um determinado demônio aqui nesta terra.";
+	next;
+	mes .r$;
+	mes "O que Heyligh quer é, conseguir essas partes da alma de Morroc. Derrotando os demônios, Heyligh realizará um feitiço de chamado dessas partes e juntando as 6 ele consegue abrir o portal.";
+	next;
+	mes .r$;
+	mes "Ele precisa de mim para localizar tais demônios...E de você para derrota-los...O que eu duvido muito...";
+	next;
+	mes .n$;
+	mes "Ótimo, já me explicou como funciona...Agora onde eu acho o primeiro demônio?";
+	next;
+	mes .r$;
+	mes "Nossa! Você é realmente um suícida! Ta ok, vou localizar...realmente eu devo algo para Heyligh...";
+	next;
+	mes "...";
+	mes ".....";
+	mes ".......";
+	next;
+	mes .r$;
+	mes "Perfeito muleque, o primeiro foi facil demais...";
+	next;
+	mes .r$;
+	mes "Em um dos calabouços de Payon, mais precisamente no 4º andar. Existe um túmulo e neste tumo há um ritual.";
+	next;
+	mes .r$;
+	mes "Você deve ler o ritual com os seguintes itens na mão.";
+	next;
+	mes "^FF0000"+getitemname(523)+"^000000";
+	mes "^FF0000"+getitemname(2743)+"^000000";
+	mes "^FF0000"+getitemname(2110)+"^000000";
+	next;
+	mes .r$;
+	mes "Cuide-se jovem. Sugiro que consiga mais guerreiros para lhe ajudar.";
+	next;
+	mes .r$;
+	mes "Quando conseguir o Fragmento. Me encontre em Juno, ao leste. Lá iremos para o próximo.";
+	next;
+	mes .r$;
+	hideoffnpc	"Túmulo#1";	
+	mes "Boa sorte garoto.";
+	final_quest	=	5;
+	close;
+	}
+	
+pay_dun04,113,126,0	script	Túmulo#1	4_NFCOFFIN,{
+
+if(final_quest	<	5){
+	mes "Esse túmulo contém palavras estranhas...";
+	mes "É melhor eu sair daqui...";
+	close;
+}
+if(final_quest	>=	6){
+	mes "Esse túmulo contém palavras estranhas...";
+	mes "É melhor eu sair daqui...";
+	close;
+}
+else{if(countitem(523) < 	1) || (countitem(2743) <	1) || (countitem(2110)	<	1){
+mes "Eu não trouxe tudo para me proteger.";
+mes "É melhor voltar e pegar o resto.";
+close;
+}
+}
+mes "*Esse túmulo está com o ritual...*";
+next;
+mes "*Vamos começar então...*";
+next;
+mes "*Bu missiyasi*";
+next;
+mes "*Hozirga Qadar*";
+next;
+mes "*Qilingan Eng*";
+next;
+mes "*Yaxshi Biridir*";
+next;
+mes "*Ovoz berish tuting va ehson*";
+next;
+mes "*Server o'sadi*";
+next;
+mes "*Yordam!*";
+next;
+mes "...";
+mes "......";
+mes ".........";
+close2;
+hideonnpc	"Túmulo#1";
+monster "pay_dun04",113,126,"Réquiem de Marfim",3073,1,strnpcinfo(0)+"::OnMobDead";
+end;
+OnMobDead:
+if(final_quest	<	5){
+	warp "prontera",150,150;
+	end;
+}
+	final_quest	=	6;
+	hideoffnpc "Pedaço de Alma#1";
+	getitem	6914,1;
+	end;
+}
+
+yuno,19,208,2	script	Dorinho#4	4_GEFFEN_11,{
+
+if(final_quest	<	6){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	
+mes	.n$;
+mes "Cara estranho...";
+next;
+mes .r$;
+mes "VOCÊ ME CHAMOU DE ESTRANHO???!! EU OUVI! HAAYSSSU BOOOM  HAAAAAAAAAAAYYYYYY!";
+warp	"prontera",150,150;
+close;
+}
+
+else{if(final_quest	==	6){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	mes .r$;
+	mes "O quê? Você derrotou um dêmonio de Morroc?! Formidável!";
+	next;
+	mes .r$;
+	mes "Certo. Agora que você o derrotou, eu já posso passar em diante...";
+	next;
+	mes .r$;
+	mes "Para eu poder localizar o próximo monstro, jovem, preciso de alguns itens.";
+	next;
+	mes .r$;
+	mes "Me traga isso.";
+	next;
+	mes "^FF0000"+getitemname(7799)+"^000000 X 20";
+	mes "^FF0000"+getitemname(7798)+"^000000 X 15";
+	mes "^FF0000"+getitemname(2374)+"^000000 X 1";
+	next;
+	mes .r$;
+	mes "Tudo isso servirá para localizar os demônios de Morroc...pera aí...por que eu estou te contando? Vá já pega-los!";
+	final_quest	=	7;
+	close;
+	}
+}
+if(final_quest	==	7){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	if(countitem(7799)	<	20)	||	(countitem(7798)	<	15)	||	(countitem(2374)	<	1){
+		set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	mes .r$;
+	mes "Você está zombando de mim? Cadê o que eu te pedi? Vá agora pega-los!";
+	next;
+	mes .r$;
+	mes "Ah você esqueceu né? ANOTE! Você precisa disso.";
+	next;
+	mes "^FF0000"+getitemname(7799)+"^000000 X 20";
+	mes "^FF0000"+getitemname(7798)+"^000000 X 15";
+	mes "^FF0000"+getitemname(2374)+"^000000 X 1";
+	next;
+	mes .r$;
+	mes "Agora vá!";
+	close;
+	}
+	mes .r$;
+	mes "Esplêndido! Você trouxe tudo, até que você é um guerreiro voraz!";
+	next;
+	delitem	7799,20;
+	delitem	7798,15;
+	delitem 2374,1;
+	next;
+	mes .r$;
+	mes "Muito bem, venha comigo.";
+	final_quest	=	8;	
+	next;	
+	warp	"gef_dun00",104,97;
+	close;
+	end;
+}
+}
+gef_dun00,99,100,4	script	Dorinho#5	4_GEFFEN_11,{
+
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	if(final_quest	<	7){
+	mes "...";
+	close;
+	}
+	else{if(final_quest	==	8){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+		mes .r$;
+		mes "Perfeito, aqui estamos...";
+		next;
+		mes .r$;
+		mes "É o seguinte, no terceiro andar existe um bixinho nojentinho, pestilento e....";
+		next;
+		mes .r$;
+		mes "Enfim, esse bixinho ele te levará até o próximo demônio de Morroc...Derrote-o.";
+		next;
+		mes .r$;
+		mes "Está esperando o que?! Vá agora! Vá!";
+		final_quest	=	9;
+		close;
+		}
+	}
+	if(final_quest	>=	9){
+	
+		mes .r$;
+		mes "Está esperando o que?! Vá agora! Vá!";	
+		next;
+		mes .r$;
+		mes "É o seguinte, no terceiro andar existe um bixinho nojentinho, pestilento e....";
+		next;
+		mes .r$;
+		mes "Enfim, esse bixinho ele te levará até o próximo demônio de Morroc...Derrote-o.";
+		close;
+	}
+	}
+
+	
+gef_dun02,210,181,0	script	Porteiro#1	4_NFBAT,{
+		.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Calabouço de Ankou";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	8){
+												mes	"[Porteiro]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}							
+							mes "[Porteiro]";
+							mes "Você não irá conseguir enfrentar meu Rei sozinho!";							
+							next;
+							mes "[Porteiro]";
+							mes "Se quiser tentar a sorte, volte com 1 ou mais guerreiros em GRUPO!";
+							close;				
+							end;
+						}
+ if( .salaocupada == 1 &&  getcharid(1) != .pt ) {
+     mes "[Porteiro]";
+     mes "Você não pode entrar ainda!";
+     close;
+     }
+					mes "[Porteiro]";
+					mes	"Hmm, você acha que está pronto para enfrentar o ceifador [^FF0000Ankou^000000]?";
+					switch(select("Estou pronto!:Acho que não.")) {
+					case 1:
+							if(final_quest	<	8){
+												mes	"[Porteiro]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}
+					mes	"[Porteiro]";
+					mes "Muito bem, boa sorte.";
+					close2;				
+					warpparty	"1@spa",61,20,getcharid(1);
+					set	.pt,getcharid(1);
+					set	.salaocupada,1;
+					initnpctimer;
+					end;
+					OnTimer10000:
+					mapannounce	"1@spa","[Dorinho]:Vocês terão 20 minutos para derrotar o Demônio!",0;
+					mapannounce	"gef_dun02","[Dorinho]:Vocês terão 20 minutos para derrotar o Demônio!",0;
+					end;
+					OnTimer15000:
+					monster "1@spa",43,42,"Ceifador Ankou",3029,1,"gananciamorto::OnMobAnkDead";
+					end;
+					OnTimer1200000:
+					mapannounce	"1@spa","[Dorinho]:Vocês não foram capazes!",0; goto	failed;
+					failed:
+					set	.salaocupada,0;
+					set .pt,"";
+					mapwarp "1@spa","prontera",150,150;	
+					end;
+
+					case 2:
+					mes	"[Porteiro]";
+					mes "Hahahaha! Acho você um fraco!";
+					close2;
+				
+					end;
+				}
+			}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	8){
+												mes	"[Porteiro]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}		
+		mes "[Porteiro]";
+		mes "Você nunca irá enfrenta-lo sozinho!.";	
+		next;
+		mes "[Porteiro]";
+		mes "Se quiser tentar a sorte, volte com 1 ou mais guerreiros em GRUPO!";
+		close2;
+		
+		end;
+		}
+			
+					mes "[Porteiro]";
+					mes "O que está fazendo aqui? Seu líder já está a caminho! Não irá ajuda-lo?!";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					case 1:
+					if(getcharid(1)	==	.pt){
+					mes	"[Porteiro]";
+					mes "Muito bem, boa sorte.";
+					next;
+					warp "1@spa",61,20;
+					end;
+					}
+					mes	"[Porteiro]";
+					mes "Você não pode entrar ainda!";
+					close;
+					case 2:
+					mes	"[Porteiro]";
+					mes "Você é mesmo um desunido!";
+					close2;
+					end;
+					}
+}
+-	script	gananciamorto	-1,{
+
+OnMobAnkDead:
+if(final_quest < 5) { warp "prontera",150,150; end;}
+	
+final_quest	= 10;
+set	$salaocupada,0;
+getitem	6914,1;
+	hideoffnpc	"Pedaço de Alma#2";	
+mapwarp "1@spa","prontera",150,150;
+end;
+}
+
+
+prontera,149,158,4	script	Dorinho#8	4_GEFFEN_11,{
+
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+	if(final_quest	<	10){
+	mes "...";
+	close;
+	}
+	else{if(final_quest	==	10){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Dorinho]";
+		mes .r$;
+		mes "Estraordináro! Você derrotou Ankou, isso nos leva ao proximo passo.";
+		next;
+		mes .r$;
+		mes "Com a derrota dos dois demônios que você derrotou, Heyligh coneguiu iniciar o ritual de Portal Dimensional.";
+		next;
+		mes .r$;
+		mes "Siga em frente até encontrar Heyligh e ele e dirá os próximos passos!";
+		mes .r$;
+		mes "Nos vemos em breve!";
+		final_quest	=	11;
+		close;
+		}
+	}
+	if(final_quest	>=	11){
+	
+		mes .r$;
+		mes "Está esperando o que?! Vá agora! Vá!";	
+		next;
+		mes .r$;
+		mes "Siga em frente até encontrar Heyligh e ele e dirá os próximos passos!";
+		next;
+		mes .r$;
+		mes "Ele está próximo a loja de utilidades de Prontera.";
+				final_quest	=	10;
+		close;
+	}
+	}
+prontera,155,224,0	script	Ancião#6	4_M_OLDFRIAR,{
+
+	if(final_quest	<	11){
+	mes "...";
+	close;
+	}
+	else{if(final_quest	==	12){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";	
+	mes .r$;
+	mes "Quando estiver pronto, entre no portal atrás de mim.";
+	mes "Que ele o levará até onde se situam os outros dois Subordinados.";
+	close;
+	}
+	}
+	
+	if(final_quest	==	13){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";	
+	mes .r$;
+	mes "Quando estiver pronto, entre no portal atrás de mim.";
+	mes "Que ele o levará até onde se situam os outros dois Subordinados.";
+	close;
+	}
+		else{if(final_quest	==	14){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";	
+	mes .r$;
+	mes "Quando estiver pronto, entre no portal atrás de mim.";
+	mes "Que ele o levará até onde se situam os outros dois Subordinados.";
+	close;
+	end;
+	}
+	}
+	if(final_quest	==	15){
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";	
+	mes .r$;
+	mes "Excelente! O grupo "+strcharinfo(1)+" se saiu muito bem! Estão de parabéns!.";
+	next;
+	mes .n$;
+	mes "Legal. E agora qual o próximo passo? Ainda falta muito?.";
+	next;
+	mes .r$;
+	mes "Não, na verdade falta pouco...porém, não será fácil daqui em diante. As coisas tendem a piorar.";
+	next;
+	mes .r$;
+	mes "Com esse feitiço que vocês me ajudaram a realizar eu poderei abrir o portal para o templo de Morroc.";
+	next;
+	mes .n$;
+	mes "Ótimo, então abra-o! Nós vamos derrota-lo!";
+	next;
+	mes .r$;
+	mes "Não é simples assim, aqui eu não tenho energia suficiente para abrir o portal. Temos que ir para um local onde a energia seja imensa!";
+	next;
+	mes .r$;
+	mes "Eu sei exatamente o lugar.";
+	next;
+	mes .r$;
+	mes "Sugiro vocês se prepararem, vou leva-los para fazer o reconhecimento do local, se precisarem voltar eu os trago de volta.";
+	next;
+	mes .r$;
+	mes "É bom fazerem orações e levarem itens abençoados com vocês...Pois não será fácil.";
+	next;
+	mes .r$;
+	mes "Eu vou leva-los até lá.";
+	final_quest	=	16;
+	next;
+	warpparty "moc_fild22b",190,301,getcharid(1);
+	close;
+	}
+	else{if(final_quest	>=16){
+	mes .r$;
+	mes "Não se procupe, eu levarei de volta.";
+	next;
+	mes .r$;
+	mes "Boa sorte.";
+	warpparty "moc_fild22b",197,221,getcharid(1);
+	next;
+	close;	
+	}
+	}
+	set .n$, "["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";
+	mes .r$;
+	announce	""+strcharinfo(0)+" completou a segunda parte da quest Cruzada contra Morroc!",bc_all;	
+	mes "Vejo que Dorinho ainda lembra de mim e te ajudou a derrotar os demônios de Morroc...";
+	next;
+	mes .r$;
+	mes "Muito bem garoto, como pode ver, toda vez que você derrotar um demônio de Morroc, o fragmento da alma dele virá pra cá.";
+	next;
+	mes .r$;
+	mes "Agora é só entrar no portal que eu criei atrás de mim e você enfrentará os 2 próximos demônios.";
+	next;
+	mes .r$;
+	mes "Eles estão guardando o templo de Morroc, então eu fiz um feitiço que quando você derrotar o último demônio, você será transportado para cá novamente.";
+	next;
+	mes .r$;
+	mes "Sugiro a partir de agora ir com um grupo.";
+	next;
+	mes .r$;
+	mes "Se estiver seguro eu o levarei agora.";
+	next;
+	mes .r$;
+	mes "Quando estiver pronto, entre no portal atrás de mim.";
+	mes "Que ele o levará até onde se situam os outros dois Subordinados.";
+	hideoffnpc	"Portal Dimensional#2";
+	final_quest	=	12;
+	close;
+	end;
+	}
+
+
+prontera,155,220,0	script	Portal Dimensional#2	1_SHADOW_NPC,{
+	.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Ultimos desafios";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	12){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}							
+							mes "[Heyligh]";
+							mes "Sugiro não ir sozinho, não é sensato.";							
+							next;
+							mes "[Heyligh]";
+							mes "Encontre no mínimo mais 1 para vir com você.";
+							close;				
+							end;
+						}
+ if( .questocup == 1 &&  getcharid(1) != .pt ) {
+     mes "[Heyligh]";
+     mes "Você não pode entrar ainda!";
+     close;
+     }
+					mes "[Heyligh]";
+					mes	"Hmm, você crê que está disposto a cruzar contra o penúltimo desafio?";
+					switch(select("Estou pronto!:Acho que não.")) {
+					case 1:
+							if(final_quest	<	12){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					close2;				
+					warpparty	"1@tnm3",98,4,getcharid(1);
+					set	.pt,getcharid(1);
+					set	.questocup,1;
+					initnpctimer;
+					end;
+					OnTimer10000:
+					mapannounce	"1@tnm3","[Heyligh]:Vocês terão 20 minutos para derrotar o Demônio!",0;
+					mapannounce	"prontera","[Heyligh]:Vocês terão 20 minutos para derrotar o Demônio!",0;
+					end;
+					OnTimer15000:
+					set $mob,1;
+					monster "1@tnm3",98,50,"Espírito de Hayan Mor",2999,1,"outromorto::OnMyMobDead";
+					end;
+					OnTimer6000000:
+					mapannounce	"1@tnm3","[Heyligh]:Vocês não foram capazes!",0; goto	failed;
+					failed:
+					set	.questocup,0;
+					set .pt,"";
+					mapwarp "1@tnm3","prontera",150,150;	
+					end;
+
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quanto estiver confiante.";
+					close2;
+				
+					end;
+				}
+			}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	12){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}		
+		mes "[Heyligh]";
+		mes "Sugiro não progredir sozinho.";	
+		next;
+		mes "[Heyligh]";
+		mes "Encontre no mínimo mais um guerreiro para vir pra cá!";
+		close2;
+		
+		end;
+		}
+			
+					mes "[Heyligh]";
+					mes "Seu líder já partiu, não deixe-o sozinho.";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					case 1:
+					if(getcharid(1)	==	.pt){
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					next;
+					warp "1@tnm3",61,20;
+					end;
+					}
+					mes	"[Heyligh]";
+					mes "Você não pode entrar ainda!";
+					close;
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quando estiver pronto.";
+					close2;
+					end;
+					}
+}
+
+-	script	outromorto	-1,{
+OnMyMobDead:
+final_quest	=	13;
+getitem	6914,1;
+announce "O grupo "+strcharinfo(1)+" derrotou o 1º monstro da segunda parte da Cruzada contra Morroc!",8; goto OnMyMoDead0;
+warpparty	"1@xm_d",217,181,getcharid(1);
+end;
+OnMyMoDead0:
+set $mob,1;
+monster "1@xm_d",234,183,"Celini Kimi",2996,1,strnpcinfo(0)+"::OnMyMobDead2";
+end;
+
+OnMyMobDead2:
+final_quest	=	14;
+getitem	6914,1;
+set $mobs,$mobs-1;
+if($mobs == 0){ announce "O grupo "+strcharinfo(1)+" derrotou o último monstro da segunda parte da Cruzada contra Morroc!",8; goto OnMyMoDead1; }
+end;
+
+OnMyMoDead1:
+final_quest	=	15;
+set	$questocup,0;
+getitem	6914,1;
+sleep	2000;
+end;
+warpparty "1@xm_d","prontera",150,150;
+end;
+}
+
+moc_fild22b,197,221,0	script	Ancião#7	4_M_OLDFRIAR,{
+
+
+
+	set	.n$,	"["+strcharinfo(0)+"]";
+	set .r$,	"[Heyligh]";
+		if(final_quest	==	17){
+		mes .r$;
+		mes "VOCÊ PRECISA VOLTAR RÁPIDO!";
+		next;
+		warpparty	"1@sthb",210,98,getcharid(1);	
+		close;
+		}
+		
+			else{if(final_quest	==	19){
+		mes .r$;
+		mes "VOCÊ PRECISA VOLTAR RÁPIDO!";
+		next;
+		warpparty	"1@eom",147,155,getcharid(1);	
+		close;
+		}
+		}
+		if(final_quest	>=	19){
+		mes .r$;
+		mes "Olá, quer que eu crie o portal dimensional para você?";
+		next;
+		switch(select("Guardião do Templo:Templo de Morroc:Quero voltar")){
+		case 1:
+		callfunc	"GTemple";
+		close;
+		case 2:
+		callfunc	"Final";
+		close;
+		case 3:
+			mes .r$;
+			mes "Tudo bem!";
+			next;
+			warp	"prontera",150,150;
+			close;
+			}
+		}
+		else{if(final_quest	==	18){
+	mes .r$;
+	mes "Você conseguiu derrotar o Príncipe Morroc! Isso é extraordinário! Agora prepare-se para o pior, vou abrir o portal para o Templo de Morroc.";
+	next;
+	mes .r$;
+	mes "Esteja ciente que não será uma tarefa fácil. Eu desejo muita boa sorte.";
+	next;
+	mes .r$;
+	mes "Mas primeiro preciso saber se você está preparado";
+	switch(select("Sim:Não:Voltar")){
+	case 1:
+	callfunc	"Final";
+	close;
+	end;
+	case 2:
+			mes .n$;
+			mes "Tudo bem.";
+	close;
+	end;
+	case 3:
+			mes .n$;
+			mes "Tudo bem.";
+			next;
+			warp	"prontera",150,150;
+			close;				
+			
+			
+			}
+		}
+		}
+	if(final_quest	<	16){
+			mes .n$;
+			mes "É perigoso aqui!";
+			next;
+			warp	"prontera",150,150;
+			close;	
+	
+	}
+	else{if(final_quest	==	16){
+	
+	mes .r$;
+	mes "Muito bem. Chegamos, aqui é o lugar perfeito para abrir o portal. A energia aqui é tanta que eu só preciso de algumas palavras para abrir.";
+	next;
+	mes .r$;
+	mes "Eu vou abrir o portal para o Guardião de Morroc. Você deve derrota-lo, pois ele detem de uma energia poderosa que não me permite abrir o portal para o Templo de Morroc.";
+	next;
+	mes .r$;
+	mes "Mas primeiro preciso saber se você está preparado";
+	switch(select("Sim:Não:Voltar")){
+	case 1:
+	callfunc	"GTemple";
+	close;
+	end;
+	case 2:
+			mes .n$;
+			mes "Tudo bem.";
+	close;
+	end;
+	case 3:
+			mes .n$;
+			mes "Tudo bem.";
+			next;
+			warp	"prontera",150,150;
+			close;		
+	}
+	}
+	}
+}
+
+
+
+
+function	script	GTemple	{
+
+	.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Ultimo desafio";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	16){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}							
+							mes "[Heyligh]";
+							mes "Sugiro não ir sozinho, não é sensato.";							
+							next;
+							mes "[Heyligh]";
+							mes "Encontre no mínimo mais 1 para vir com você.";
+							close;				
+							end;
+						}
+					mes "[Heyligh]";
+					mes	"Hmm, você crê que está disposto a cruzar contra o penúltimo desafio?";
+					next;
+					switch(select("Estou pronto!:Acho que não.")) {
+					case 1:
+							if(final_quest	<	12){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					close2;				
+					warpparty	"1@tnm1",100,24,getcharid(1);
+					set	.pts,getcharid(1);
+					initnpctimer;
+					end;
+					OnTimer10000:
+					mapannounce	"1@tnm1","[Heyligh]:Vocês terão 120 minutos para derrotar o Demônio!",0;
+					mapannounce	"prontera","[Heyligh]:Vocês terão 120 minutos para derrotar o Demônio!",0;
+					end;
+					OnTimer60000:
+					mapannounce	"1@tnm1","[Heyligh]:Vocês não foram capazes!",0; goto	failed;
+					failed:
+					set	.finalocup,0;
+					set .pts,"";
+					mapwarp "1@tnm1","prontera",150,150;	
+					end;
+
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quanto estiver confiante.";
+					close2;
+				
+					end;
+				}
+			}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	16){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}		
+		mes "[Heyligh]";
+		mes "Sugiro não progredir sozinho.";	
+		next;
+		mes "[Heyligh]";
+		mes "Encontre no mínimo mais um guerreiro para vir pra cá!";
+		close2;
+		
+		end;
+		}
+					mes "[Heyligh]";
+					mes "Seu líder já partiu, não deixe-o sozinho.";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					case 1:
+					if(getcharid(1)	==	.pts){
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					next;
+					warp "1@tnm3",61,20;
+					end;
+					}
+					mes	"[Heyligh]";
+					mes "Você não pode entrar ainda!";
+					close;
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quando estiver pronto.";
+					close2;
+					end;
+					}
+}
+
+function	script	Final	{
+
+	.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Ultimo desafio";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	16){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}							
+							mes "[Heyligh]";
+							mes "Sugiro não ir sozinho, não é sensato.";							
+							next;
+							mes "[Heyligh]";
+							mes "Encontre no mínimo mais 1 para vir com você.";
+							close;				
+							end;
+					}
+					mes "[Heyligh]";
+					mes	"Hmm, você crê que está disposto a cruzar contra o penúltimo desafio?";
+					switch(select("Estou pronto!:Acho que não.")) {
+					case 1:
+							if(final_quest	<	12){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					close2;				
+					warpparty	"1@sthb",94,79,getcharid(1);
+					set	.pt,getcharid(1);
+					initnpctimer;
+					end;
+					OnTimer10000:
+					mapannounce	"1@sthb","[Heyligh]:Vocês terão 120 minutos para derrotar o Demônio!",0;
+					mapannounce	"prontera","[Heyligh]:Vocês terão 120 minutos para derrotar o Demônio!",0;
+					end;;
+					OnTimer6000000:
+					mapannounce	"1@sthb","[Heyligh]:Vocês não foram capazes!",0; goto	failed;
+					mapannounce	"1@sthd","[Heyligh]:Vocês não foram capazes!",0; goto	failed;					
+					failed:
+					set	.finalocup,0;
+					set .pt,"";
+					mapwarp "1@sthd","prontera",150,150;	
+					end;
+
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quanto estiver confiante.";
+					close2;
+				
+					end;
+				}
+			}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	16){
+												mes	"[Heyligh]";
+												mes "Você não faz parte da Cruzada contra Morroc";
+												close;
+												}		
+		mes "[Heyligh]";
+		mes "Sugiro não progredir sozinho.";	
+		next;
+		mes "[Heyligh]";
+		mes "Encontre no mínimo mais um guerreiro para vir pra cá!";
+		close2;
+		
+		end;
+		}
+					mes "[Heyligh]";
+					mes "Seu líder já partiu, não deixe-o sozinho.";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					case 1:
+					if(getcharid(1)	==	.pt){
+					mes	"[Heyligh]";
+					mes "Muito bem, boa sorte.";
+					next;
+					warp "1@tnm3",61,20;
+					end;
+					}
+					mes	"[Heyligh]";
+					mes "Você não pode entrar ainda!";
+					close;
+					case 2:
+					mes	"[Heyligh]";
+					mes "Tudo bem, volte quando estiver pronto.";
+					close2;
+					end;
+					}
+}
+
+1@sthd,104,96,4	script	Príncipe Morroc	MM_MOROCC_KID,{
+
+	set	.r$,	"["+strnpcinfo(0)+"]";
+	set .s$,	"["+strcharinfo(0)+"]";
+	
+	.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Ultimo desafio";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	16){
+												mes	.r$;
+												mes "O QUE VOCÊ FAZ EM MEU TEMPLO?";
+												warp "prontera",150,150;
+												close;
+												}							
+							mes .r$;
+							mes "O QUE VOCÊ FAZ EM MEU TEMPLO, SOZINHO?";							
+							next;
+							warp "prontera",150,150;
+							close;				
+							end;
+						}
+ if( .finalocup == 1 &&  getcharid(1) != .pt ) {
+     mes .r$;
+     mes "...";
+     close;
+     }
+	mes .r$;
+	mes "Vocês acreditaram que Heyligh trazendo vocês aqui, seriam capaz de me enfrentar em meu templo?";
+	next;
+	mes .s$;
+	mes "Nós não somos tão fracos quanto pensa, Morroc!";
+	next;
+	mes .r$;
+	mes "Vocês são um bando de vermes imundos e tolos! Jamais me derrotarão! Meu poder irá prevalecer! O mal que eu trago irá consumir Rune-Midgard!";
+	next;
+	mes .r$;
+	mes "Não há nada que vocês possam fazer!";
+	next;
+	mes .s$;
+	mes "Isso não é verdade! Thanatos já o derrotou uma vez! Nós também o derrotaremos!";
+	next;
+	mes .r$;
+	mes "INSOLENTE!";
+	next;
+	mes .r$;
+	mes "PREPAREM-SE PARA O CAOS! APROVEITEM SEUS ÚLTIMOS SUSPIROS DE VIDA!";
+	final_quest	=	17;
+	close2;
+	sleep2	10000;
+	hideonnpc	"Príncipe Morroc";
+	monster "1@sthd",104,96,"Príncipe Morroc",3096,1,"principemorroc::OnMocDead";	
+	end;
+	}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	16){
+												mes	.r$;
+												mes "O QUE VOCÊ FAZ EM MEU TEMPLO?!";
+												warp	"prontera",150,150;
+												close;
+												}		
+		mes .r$;
+		mes "O QUE VOCÊ FAZ EM MEU TEMPLO, SOZINHO?!.";	
+		next;
+		warp	"prontera",150,150;
+		close2;
+		
+		end;
+		}
+					mes .r$;
+					mes "...";
+					if(getcharid(1)	==	.pt){
+					mes	.r$;
+					mes "...";
+					close;
+					end;
+					}
+					mes	.r$;
+					mes "...!";
+					close;
+}
+
+
+-	script	principemorroc	-1,{
+
+OnMocDead:
+if(final_quest < 12) { warp "prontera",150,150; end;}
+	
+final_quest	= 18;
+	hideoffnpc	"Portal#1";
+	enablenpc	"Portal#1";
+mapwarp "1@sthd","prontera",150,150;
+	hideoffnpc	"Príncipe Morroc";
+end;
+}
+
+1@eom,102,202,4	script	Deus Morroc	MM_MOROCC_ADT,{
+
+	set	.m$,	"["+strnpcinfo(0)+"]";
+	set .e$,	"["+strcharinfo(0)+"]";
+	set .h$,	"[Heyligh]";
+	set .d$,	"[Dorinho]";
+	set .t$,	"[Thanatos]";
+	set	.l$,	"[Loki]";
+	
+	.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Ultimo desafio";
+				if (getcharid(0) == getpartyleader(.@party_id,2)){
+							if (!instance_check_party(.@party_id,2)) {	// Custom
+							if(final_quest	<	16){
+												mes	.m$;
+												mes "O QUE VOCÊ FAZ EM MEU TEMPLO?";
+												warp "prontera",150,150;
+												close;
+												}							
+							mes .m$;
+							mes "O QUE VOCÊ FAZ EM MEU TEMPLO, SOZINHO?";							
+							next;
+							warp "prontera",150,150;
+							close;				
+							end;
+						}
+ if( .finalocup == 1 &&  getcharid(1) != .pt ) {
+     mes .m$;
+     mes "...";
+     close;
+     }
+	mes .h$;
+	mes "Pasmem, Morroc...Nós conseguimos outra vez.";
+	next;
+	mes .m$;
+	mes "Vocês acham que conseguiram? Passar por meus subordinados foi fácil, agora a história muda de figura. Não sou o mesmo de séculos atrás, Heyligh!";
+	next;
+	mes .h$;
+	mes "Eu sei disso. Os tempos mudaram, não é Dorinho? Agora nós temos poderes que não tinhamos quando trancamos você.";
+	next;
+	mes .e$;
+	mes "Eii! Espera aí! O que está acontecendo afinal?!";
+	next;
+	mes .d$;
+	mes "Aaaai eu não aguento esse tipo de gente que faz perguntas em hora séria!";
+	next;
+	mes .h$;
+	mes "Acalme-se "+strcharinfo(0)+", independente do que aconteça, no final eu esclarecerei tudo a você.";
+	next;
+	mes .m$;
+	mes "Você não mudou nada Thanatos. Você continua usando os poderes alheios para suprir-se e conseguir o que quer...";
+	next;
+	mes .e$;
+	mes "O que?! Thanatos? Como assim?!";
+	next;
+	mes .m$;
+	mes "Oh...seu velhote amiguinho não lhe contou? Isso é apenas um disfarce! REVELEM-SE!";
+	next;
+	hideonnpc	"Heyligh";
+	hideonnpc	"Dorinho";
+	hideoffnpc	"Thanatos";
+	hideoffnpc	"Loki";
+	mes .t$;
+	mes "Ele tem razão jovem, somos nós, Thanatos e Loki. Nós o prendemos da última vez.";
+	next;
+	mes .l$;
+	mes "Nós nos disfarçamos para convencer vocês virem para cá. Sabiamos do seu potencial, nós nos vimos em você e em seu grupo.";
+	next;
+	mes .e$;
+	mes "Mas...como? Como vocês estão vivos? Thanatos, você estava amaldiçoado!";
+	next;
+	mes .t$;
+	mes "Tudo o que eu disse é verdade, apenas eu omiti alguns fatos. Heyligh existe, porém era apenas uma casca. Eu o usei como porta para vir a esse mundo.";
+	next;
+	mes .l$;
+	mes "No mundo dos mortos, tudo é possível. Nós sabiamos que Morroc voltaria para assombrar Rune-Midgard, então nós fizemos um acordo com Freya.";
+	next;
+	mes .l$;
+	mes "Pois nós eramos os únicos a ter conhecimendo de como derrotar esse monstro.";
+	next;
+	mes .m$;
+	mes "Veja como fala Loki! Eu não sou mais aquele velho imperador com poderes e forças limitadas. Não...agora eu sou um deus! E vocês e ajoelharão perante o meu reinado! E assistirão a destruição de Rune-Midgard sem poder fazer nada! Hahahahahhahahahaha";
+	next;
+	mes .t$;
+	mes "Isso não vai acontecer Morroc, não esqueça que nós não estamos sozinhos...";
+	next;
+	mes .e$;
+	mes "Nós não vamos permitir que acabe com Midgard Morroc! Nós vamos te empedir!";
+	next;
+	mes .m$;
+	mes "O que? Vocês acham mesmo que irão me derrotar?! Vocês são vermes! Não farão nem cocegas!";
+	next;
+	mes .t$;
+	mes "Não nos subestime Morroc, não somos o que você pensa que somos...";
+	next;
+	mes .l$;
+	mes "Ainda não caiu a ficha Morroc? Estamos aqui, isso já é o seu fim...";
+	next;
+	mes .m$;
+	mes "Hm...Muito bem...então vamos ver do que são capazes!";
+	next;
+	mes .t$;
+	mes "Prepare...";
+	next;
+	mes "Hrrrrrrrrrrr Haaaaaaaa!!!!!!";
+	next;
+	mes .e$;
+	mes "THANATOS! LOKI! O QUE ESTÁ ACONTECENDO?!";
+	next;
+	mes .t$;
+	mes "Eu não sei! Ele é muito forte! Aaaaaahhh";
+	next;
+	mes .l$;
+	mes "Cuide-se garoto! FUJA ENQUANTO HÁ TEMPO!";
+	next;
+	mes "AAAAAAHHHHHH";
+	hideonnpc	"Thanatos";
+	hideonnpc	"Loki";
+	final_quest	=	19;
+	mes .m$;
+	mes "AGORA, VERME! ENFRENTE MINHA FÚRIA!";
+	close2;
+	sleep2	10000;
+	hideonnpc	"Deus Morroc";
+	monster "1@eom",102,202,"Deus Morroc",3097,1,"deusmorroc::OnMocDead";	
+	end;
+	}
+		if (!instance_check_party(.@party_id,2)) {
+							if(final_quest	<	16){
+												mes	.r$;
+												mes "O QUE VOCÊ FAZ EM MEU TEMPLO?!";
+												warp	"prontera",150,150;
+												close;
+												}		
+		mes .r$;
+		mes "O QUE VOCÊ FAZ EM MEU TEMPLO, SOZINHO?!.";	
+		next;
+		warp	"prontera",150,150;
+		close2;
+		
+		end;
+		}
+					mes .r$;
+					mes "...";
+					if(getcharid(1)	==	.pt){
+					mes	.r$;
+					mes "...";
+					close;
+					end;
+					}
+					mes	.r$;
+					mes "...!";
+					close;
+}
+
+
+-	script	deusmorroc	-1,{
+
+OnMocDead:
+if(final_quest < 12) { warp "prontera",150,150; end;}
+	
+final_quest	= 20;
+	hideoffnpc	"Portal#1";
+	enablenpc	"Portal#1";
+	sleep	2000;
+	announce	"Morroc : Nããããããããõooo!!!!! Isso é impossível!! Hrrrrr Aaaaaah!",bc_all;
+mapwarp "1@sthd","valkyrie",49,7;
+	hideoffnpc	"Príncipe Morroc";
+end;
+}
+
+1@eom,103,199,0	script	Heyligh	4_M_OLDFRIAR,{
+
+	set	.n$,	"["+strnpcinfo(0)+"]";
+	set .s$,	"["+strcharinfo(0)+"]";
+	
+	mes .s$;
+	mes "O quê?! O que você e Dorinho fazem aqui?!";
+	next;
+	mes .n$;
+	mes "É uma longa história jovem. Acalme-se";
+	close;
+	end;
+	}
+	
+1@eom,101,199,0	script	Dorinho	4_GEFFEN_11,{
+
+	set	.n$,	"["+strnpcinfo(0)+"]";
+	set .s$,	"["+strcharinfo(0)+"]";
+	
+	mes .n$;
+	mes "Controle-se seu infeliz...";
+	next;
+	mes .n$;
+	mes "Esta tudo sobcontrole.";
+	close;
+	end;
+	}	
+
+1@eom,101,199,0	script	Loki	4_M_ROKI2,{
+
+	set	.n$,	"["+strnpcinfo(0)+"]";
+	set .s$,	"["+strcharinfo(0)+"]";
+	
+	mes .n$;
+	mes "Controle-se seu infeliz...";
+	next;
+	mes .n$;
+	mes "Esta tudo sobcontrole.";
+	close;
+	end;
+	}	
+
+1@eom,103,199,0	script	Thanatos	THANATOS,{
+
+	set	.n$,	"["+strnpcinfo(0)+"]";
+	set .s$,	"["+strcharinfo(0)+"]";
+	
+	mes .s$;
+	mes "O quê?! O que você e Dorinho fazem aqui?!";
+	next;
+	mes .n$;
+	mes "É uma longa história jovem. Acalme-se";
+	close;
+	end;
+	}
+	
+prontera,153,219,0	script	Pedaço de Alma#1	4_NFWISP,{}
+prontera,157,219,0	script	Pedaço de Alma#2	4_NFWISP,{}
+prontera,157,221,0	script	Pedaço de Alma#3	4_NFWISP,{}
+prontera,153,221,0	script	Pedaço de Alma#4	4_NFWISP,{}
+
+
+1@tnm1,159,23,0	script	Portal#1	45,2,2,{
+end;
+OnTouch:
+warp	"1@sthb",209,99;
+close;
+}
+
+1@sthd,106,72,0	script	Man	-1,3,3,{
+end;
+	OnTouch:
+	hideonnpc	"Portal#1";
+	disablenpc	"Portal#1";
+	initnpctimer;
+	end;
+	OnTimer60000:
+	mapannounce	"1@sthd","Príncipe Morroc :	Quem ousa invadir o meu templo?!",0;
+	end;
+	OnTimer120000:
+	mapannounce	"1@sthd","Príncipe Morroc :	Vocês acham que vão conseguir sobreviver ao meu poder?!",0;
+	end;	
+	OnTimer180000:
+	mapannounce	"1@sthd","Heyligh :	Você verá Morroc! Nós iremos derrota-lo",0;
+	end;
+	OnTimer240000:
+	mapannounce	"1@sthd","Heyligh :	Pessoal vocês tem 60 minutos para matar Morroc antes de ele se liberar!",0;
+	end;
+	OnTimer6000000:
+	announce"Príncipe Morroc :	Hahaha Adeus Rune-Midgard!",bc_all;
+	mapwarp	"1@sthb","prontera",150,150;
+	mapwarp	"1@sthd","prontera",150,150;
+	hideoffnpc	"Portal#1";
+	enablenpc	"Portal#1";
+	end;
+	close;
+}
+1@eom,147,156,0	script	Man2	-1,3,3,{
+end;
+	OnTouch:
+	hideonnpc	"Portal#2";
+	disablenpc	"Portal#2";
+	initnpctimer;
+	end;
+	OnTimer60000:
+	mapannounce	"1@eom","Príncipe Morroc :	Quem ousa invadir o meu templo?!",0;
+	end;
+	OnTimer120000:
+	mapannounce	"1@eom","Príncipe Morroc :	Vocês acham que vão conseguir sobreviver ao meu poder?!",0;
+	end;	
+	OnTimer180000:
+	mapannounce	"1@eom","Heyligh :	Você verá Morroc! Nós iremos derrota-lo",0;
+	end;
+	OnTimer240000:
+	mapannounce	"1@eom","Heyligh :	Pessoal vocês tem 60 minutos para matar Morroc antes de ele se liberar!",0;
+	end;
+	OnTimer6000000:
+	announce"Príncipe Morroc :	Hahaha Adeus Rune-Midgard!",bc_all;
+	mapwarp	"1@eom","prontera",150,150;
+	mapwarp	"1@eom","prontera",150,150;
+	hideoffnpc	"Portal#2";
+	enablenpc	"Portal#2";
+	end;
+	close;
+}
+
+1@sthb,189,58,0	warp	1@sthb	3,3,1@sthd,106,72
+
+1@sthb,74,74,0	script	Portal#2	45,2,2,{
+end;
+OnTouch:
+warp	"1@eom",147,156;
+close;
+}
+1@eom,132,93,0	warp	1@eom#1	3,3,1@eom,66,148
+1@eom,61,88,0	warp	1@eom#2	3,3,1@eom,102,16
+1@eom,101,60,0	warp	1@eom#3	3,3,1@eom,101,194
+valkyrie,49,66,0	warp	valkyrie#1	3,3,valkyrie,49,78
+valkyrie,49,72,0	warp	valkyrie#2	3,3,valkyrie,48,61
+
+
+//========Tower	1==============================================
+1@sthb,0,0,0,0	monster	Aparição 	2733,20,0,0,0
+1@sthb,0,0,0,0	monster	Alma Penada	1291,20,0,0,0
+1@sthb,0,0,0,0	monster	Punk	1199,40,0,0,0
+1@sthb,0,0,0,0	monster	Ilusão das Trevas	1302,20,0,0,0
+1@sthb,0,0,0,0	monster	Zumbi Prisioneiro	2604,20,0,0,0
+1@sthb,0,0,0,0	monster	Dilacerador	2603,20,0,0,0
+1@sthb,0,0,0,0	monster	Zumbi	1015,20,0,0,0
+1@sthb,0,0,0,0	monster	Zumbi Metaleiro	2605,20,0,0,0
+1@sthb,0,0,0,0	monster	Zumbi Furioso	2606,20,0,0,0
+
+//=========Tower	2==========================================
+1@eom,48,137,30,30	monster	Escravo de Morroc 	1921,4,0,0,0
+1@eom,38,131,50,50	monster	Filhote de Brinaranha	3088,20,0,0,0
+1@eom,40,106,0,0	boss_monster	Brinharanha	3091,1,1200000,0,1
+
+1@eom,165,140,30,30	monster	Escravo de Morroc 	1918,4,0,0,0
+1@eom,161,143,20,20	monster	Golem Amaldiçoado	3023,5,0,0,0
+1@eom,168,128,20,20	monster	Kasa Amaldiçoado	3089,10,0,0,0
+1@eom,162,108,20,20	monster	Salamandra Amaldiçoado	3090,1,0,0,0
+1@eom,154,99,0,0	boss_monster	Skoll	3092,1,1200000,0,1
+
+
+1@eom,104,30,30,30	monster	Escravo de Morroc 	1918,4,0,0,0
+1@eom,104,30,30,30	monster	Escravo de Morroc 	1921,4,0,0,0
+1@eom,104,30,30,30	monster	Escravo de Morroc 	3105,1,1200000,0,0
+1@eom,104,30,30,30	monster	Escravo de Morroc 	3106,1,1200000,0,0
+
+1@eom,90,198,0,0	monster	Memória de Morroc 	3099,1,1200000,0,0
+1@eom,114,197,0,0	monster	Origem de Morroc 	3098,1,1200000,0,0
+
+
+valkyrie,49,86,4	script	Espírito de Freya	4_F_VALKYRIE,{
+
+	set	.r$,	"[Freya]";
+	set	.s$,	"["+strcharinfo(0)+"]";
+	
+	if(final_quest	<	20){
+	warp	"prontera",150,150;
+	end;
+	}
+	mes .r$;
+	mes "Muito bem guerreiro, vocês fez muito bem! Eu irei te abençoar!";
+	next;
+	mes .s$;
+	mes "Você ajudou a salvar Rune-Midgard do terrível Morroc.";
+	next;
+	mes .s$;
+	mes "Seremos eternamente gratos!";
+	next;
+	mes .s$;
+	mes "Agora fale com eles.";
+	final_quest	=	21;
+	close;
+	end;
+	}
+valkyrie,46,84,6	script	Thanatos#1	THANATOS,{
+
+	set	.n$,	"[Thanatos]";
+	set	.s$,	"["+strcharinfo(0)+"]";
+	if(final_quest	==	20){
+	mes .n$;
+	mes "Fale com o espírito de Freya premeiro, ela quer lhe agradecer.";
+	close;
+	}
+	else{if(final_quest	>	21){
+	mes .n$;
+	mes "Uau ein, quem dira que você seria capaz...";
+	next;
+	mes .n$;
+	mes "Eu sempre acreditei em vocês. Todos de Midgard.";
+	next;
+	mes .n$;
+	mes "Mantiveram o espírito de equipe o tempo todo. Isso é o que faz vocês serem fortes.";
+	mes "Estão de parabéns.";
+	next;
+	mes .n$;
+	mes "Muito bem, não há mais o que fazer aqui. Não há tempo para perguntas, eu e Loki estamos partindo.";
+	next;
+	mes .n$;
+	mes "Mas nunca esqueceremos de vocês. Tome sua recompensa.";
+	next;
+	final_quest	=	22;
+	getitem	502,1;
+	mes .n$;
+	mes "Faça bom uso, e que sirva de recordação dessa batalha triunfal.";
+	next;
+	warpparty	"prontera",150,150,getcharid(1);
+	close;	
+	}
+	}	
+	mes .n$;
+	mes "Uau ein, quem dira que você seria capaz...";
+	next;
+	mes .n$;
+	mes "Eu sempre acreditei em vocês. Todos de Midgard.";
+	next;
+	mes .n$;
+	mes "Mantiveram o espírito de equipe o tempo todo. Isso é o que faz vocês serem fortes.";
+	mes "Estão de parabéns.";
+	next;
+	mes .n$;
+	mes "Muito bem, não há mais o que fazer aqui. Não há tempo para perguntas, eu e Loki estamos partindo.";
+	next;
+	mes .n$;
+	mes "Mas nunca esqueceremos de vocês. Tome sua recompensa.";
+	next;
+	getitem	501,1;
+	mes .n$;
+	mes "Faça bom uso, e que sirva de recordação dessa batalha triunfal.";
+	final_quest	=	22;
+	next;
+	warpparty	"prontera",150,150,getcharid(1);
+	close;
+	end;
+	}
+	
+valkyrie,51,84,4	script	Loki#1	4_M_ROKI2,{
+
+	set	.n$,	"[Loki]";
+	set	.s$,	"["+strcharinfo(0)+"]";
+	if(final_quest	==	20){
+	mes .n$;
+	mes "Fale com o espírito de Freya premeiro, ela quer lhe agradecer.";
+	close;
+	}
+	else{if(final_quest	>	21){
+	mes .n$;
+	mes "Uau ein, quem dira que você seria capaz...";
+	next;
+	mes .n$;
+	mes "Eu sempre acreditei em vocês. Todos de Midgard.";
+	next;
+	mes .n$;
+	mes "Mantiveram o espírito de equipe o tempo todo. Isso é o que faz vocês serem fortes.";
+	mes "Estão de parabéns.";
+	next;
+	mes .n$;
+	mes "Muito bem, não há mais o que fazer aqui. Não há tempo para perguntas, eu e Loki estamos partindo.";
+	next;
+	mes .n$;
+	mes "Mas nunca esqueceremos de vocês. Tome sua recompensa.";
+	next;
+	final_quest	=	22;
+	getitem	502,1;
+	mes .n$;
+	mes "Faça bom uso, e que sirva de recordação dessa batalha triunfal.";
+	next;
+	warpparty	"prontera",150,150,getcharid(1);
+	close;	
+	}
+	}
+	mes .n$;
+	mes "Uau ein, quem dira que você seria capaz...";
+	next;
+	mes .n$;
+	mes "Eu sempre acreditei em vocês. Todos de Midgard.";
+	next;
+	mes .n$;
+	mes "Mantiveram o espírito de equipe o tempo todo. Isso é o que faz vocês serem fortes.";
+	mes "Estão de parabéns.";
+	next;
+	mes .n$;
+	mes "Muito bem, não há mais o que fazer aqui. Não há tempo para perguntas, eu e Loki estamos partindo.";
+	next;
+	mes .n$;
+	mes "Mas nunca esqueceremos de vocês. Tome sua recompensa.";
+	next;
+	final_quest	=	22;
+	getitem	502,1;
+	mes .n$;
+	mes "Faça bom uso, e que sirva de recordação dessa batalha triunfal.";
+	next;
+	warpparty	"prontera",150,150,getcharid(1);
+	close;
+	end;
+	}	

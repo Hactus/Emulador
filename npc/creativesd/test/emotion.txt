@@ -1,0 +1,9 @@
+prontera,150,150,4	script	Test Emoticons	1_M_04,{
+	input .@init;
+	for( set .@i,.@init; .@i <= ET_YUT7; set .@i,.@i+1 ) {
+		emotion .@i;
+		dispbottom "Emoticon: " + .@i;
+		sleep2 2000;
+	}
+	end;
+}

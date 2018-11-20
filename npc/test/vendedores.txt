@@ -1,0 +1,79 @@
+prontera,164,175,3	script	Vendedor#hats_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",1;
+	end;
+OnInit:
+	showvend( "Vendedor#hats_prontera", 1, "[Chapéus]" );
+	end;
+}
+
+prontera,164,173,3	script	Vendedor#body_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",2;
+	end;
+OnInit:
+	showvend( "Vendedor#body_prontera", 1, "[Armaduras]" );
+	end;
+}
+
+prontera,164,171,3	script	Vendedor#wpns_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",3;
+	end;
+OnInit:
+	showvend( "Vendedor#wpns_prontera", 1, "[Armas]" );
+	end;
+}
+
+prontera,164,169,3	script	Vendedor#shld_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",4;
+	end;
+OnInit:
+	showvend( "Vendedor#shld_prontera", 1, "[Escudos]" );
+	end;
+}
+
+prontera,164,167,3	script	Vendedor#capa_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",5;
+	end;
+OnInit:
+	showvend( "Vendedor#capa_prontera", 1, "[Capas]" );
+	end;
+}
+
+prontera,164,165,3	script	Vendedor#shoe_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",6;
+	end;
+OnInit:
+	showvend( "Vendedor#shoe_prontera", 1, "[Sapatos]" );
+	end;
+}
+
+prontera,164,163,3	script	Vendedor#acc_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",7;
+	end;
+OnInit:
+	showvend( "Vendedor#acc_prontera", 1, "[Acessórios]" );
+	end;
+}
+
+prontera,164,161,3	script	Vendedor#card_prontera	4_M_JP_RUN,{
+	end;
+OnVendingClick:
+	callfunc "F_VendorMain","[ ^FF00EE Vendedor de Prontera ^000000]",8;
+	end;
+OnInit:
+	showvend( "Vendedor#card_prontera", 1, "[Cartas]" );
+	end;
+}

@@ -1,0 +1,211 @@
+1@gl_k,149,106,4	script	Feiticeira#1	4_F_HIMEL2,{
+mes "[Feiticeira]";
+mes "Você é corajoso, veio aqui para conseguir os [^CC00FFCristai Temporais^000000], correto?";
+next;
+mes "[Feiticeira]";
+mes "Ok, mas para isso você precisará derrotar meu bixinho de estimação [^FF0000Amdarais^000000].";
+next;
+mes "[Feiticeira]";
+mes "Eu posso invoca-lo pra você, para isso eu preciso de 50 un. de [^00CC00Feitiço Coagulado^000000]. Você os tem?";	
+	switch(select("Sim:Não:")){
+	
+	case 1:
+		if (countitem(6608) > 49) {
+		mes "[Feiticeira]";
+		mes "Certo, passe eles para mim, e trarei [^FF0000Amdarais^000000] até você.";
+		next;
+		mes "[Feiticeira]";
+		mes "Boa sorte.";
+		delitem 6608,50;
+		monster "1@gl_k",149,96,"Amdarais",2476,1;
+		close;		
+			}
+		mes "[Feiticeira]";
+		mes "Desculpe, mas você precisa ter no mínimo 50 un. de [^00CC00Feitiço Coagulado^000000].";
+		next;
+		mes "[Feiticeira]";
+		mes "Consiga-os e traga para mim que invocarei [^FF0000Amdarais^000000]. Até logo.";
+		close;		
+		
+	case 2:
+			mes "[Feiticeira]";
+			mes "Você não tem [^00CC00Feitiço Coagulado^000000] para invocar [^FF0000Amdarais^000000]? .";
+			next;
+			mes "[Feiticeira]";
+			mes "Para consegui-los basta derrotas os monstros presentes aqui neste mapa, todos eles fornecem o item.Boa sorte, até logo.";
+			close;
+			end;
+}
+}
+
+// ====== Botas =============
+prontera,168,162,3	script	Feiticeira#2	4_F_HIMEL,{
+	mes "[Feiticeira]";
+	mes "Muito bem, "+strcharinfo(0)+", você veio até aqui para obter as [^FF0000Botas Temporais^000000], não é mesmo?";
+	next;
+	mes "[Feiticeira]";
+	mes "Pois bem, eu posso fazê-las pra você, mas para isso eu preciso que você traga para mim 100 un. de [^CC00FFCristal Temporal^000000].";
+	next;
+	mes "[Feiticeira]";
+	mes "Eu posso fornecer ATRIBUTOS a ela também, com mais 100 un. de [^CC00FFFeitiço Coagulado^000000] Eu as deixou como você quiser.";
+	next;
+	mes "[Feiticeira]";
+	mes "O que você quer?.";
+	next;
+	switch(select("Obter as Botas:Nada:Encantar")){
+	
+		case 1:
+			if (countitem(6607) > 99) {
+			mes "[Feiticeira]";
+			mes "Atenderei seu desejo, aqui está suas [^FF0000Botas Temporais^000000].";
+			delitem 6607,100; //
+			getitem 2499,1;
+			next;
+			mes "[Feiticeira]";
+			mes "Para encata-las, volte até mim com mais 100 un. de [^CC00FFFeitiço Coagulado^000000] que eu as encatarei. Até breve";
+			close;
+			}
+			mes "[Feiticeira]";
+			mes "Desculpe, mas você precisa ter no mínimo 100 un. de [^CC00FFCristal Temporal^000000].";
+			next;
+			mes "[Feiticeira]";
+			mes "Me encontre na Velha Glast Heim e eu o ajudo a conseguir. Até logo.";
+			close;
+		
+		case 2:
+			mes "[Feiticeira]";
+			mes "Tudo bem, volte quando precisar de mim!";
+			close;
+			
+		case 3:
+				mes "[Feiticeira]";
+				mes "Eu vou precisar das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000]..";
+				next;
+				mes "[Feiticeira]";
+				mes "Indique com qual atributo você deseja receber.";
+				next;
+				switch(select("FOR:AGI:VIT:INT:DES:SOR")){
+					case 1:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22006,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;
+				
+					case 2:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22010,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;				
+				
+					case 3:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22007,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;				
+			
+					case 4:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22009,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;				
+			
+					case 5:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22008,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;				
+			
+					case 6:
+					if (countitem(6608) > 99) 
+					if (countitem(2499) > 0) {
+					mes "[Feiticeira]";
+					mes "Muito bem.";
+					delitem 6608,100; 
+					delitem 2499,1;
+					getitem	22011,1;
+					next;
+					mes "[Feiticeira]";
+					mes "Aqui estão suas botas, faça bom uso.";
+					close;
+					end;
+				}
+				mes "[Feiticeira]";
+				mes "Você não tem todos os itens necessários.";
+				next;
+				mes "Eu preciso das suas [^FF0000Botas Temporais^000000] e 100 un. de [^CC00FFFeitiço Coagulado^000000].";
+				close;				
+			
+			
+			}
+		}			
+}

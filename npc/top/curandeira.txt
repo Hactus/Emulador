@@ -1,0 +1,209 @@
+//===== Cronus Script ========================================
+//= Buffer
+//===== Por: =================================================
+//= Euphy
+//===== Versão Atual: ========================================
+//= 1.1
+//===== Descrição: ===========================================
+//= Recupera HP e SP, dá buffs e com opção de delay
+//= Adicionado Buffs para groupid maior q 0
+//= Adicionado locomoção e fala do npc
+//===== Changelog: ===========================================
+//= 1.0 First version. [Euphy]
+//= 1.0a Traduzido. [mkbu95]
+//= 1.1 Script Otimizado. [ICantStop/Infernool]
+//= 1.2 Adicionado Balão. [ICantStop/Infernool]
+//============================================================
+
+-	script	Buffer	-1,{
+
+	set @ServerName$, "InfinityRO"; 	//Nome de Seu Servidor que aparecera quando npc falar
+	set .@Price,	0;	// Zeny necess�rio para curar. 0 = Gratuito
+	set .@Buffs,	1;	// Dar buffs b�sicos ao jogador? (1 = Sim/0 = N�o)
+	set .@Delay,	5	;	// Delay para usar o npc, em segundos. 0 = Desativado
+	            if(getgroupid() == 0) {
+			specialeffect2 223;
+			specialeffect2 325;
+			sc_start 30,3600000,10;        // Ben褯					Dura褯: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura褯: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura褯: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura褯: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura褯: 600 seg.
+			sc_start 41,3600000,10;          // Gl󲩡					Dura褯: 600 seg.
+			//sc_start 39,3600000,10;           // Kyrie Eleison				Dura褯: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura褯: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura褯: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura褯: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura褯: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura褯: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura褯: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			percentheal 100,100;
+			if( getbrokenid(1) ) repairall;
+			dispbottom "Obrigado por jogar no "+ @ServerName$ +"!";
+			emotion 51; }
+			
+            if(getgroupid() == 1) {
+			specialeffect2 238;
+			specialeffect2 325;
+			sc_start 30,3600000,10;        // Ben褯					Dura褯: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura褯: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura褯: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura褯: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura褯: 600 seg.
+			sc_start 41,3600000,10;          // Gl󲩡					Dura褯: 600 seg.
+			//sc_start SC_ASPERSIO,3600000,10;        // Aspersio					Dura褯: 600 seg.
+			//sc_start 39,3600000,10;           // Kyrie Eleison				Dura褯: 600 seg.
+			//sc_start SC_PROTECTWEAPON,3600000,10;   // Revestimento Arma			Dura褯: 600 seg.
+			//sc_start SC_REFLECTSHIELD,3600000,10;   // Escudo Refletor			Dura褯: 600 seg.
+			sc_start SC_RENOVATIO,3600000,10;                 // Renovatio		Dura褯: 600 seg.
+			sc_start SC_CP_WEAPON,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_SHIELD,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_ARMOR,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_HELM,3600000,10;                 // FP		Dura褯: 600 seg.
+			//sc_start SC_EXTRACT_SALAMINE_JUICE,3600000,10;                 // Suco Celular Enriquecido		Dura褯: 600 seg.
+			sc_start 23,3600000,10;                 // Concentra褯		Dura褯: 600 seg.
+			//sc_start 110,3600000,5;                 // Dedica褯				Dura褯: 600 seg.
+			//sc_start 122,3600000,10;                // Golpe Estilha袮te		Dura褯: 600 seg.
+			//sc_start 156,3600000,1;                 // For衠Violentima		Dura褯: 600 seg.
+			sc_start 121,3600000,10;	               // Caminho do Vento			Dura褯: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura褯: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura褯: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura褯: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura褯: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura褯: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura褯: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			percentheal 100,100;
+		if( getbrokenid(1) ) repairall;
+    dispbottom "Obrigado por jogar no "+ @ServerName$ +"!";
+    emotion 51;
+    end;			}
+	
+        if(getgroupid() > 1) {
+			sc_start 30,3600000,10;        // Ben褯					Dura褯: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura褯: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura褯: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura褯: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura褯: 600 seg.
+			sc_start 41,3600000,10;          // Gl󲩡					Dura褯: 600 seg.
+			//sc_start SC_ASPERSIO,3600000,10;        // Aspersio					Dura褯: 600 seg.
+			//sc_start 39,3600000,10;           // Kyrie Eleison				Dura褯: 600 seg.
+			//sc_start SC_PROTECTWEAPON,3600000,10;   // Revestimento Arma			Dura褯: 600 seg.
+			//sc_start SC_REFLECTSHIELD,3600000,10;   // Escudo Refletor			Dura褯: 600 seg.
+			sc_start SC_RENOVATIO,3600000,10;                 // Renovatio		Dura褯: 600 seg.
+			sc_start SC_CP_WEAPON,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_SHIELD,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_ARMOR,3600000,10;                 // FP		Dura褯: 600 seg.
+			sc_start SC_CP_HELM,3600000,10;                 // FP		Dura褯: 600 seg.
+			//sc_start SC_EXTRACT_SALAMINE_JUICE,3600000,10;                 // Suco Celular Enriquecido		Dura褯: 600 seg.
+			sc_start 23,3600000,10;                 // Concentra��o		Dura褯: 600 seg.
+			//sc_start 110,3600000,5;                 // Dedica��o				Dura褯: 600 seg.
+			//sc_start 122,3600000,10;                // Golpe Estilha袮te		Dura褯: 600 seg.
+			//sc_start 156,3600000,1;                 // For衠Violentima		Dura褯: 600 seg.
+			sc_start 121,3600000,10;	               // Caminho do Vento			Dura褯: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura��o: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura��o: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura��o: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura��o: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura��o: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura��o: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			percentheal 100,100;
+		end;		}
+
+
+}
+
+prontera,160,189,3	duplicate(Buffer)	Buffer#pront	4_F_ARUNA_POP
+morocc,159,96,5	duplicate(Buffer)	Buffer#moc	4_F_ARUNA_POP
+ayothaya,155,111,5	duplicate(Buffer)	Buffer#ayo	4_F_ARUNA_POP
+geffen,121,61,5	duplicate(Buffer)	Buffer#gef	4_F_ARUNA_POP
+umbala,94,162,5	duplicate(Buffer)	Buffer#umb	4_F_ARUNA_POP
+payon,180,105,5	duplicate(Buffer)	Buffer#pay	4_F_ARUNA_POP
+alberta,185,144,5	duplicate(Buffer)	Buffer#alb	4_F_ARUNA_POP
+aldebaran,134,123,5	duplicate(Buffer)	Buffer#alde	4_F_ARUNA_POP
+izlude,125,118,5	duplicate(Buffer)	Buffer#izl	4_F_ARUNA_POP
+xmas,149,136,5	duplicate(Buffer)	Buffer#xmas	4_F_ARUNA_POP
+comodo,188,162,5	duplicate(Buffer)	Buffer#com	4_F_ARUNA_POP
+amatsu,200,80,5	duplicate(Buffer)	Buffer#ama	4_F_ARUNA_POP
+gonryun,164,130,5	duplicate(Buffer)	Buffer#gon	4_F_ARUNA_POP
+yuno,149,183,5	duplicate(Buffer)	Buffer#yuno	4_F_ARUNA_POP
+niflheim,188,180,5	duplicate(Buffer)	Buffer#nif	4_F_ARUNA_POP
+louyang,225,103,5	duplicate(Buffer)	Buffer#lou	4_F_ARUNA_POP
+rachel,131,117,5	duplicate(Buffer)	Buffer#rac	4_F_ARUNA_POP
+veins,212,124,5	duplicate(Buffer)	Buffer#vei	4_F_ARUNA_POP
+moscovia,221,192,5	duplicate(Buffer)	Buffer#mosc	4_F_ARUNA_POP
+einbech,179,129,5	duplicate(Buffer)	Buffer#ein	4_F_ARUNA_POP
+einbroch,68,202,5	duplicate(Buffer)	Buffer#ebc	4_F_ARUNA_POP
+lighthalzen,161,103,5	duplicate(Buffer)	Buffer#lhz	4_F_ARUNA_POP
+hugel,90,148,5	duplicate(Buffer)	Buffer#hug	4_F_ARUNA_POP
+
+jupe_ele,43,40,3	duplicate(Buffer)	Buffer#test	4_F_ARUNA_POP
+
+
+
+// Duplicates (Renewal)
+//============================================================
+brasilis,194,221,6	duplicate(Buffer)	Buffer#bra	4_F_ARUNA_POP
+dewata,195,187,4	duplicate(Buffer)	Buffer#dew	4_F_ARUNA_POP
+dicastes01,201,194,4	duplicate(Buffer)	Buffer#dic	4_F_ARUNA_POP
+ecl_in01,45,60,4	duplicate(Buffer)	Buffer#ecl	4_F_ARUNA_POP
+malangdo,132,114,6	duplicate(Buffer)	Buffer#mal	4_F_ARUNA_POP
+malaya,205,205,6	duplicate(Buffer)	Buffer#ma	4_F_ARUNA_POP
+mora,55,152,4	duplicate(Buffer)	Buffer#mora	4_F_ARUNA_POP
+1@gef_in,34,170,6	duplicate(Buffer)	Buffer#2gef	4_F_ARUNA_POP
+1@gef_in,160,97,6	duplicate(Buffer)	Buffer#1gef	4_F_ARUNA_POP
+vip,72,255,5	duplicate(Buffer)	Buffer#vip	4_F_ARUNA_POP
+bat_room,160,154,3	duplicate(Buffer)	Buffer#bg	4_F_ARUNA_POP

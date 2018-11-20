@@ -1,0 +1,264 @@
+prontera,166,202,0	script	Bruxa	BATHORY,{
+	set .b$,	"[Bruxa]";
+	set .n$,	"["+strcharinfo(0)+"]";
+	
+	mes .b$;
+	mes "Olá jovem! Eu amo essa epoca de Halloween! É perfeita para contar histórias !";
+	next;
+	callfunc	"Hallow";
+	end;
+	}
+	
+function	script	Hallow	{
+	set .b$,	"[Bruxa]";
+	set .n$,	"["+strcharinfo(0)+"]";
+	mes .b$;
+	mes "Eu sei algumas histórias interessantes, e são todas reais hihihihi.";
+	mes "Você quer ouvi-las?";
+	switch(select("Gostosuras ou Travessuras:Homem da Lanterna:Não, vou embora.")){
+	case 1:
+		callfunc	"caos1";
+		end;
+	case 2:
+		callfunc	"caos2";
+		end;
+	case 3:
+	if(halloween	==	1){
+		mes .n$;
+		mes "Eu não acredito mais em histórias assombradas dona... Adeus.";
+		next;
+		mes "...";
+		mes "Hihihihi";
+		next;
+		mes .n$;
+		mes "Huh?";
+		next;
+		mes .b$;
+		mes "Então é melhor começar a acreditar em histórias assombradas senh"+strcharinfo(2)+"r "+strcharinfo(0)+", ESTÁ VIVENDO UMA!";
+		next;
+		warp "niflheim",348,255;
+		close;
+		}
+		mes .n$;
+		mes "Hm, não não. Eu vou embora. Até mais.";
+		next;
+		mes .b$;
+		mes "Um triste halloween pra você Muhuhuhhahaha!";
+		next;
+		atcommand	"@die";
+		close;
+		}
+
+	}
+function	script	caos1	{
+	
+		mes .b$;
+		mes "Haaa essa história é uma travessuuuuura...";
+		next;
+		mes .b$;
+		mes "Há alguns séculos atrás, todo dia de halloween, um velhinho de Geffen fechava-se em sua casa para não ter que antender as crianças pentelhas que batiam em sua porta para lhe pedir gostosuras ou travessuras.";
+		next;
+		mes "Até que certo dia, ele não teve escolha, duas crianças vieram em sua casa e começaram a jogar pedras em suas janelas, tocar a campainha interruptamente, até que ele abriu a porta, pegou as crianças e as trancou em sua casa.";
+		next;
+		mes "Ninguém sabe até hoje o que foi feito das crianças. Após o velho falecer, todos que moravam na casa, relataram que viam as crianças, pertubando a viamida dos moradores.";
+		next;
+		mes "Até hoje a casa está abandonada, ninguém teve coragem de entrar lá e descobrir o mistério.";
+		next;
+		mes .b$;
+		mes "A proposito. Nessa Epoca do Ano, é normal  os cristãos ir de vila em vila pedindo *bolos de alma*."; 
+		next;
+		mes .b$;
+		mes "Para cada bolo que ganhasse, a pessoa deveria fazer uma oração por um parente morto do doador.";
+		next;
+		mes .b$;
+		mes "Acreditava-se que as almas permaneciam no limbo por um certo tempo após sua morte e que as orações ajudavam-na a ir para o céu.";
+		next;
+		mes .b$;
+		mes "*Suspiro*";
+		next;
+		mes .b$;
+		mes "Infelismente temos  um  luto hoje atrás da  catedral de  prontera. Talves Você possa passar lá r dar-lhes suas condolências.";
+		halloween	=	1;
+		close2;
+		callfunc	"Hallow";
+}
+
+function	script	caos2	{
+		mes .b$;
+		mes "Um homem chamado Jack, um alcoólatra grosseiro, em um dia, 31 de Outubro bebeu excessivamente e o diabo veio levar sua alma.";
+		next;
+		mes .b$;
+		mes "Desesperado, Jack implora por mais um copo de bebida e o diabo concede.";
+		next;
+		mes .b$;
+		mes "Jack estava sem dinheiro para o último trago e pede ao Diabo que se transformasse em uma moeda. O Diabo concorda.";
+		next;
+		mes .b$;
+		mes "Mal vê a moeda sobre a mesa, Jack guarda-a na carteira, que tem um fecho em forma de cruz.";
+		next;
+		mes .b$;
+		mes "Desesperado, o Diabo implora para sair e Jack propõe um trato: libertá-lo em troca de ficar na Terra por mais um ano inteiro.";
+		next;
+		mes .b$;
+		mes "Sem opção, o Diabo concorda.";
+		next;
+		mes .n$;
+		mes "E agora? Jack ainda está na Terra?";
+		next;
+		mes .b$;
+		mes "Há rumores que  nessa epoca ele costuma aparecer perto do bar de  prontera.";
+		next;
+		mes .n$;
+		mes "Hmm...certo...interessante.";
+		close2;
+		callfunc	"Hallow";
+}
+
+prontera,264,343,0	script	Roselinda	4_F_STARFISHGIRL,{
+	set	.c$,	getcharid(0);
+	if(rose	==	1){
+	if(countitem(539)	>	499)||	(countitem(529)	>	499)	||	(countitem(530)	>	499){
+	mes "[Roselinda]";
+	mes "Ótimo! Você trouxe tudo!";
+	delitem	539,500;
+	delitem	529,500;
+	delitem	530,500;
+	next;
+	mes "[Roselinda]";
+	mes "Muito obrigada!";
+	next;
+	mes "[Roselinda]";
+	mes "Tome, isso aqui é por me ajudar.";
+	getitem	20118,1;
+	getitem	19770,1;
+	next;
+	mes "[Roselinda]";
+	mes	"Você é mesmo um anjo!";
+	next;
+	mes "...";
+	next;
+	mes ".....";
+	next;
+	mes ".........";
+	next;
+	mes "Eu não gosto de anjos.";
+	close;
+	hideonnpc "Roselinda";
+	monster	"prontera",264,343,"Alma Penada",1192,10;
+	monster	"prontera",264,343,"Zumbi",1865,20;
+	end;
+	}
+	mes "[Roselinda]";
+	mes "Você não trouxe tudo o que preciso!";
+	next;
+	mes "[Roselinda]";
+	mes "Me traga isso.";
+	mes ""+getitemname(539)+" x 500";
+	mes ""+getitemname(529)+" x 500";
+	mes ""+getitemname(540)+" x 500";
+	next;
+	mes "[Roselinda]";
+	mes "Os batedores estão espalhados pela cidade. Tome cuidado!";
+	close;
+	}
+	mes "[Roselinda]";
+	mes "Meu noivo morreu tem 5 dias...Até hoje não consigo acreditar...";
+	next;
+	mes "[Roselinda]";
+	mes "Ele gostava de doces, bolos, eu tinha muitos para dar a ele. Mas os Batedores levaram tudo.";
+	next;
+	mes "[Roselinda]";
+	mes "Você pode me ajudar a recupera-los?";
+	next;
+	switch(select("Claro!:Não...estou ocupado.")){
+	case 1:
+	mes "[Roselinda]";
+			mes "Perfeito!";
+			next;
+			mes "[Roselinda]";
+			mes "Me traga isso.";
+			mes ""+getitemname(539)+" x 500";
+			mes ""+getitemname(529)+" x 500";
+			mes ""+getitemname(540)+" x 500";
+			next;
+		mes "[Roselinda]";
+		mes "Os batedores estão espalhados pela cidade. Tome cuidado!";
+		rose	=	1;
+		close;
+	case 2:
+			mes "[Roselinda]";
+			mes "Tudo bem...";
+			close;			
+	}
+}
+prontera,266,346,1	script	Túmulo#222	4_NFCOFFIN,{}
+
+prontera,140,222,4	script	Jack	JAKK,{
+	if(allan	==	1){
+	if(countitem(970)	<	50)	||	(countitem(1041)	<	50)	||	(countitem(535)	<	300)	||	(countitem(1062)	<	100)	||
+	(countitem(1101)	<	10)	||	(countitem(2608)	<	1)	||	(countitem(523)	<	1){
+	mes "[Jack]";
+	mes "Você não me trouxe tudo!";
+	next;
+	mes "[Jack]";
+	mes "Eu preciso disso.";
+	next;
+	mes ""+getitemname(970)+" x 50";
+	mes ""+getitemname(1041)+" x 50";
+	mes ""+getitemname(535)+" x 300";
+	mes ""+getitemname(1062)+" x 100";
+	mes ""+getitemname(1101)+" x 10";
+	mes ""+getitemname(2608)+" x 1";
+	mes ""+getitemname(523)+" x 1";	
+	close;
+	}
+	mes "[Jack]";
+	mes "Ótimo!";
+	mes "Entregue-me os itens.";
+	next;
+	mes "[Jack]";
+	mes "Aqui está!";
+	next;
+	delitem	970,50;
+	delitem	1041,50;
+	delitem	535,300;
+	delitem 1062,100;
+	delitem 1101,10;
+	delitem 2608,1;
+	delitem 523,1;
+	getitem 19542,1;
+	getitem	19917,1;
+	close;
+	end;
+	}
+	
+	mes "[Jack]";
+	mes "Aaah achei que aqui era o bar que eu costumava vir tomar um TRAGO!";
+	next;
+	mes "[Jack]";
+	mes "Eu não enxergo muito bem, por sorte eu tenho essa lanterna comigo...";
+	next;
+	mes "Eeeeei você!";
+	next;
+	mes "[Jack]";
+	mes "Você não gostaria de ter uma lanterna? É muito útil nessa escuridão que está Prontera!";
+	switch(select("Claro, por que não?:Não, obrigado.")){
+	case 1:
+	mes "[Jack]";
+	mes "Ok, me traga os seguintes itens:";
+	next;
+	mes ""+getitemname(970)+" x 50";
+	mes ""+getitemname(1041)+" x 50";
+	mes ""+getitemname(535)+" x 300";
+	mes ""+getitemname(1062)+" x 100";
+	mes ""+getitemname(1101)+" x 10";
+	mes ""+getitemname(2608)+" x 1";
+	mes ""+getitemname(523)+" x 1";	
+	allan	=	1;
+	close;
+	case 2:
+	mes "[Jack]";
+	mes "Então fique cego!";
+	close;
+	}
+}

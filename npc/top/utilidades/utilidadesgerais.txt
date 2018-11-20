@@ -1,0 +1,27 @@
+prontera,164,175,3	script	Utilidades Gerais	76,{
+
+mes "Escolha algum de meus serviços:";
+switch(select("Aluguéis","Removedor de Cartas","Resetador","Habilidades de Platina")) {
+
+case 1:
+next;
+doevent "Aluguel::OnAluguel";
+end;
+
+case 2:
+next;
+doevent "Removedora de Cartas::OnRemovedor";
+end;
+
+case 3:
+next;
+doevent "Resetadora::OnReset";
+end;
+
+case 4:
+next;
+doevent "Platinas::OnPlatinas";
+end;
+
+}
+}

@@ -1,0 +1,241 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   1ª Arena de Duelos                                               .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 1.1	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Eventos Relacionado a 1ª Arena de Duelos.                        .
+  *---------------------------------------------------------------------*/
+-	script	Dueling_01	-1,{
+
+//OnInit:
+//	if( !getmapusers("quiz_02") )
+//		donpcevent "Dueling_01::OnEnd";
+//	else if( getmapusers("quiz_02") < 2 )
+//		donpcevent "Dueling_01::OnCheck";
+//	end;
+
+OnStart:
+	set $dueling_arena_1, 1;
+	set $dueling01_player_1$, "";
+	set $dueling01_aid_1, 0;
+	set $dueling01_status_1, 0;
+	set $dueling01_player_2$, "";
+	set $dueling01_aid_2, 0;
+	set $dueling01_status_2, 0;
+	set $dueling01_agree_1, 0;
+	set $dueling01_agree_2, 0;
+	set $dueling01_bid_progress, 0;
+	deletearray $dueling01_bid_1, 127;
+	deletearray $dueling01_bid_2, 127;
+	enablenpc "#dueling01_player_warp";
+	donpcevent "Dueling_01::OnDueling01B01E";
+	setwall "quiz_02", 73, 73, 5, 0, 0, "dueling01_w01";
+	setwall "quiz_02", 73, 53, 5, 0, 0, "dueling01_w02";
+	initnpctimer "#dueling01_timer_check";
+	end;
+	
+OnTimer1000:
+	mapannounce "quiz_02", "[Duelo]: Resta 3 segundos para começar o duelo!", bc_map, "0x00FF00";
+	donpcevent strnpcinfo(0)+"Dueling_01::OnDueling01E01";
+	end;
+
+OnTimer2000:
+	mapannounce "quiz_02", "[Duelo]: Resta 2 segundo para começar o duelo!", bc_map, "0x00FF00";
+	donpcevent strnpcinfo(0)+"Dueling_01::OnDueling01E01";
+	end;
+	
+OnTimer3000:
+	donpcevent "::OnDueling01E02";
+	delwall "dueling01_w01";
+	delwall "dueling01_w02";
+	mapannounce "quiz_02", "[Duelo]: O Duelo começou, boa sorte!", bc_map, "0x00FF00";
+	end;
+	
+OnEnd:
+	warp "quiz_02", 69, 80;
+	set $dueling_arena_1, 0;
+	set $dueling01_player_1$, "";
+	set $dueling01_aid_1, 0;
+	set $dueling01_status_1, 0;
+	set $dueling01_player_2$, "";
+	set $dueling01_aid_2, 0;
+	set $dueling01_status_2, 0;
+	set $dueling01_agree_1, 0;
+	set $dueling01_agree_2, 0;
+	set $dueling01_bid_progress, 0;
+	deletearray $dueling01_bid_1, 127;
+	deletearray $dueling01_bid_2, 127;
+	stopnpctimer "#dueling01_timer_check";
+	donpcevent "Recrutador de Duelos#d_pvp01::OnStartArena";
+	end;
+
+OnPCLogoutEvent:
+	.@flaglogout = 1;
+OnPCDieEvent:
+	.@flaglogout = (.@flaglogout?1:0);
+	set .@charname$, strcharinfo(0);
+	
+	sleep 2000;
+	.@p = (.@charname$==$dueling01_player_1$?1:(.@charname$==$dueling01_player_2$?2:0));
+	
+	if( !.@p )
+		end;
+	
+	if( .@flaglogout && .@p == 1 )
+		set $dueling01_status_1, 0;
+	else if( .@flaglogout && .@p == 2 )
+		set $dueling01_status_2, 0;
+		
+	donpcevent "Dueling_01::OnCheck";
+	end;
+
+OnCheck:
+	sleep 2000;
+	getmapxy .@map_1$, .@x, .@y, 0, $dueling01_player_1$;
+	getmapxy .@map_2$, .@x, .@y, 0, $dueling01_player_2$;
+	
+	if( .@map_1$ != "quiz_02" || getcharisdead($dueling01_player_1$) )
+		set $dueling01_status_1, 0;
+		
+	if( .@map_2$ != "quiz_02" || getcharisdead($dueling01_player_2$) )
+		set $dueling01_status_2, 0;
+	
+	if( $dueling_arena_1 < 4 && !$dueling01_status_1 && !$dueling01_status_2 )
+	{
+		mapannounce "quiz_02", "Ambos jogadores empataram não houve vencedores.", bc_map, "0x00FF00";
+		set $dueling_arena_1, 4;
+		sleep 2000;
+		if( attachrid($dueling01_aid_1) )
+		{
+			if( $dueling01_bid_1[0] == 1 )
+				getitem2 $dueling01_bid_1[1], $dueling01_bid_1[2], $dueling01_bid_1[4], $dueling01_bid_1[3], $dueling01_bid_1[5], $dueling01_bid_1[6], $dueling01_bid_1[7], $dueling01_bid_1[8], $dueling01_bid_1[9];
+			else if( $dueling01_bid_1[0] == 2 )
+				set Zeny, Zeny + $dueling01_bid_1[2];
+				
+			detachrid;
+		}
+			
+		if( attachrid($dueling01_aid_2) )
+		{
+			if( $dueling01_bid_2[0] == 1 )
+				getitem2 $dueling01_bid_2[1], $dueling01_bid_2[2], $dueling01_bid_2[4], $dueling01_bid_2[3], $dueling01_bid_2[5], $dueling01_bid_2[6], $dueling01_bid_2[7], $dueling01_bid_2[8], $dueling01_bid_2[9];
+			else if( $dueling01_bid_2[0] == 2 )
+				set Zeny, Zeny + $dueling01_bid_2[2];
+					
+			detachrid;
+		}
+		sleep 2000;
+		donpcevent "Dueling_01::OnEnd";
+	}
+	else if( $dueling_arena_1 > 0 && $dueling_arena_1 < 4 && (!$dueling01_status_1 || !$dueling01_status_2) )
+	{
+		if( $dueling01_status_1 )
+			.@charname$ = $dueling01_player_1$;
+		else if( $dueling01_status_2 )
+			.@charname$ = $dueling01_player_2$;
+		else {
+			donpcevent "Dueling_01::OnEnd";
+			end;
+		}
+			
+		mapannounce "quiz_02", "O Jogador " + .@charname$ + " venceu o duelo!", bc_map, "0x00FF00";
+		.@last = $dueling_arena_1;
+		set $dueling_arena_1, 3;
+		
+		if( .@last < 2 )
+		{
+			warpchar "quiz_02", 97, 100, getcharid(0,.@charname$);
+		}
+	}
+	end;
+}
+
+// Checagem de tempo para finalizações limpeza da arena.
+-	script	#dueling01_timer_check	-1,{
+OnInit:
+	if( $dueling_arena_1 )
+		initnpctimer;
+	end;
+
+OnTimer60000:
+	stopnpctimer;
+	if( !getmapusers("quiz_02") )
+		donpcevent "Dueling_01::OnEnd";
+	else
+		initnpctimer;
+	end;
+}
+
+// Efeitos do tempo.
+quiz_02,79,98,0	script	#dueling01_effect01	HIDDEN_WARP_NPC,{
+	end;	
+OnDueling01E01:
+	specialeffect EF_CHANGECOLD;
+	end;
+	
+OnDueling01E02:
+	specialeffect EF_CHANGEPOISON;
+	end;
+}
+
+quiz_02,79,99,0	duplicate(#dueling01_effect01)	#dueling01_effect02	HIDDEN_WARP_NPC
+quiz_02,79,100,0	duplicate(#dueling01_effect01)	#dueling01_effect03	HIDDEN_WARP_NPC
+quiz_02,79,101,0	duplicate(#dueling01_effect01)	#dueling01_effect04	HIDDEN_WARP_NPC
+quiz_02,120,98,0	duplicate(#dueling01_effect01)	#dueling01_effect05	HIDDEN_WARP_NPC
+quiz_02,120,99,0	duplicate(#dueling01_effect01)	#dueling01_effect06	HIDDEN_WARP_NPC
+quiz_02,120,100,0	duplicate(#dueling01_effect01)	#dueling01_effect07	HIDDEN_WARP_NPC
+quiz_02,120,101,0	duplicate(#dueling01_effect01)	#dueling01_effect08	HIDDEN_WARP_NPC
+
+// Teleportador que define o lado que os jogadores vão se encontrar.
+quiz_02,99,100,0	script	#dueling01_player_warp	HIDDEN_NPC,5,5,{
+	end;
+
+OnInit:
+	disablenpc "#dueling01_player_warp";
+	end;
+
+OnTouch:
+	if( $dueling01_player_1$ == "" )
+	{
+		set $dueling01_aid_1, getcharid(3);
+		set $dueling01_player_1$, strcharinfo(0);
+		set $dueling01_status_1, 1;
+		warp "quiz_02", 73, 73;
+	}
+	else if( $dueling01_player_2$ == "" )
+	{
+		set $dueling01_aid_2, getcharid(3);
+		set $dueling01_player_2$, strcharinfo(0);
+		set $dueling01_status_2, 1;
+		warp "quiz_02", 73, 52;
+	}
+	else {
+		warp "quiz_02", 55, 89;
+	}
+
+	if( $dueling01_player_1$ != "" && $dueling01_player_2$ != "" )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// MapFlags
+quiz_02	mapflag	noreturn
+quiz_02	mapflag	nosave
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nowarpto

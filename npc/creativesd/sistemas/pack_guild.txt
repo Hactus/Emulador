@@ -1,0 +1,578 @@
+/*.-----------------------------------------------------------------.
+  .    ____                          __                             .
+  .   /\  _`\                       /\ \__  __                      .
+  .   \ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __      .
+  .    \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\    .
+  .     \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/    .
+  .      \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\   .
+  .       \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/   .
+  .                                                                 .
+  .          2014~2018 © Creative Services and Development          .
+  .                      www.creativesd.com.br                      .
+  .-----------------------------------------------------------------.
+  . Script:                                                         .
+  .    Pack Guild                                                   .
+  .-----------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                            Versão: 1.0  .
+  .                                                                 .
+  . Compátivel:	rAthena e derivações.                               .
+  .-----------------------------------------------------------------.
+  . Descrição:                                                      .
+  .    Entrega itens de Clã para os Usuários.                       .
+  *-----------------------------------------------------------------*/
+// Nota 1:
+//	0 (zero) desativa esta opção.
+// Nota 2:
+//	Configuração deve ser feita em segundos.
+// Nota 3:
+//	Quantidade de vezes em que deve ser repetido o processo.
+// Nota 4:
+//  Ao iniciar a Guerra do Emperium, os tempos para registrar novamente
+//  serão removidos.
+
+/*
+CREATE TABLE IF NOT EXISTS `pack_guild` (
+  `guild_id` int(11) unsigned NOT NULL,
+  `count` int(11) NOT NULL default '0',
+  `expire_time` int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`guild_id`)
+) ENGINE=MyISAM;
+
+CREATE TABLE IF NOT EXISTS `pack_guild_players` (
+  `char_id` int(11) unsigned NOT NULL,
+  `flag` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',,
+  `expire_time` int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`char_id`)
+) ENGINE=MyISAM;
+*/
+
+-	script	Pack Guild#main	-1,{
+OnInit:
+	// Mínimo de Jogadores que um Clã deve ter para começar a receber itens.
+	set .MinPlayer, 3;
+	
+	// Marcar Registro de Clã? [Nota 1 e 3]
+	// Desta forma apenas Clãs com seus líderes que esteve x vezes on-line na Guerra do Emperium poderão receber seu Pack Guild.
+	set .MarkGuild, 3;
+	
+	// Quem pode marcar o registro?
+	// 0: Qualquer membro do Clã.
+	// 1: Somente o Líder do Clã.
+	set .MarkType, 1;
+
+	// Marcação de Registro de Clã só podem ser feita na Guerra do Emperium? [Nota 1 e 4]
+	set .MarkInWoe, 1;
+	
+	// Tempo para bloqueio de uma nova marcação de registro [Nota 2]
+	// Caso utilize marcação em Guerra do Emperium, para melhor experiência, ponha o valor máximo de tempo de duração de um das Guerras do seu servidor.
+	// Min: 300 (5 minutos)
+	// Padrão: 7200 (2 horas)
+	set .MarkTimer, 7200;
+	
+	// Tempo que os jogadores poderão pegar seus itens novamente. [Nota 1 e 2]
+	// Padrão: 2592000 (30 dias)
+	set .RechargeTimer, 2592000;
+	
+	// Configurações de Itens para Líder
+	setarray .MasterItems[0],
+		// ID, Quantidade, Tempo para Expirar? [Nota 1]
+		// Tempo para Expirar é de acordo com o RechargeTimer
+		501, 200, 1,		// Poção Vermelha
+		5170, 1, 1,			// Boina Alada
+		2115, 1, 1,			// Escudo da Valquíria
+		2211, 1, 1,			// Óculos Escuros
+		2624, 1, 1,			// Luvas
+		2528, 1, 1,			// Cachecol de Lã
+		2424, 1, 1,			// Sapatos da Maré
+		12208, 1, 1			// Manual de Combate
+	;
+	
+	// Configurações de Itens para Membros
+	setarray .MembersItems[0],
+		// ID, Quantidade, Tempo para Expirar [Nota 1 e 2]
+		501, 100, 1,		// Poção Vermelha
+		5170, 1, 1,			// Boina Alada
+		2115, 1, 1,			// Escudo da Valquíria
+		2211, 1, 1,			// Óculos Escuros
+		2624, 1, 1,			// Luvas
+		2528, 1, 1,			// Cachecol de Lã
+		2424, 1, 1,			// Sapatos da Maré
+		12208, 1, 1			// Manual de Combate
+	;
+	
+	// ! Não altere por segurança !
+	if( .MarkTimer < 300 )
+		set .MarkTimer, 300;
+	end;
+	
+OnGuildEnter:
+	set .@CID, getcharid(0);
+	set .@GID, getcharid(2);
+	set .@MasterID, getguildmasterid(.@GID);
+	sleep 3000; // Sleep NPC for Attemp
+	getguildmember .@GID, 1, .@members[0];
+	set .@CurrentPlayers, $@guildmembercount;
+	set .@MinPlayer, getvariableofnpc(.MinPlayer, "Pack Guild#main");
+	if( .@MinPlayer && .@CurrentPlayers < .@MinPlayer )
+		end;
+	
+	set .@Mark, getvariableofnpc(.MarkGuild, "Pack Guild#main");
+	set .@GCount, callfunc("pack_guild", .@GID, 0);
+	if( .@Mark && .@GCount < .@Mark )
+		end;
+		
+	for( set .@i,0; .@i < .@CurrentPlayers; set .@i,.@i+1 ) {
+		set .@AID, callfunc("getaccountid", .@members[.@i]);
+		if( .@AID <= 0 || !isloggedin(.@AID,.@members[.@i]) )
+			continue;
+			
+		set .@PCount, callfunc("pack_guild_players", .@members[.@i], 0);
+		set .@PExpire, callfunc("pack_guild_players", .@members[.@i], 1);
+		
+		if( .@PCount && gettimetick(2) < .@PExpire )
+			continue;
+			
+		attachrid(.@AID);
+		set .@r, callfunc("pack_guild_get");
+		if( .@r == -1 ) 
+			dispbottom "[Pack Guild]: Você está carregando muitos itens com você, guarde alguns itens em seu Armazém e depois fale com o Mestre da Guerra.", 0xFF0000;
+		else if( .@r > 0 )	
+			dispbottom "[Pack Guild]: Você recebeu itens de auxilio a Clãs que participam da Guerra do Emperium.", 0x00FF00;
+		detachrid;
+	}
+	end;
+	
+OnGuildLeave:
+	set .@CID, getcharid(0);
+	set .@Timer, callfunc("pack_guild_players", .@CID, 1);
+	callfunc("pack_guild_players", .@CID, 2, 0, .@Timer);
+	removeguilditems(.@CID);
+	end;
+}
+
+prontera,165,187,3	script	Mestre da Guerra#guild	4_M_JOB_KNIGHT1,{
+	set .@loop_1,1;
+	while(.@loop_1) {
+		set .@CID, getcharid(0);
+		set .@GID, getcharid(2);
+		set .@PCount, callfunc("pack_guild_players", .@CID, 0);
+		set .@PExpire, callfunc("pack_guild_players", .@CID, 1);
+		set .@Mark, getvariableofnpc(.MarkGuild, "Pack Guild#main");
+		set .@MarkTimer, getvariableofnpc(.MarkTimer, "Pack Guild#main");
+		set .@MinPlayer, getvariableofnpc(.MinPlayer, "Pack Guild#main");
+		mes "^FFD700[Mestre da Guerra]^000000";
+		mes "Bem-vindo ^0000FF" + strcharinfo(0) + "^000000!";
+		mes "Estou aqui para ajudar jogadores que participam da ^FF0000Guerra do Emperium^000000.";
+		next;
+		set .@menu, 0x00;
+		if( .@MinPlayer ) {
+			getguildmember .@GID;
+			set .@CurrentPlayers, $@guildmembercount; 
+			if( .@CurrentPlayers < .@MinPlayer )
+				set .@menu, .@menu + 0x1;
+		}
+		
+		if( .@Mark ) {
+			set .@MarkType, getvariableofnpc(.MarkType, "Pack Guild#main");
+			set .@MarkInWoe, getvariableofnpc(.MarkInWoe, "Pack Guild#main");
+			set .@member, (.@MarkType==0||getguildmasterid(.@GID)==getcharid(0)?1:0);
+			set .@GCount, callfunc("pack_guild", .@GID, 0);
+			set .@GExpire, callfunc("pack_guild", .@GID, 1);
+				
+			if( .@GCount < .@Mark ) {
+				set .@menu, .@menu + 0x10;
+				if( .@MarkInWoe && !agitcheck() && !agitcheck2() && !agitcheck3() )
+					set .@menu, .@menu + 0x100;
+				
+				if( .@member == 0 )
+					set .@menu, .@menu + 0x200;
+			
+				if( .@GExpire > gettimetick(2) )
+					set .@menu, .@menu + 0x400;
+			}
+		}
+		
+		if( .@menu ) {
+			mes "^FFD700[Mestre da Guerra]^000000";
+			mes "^FF0000Seu Clã ainda não atende os requisitos necessário para membros pegar os itens de auxilio.^000000";
+			mes "Selecione o menu ^0000FFAjuda > Requisitos^000000 para mais informações.";
+		}
+		else if( .@PCount && gettimetick(2) < .@PExpire ) {
+			mes "^FFD700[Mestre da Guerra]^000000";
+			mes "Você já pegou seus itens e deve aguardar: ^FF0000" + callfunc("Time2Str", .@PExpire) + "^000000.";
+		}
+		else {
+			set .@menu, 0x1000;
+			mes "^FFD700[Mestre da Guerra]^000000";
+			mes "Deseja pegar os itens que irão te auxiliar na ^FF0000Guerra do Emperium^000000?";
+		}
+		next;
+		switch( select((.@menu==0x10?"- Registrar Clã.":""), ((.@menu&0x1000)?"- Resgatar Itens.":""), "^0000FF- Ajuda.^000000", "- Não, obrigado.") )
+		{
+			// Registar Clã
+			case 1:
+				set .@count, callfunc("pack_guild", .@GID, 0);
+				set .@count,.@count+1;
+				set .@time, gettimetick(2) + .@MarkTimer;
+				mes "^FFD700[Mestre da Guerra]^000000";
+				if( callfunc("pack_guild", .@GID, 2, .@count, .@time) )
+					mes "Registro efetuado com sucesso!";
+				else
+					mes "^0000FFHouve um problema ao efetuar o registro!^000000";
+				next;
+				break;
+			// Resgatar Itens
+			case 2:
+				mes "^FFD700[Mestre da Guerra]^000000";
+				set .@i, callfunc("pack_guild_get");
+				switch(.@i) {
+					case 0:
+					case -4:
+						mes "Hmmm, parece que não há itens para você receber.";
+						mes "Entre em contato com a equipe de Desenvolvimento, talvez eles podem te ajudar.";
+						break;
+					case -3:
+						mes "Você não está em nenhum Clã para pegar itens.";
+						mes "Selecione o menu ^0000FFAjuda > Requisitos^000000 para mais informações.";
+						break;
+					case -2:
+						set .@PExpire, callfunc("pack_guild_players", .@CID, 1);
+						mes "Você já pegou seus itens e deve aguardar: ^FF0000" + callfunc("Time2Str", .@PExpire) + "^000000.";
+						break;
+					case -1:
+						mes "Você está carregando muitos itens com você, por favor, guarde alguns itens em seu ^0000FFArmazém Pessoal^000000.";
+						break;
+					default:
+						mes "Pronto, espero que os itens sejam úteis em sua jornada!";
+						break;
+				}
+				next;
+				break;
+			// Ajuda
+			case 3:
+				set .@loop_2,1;
+				while(.@loop_2)
+				{
+					mes "^FFD700[Mestre da Guerra]^000000";
+					mes "Entregamos itens para ajudar ^0000FFClãs^000000 que estão começando ou migrando de outros mundos.";
+					mes "Com eles você pode se equipar e estar pronto para uma batalha corpo a corpo ou te ajudar a sair de alguma enrascada.";
+					next;
+					switch( select("- Itens para Líderes.", "- Itens para Membros.", "- O que é um Clã?", "- O que é a Guerra do Emperium?", "^0000FF- Requisitos.^000000", "^FF8C00- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+					{
+						// Itens para Líderes
+						case 1:
+							set .@Timer, getvariableofnpc(.RechargeTimer, "Pack Guild#main");
+							copyarray .@Items[0], getvariableofnpc(.MasterItems[0], "Pack Guild#main"), getarraysize(getvariableofnpc(.MasterItems[0], "Pack Guild#main"));
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Líderes do Clã recebe os seguintes itens:";
+							for( set .@i,0; .@i < getarraysize(.@Items); set .@i,.@i+3 ) {
+								mes " ";
+								mes "^FF0000" + .@Items[.@i+1] + "x " + getitemname(.@Items[.@i]) + "^000000";
+								mes "^0000FFDuração: " + (.@Timer&&.@Items[.@i+2]?callfunc("Time3Str", .@Timer):"Ilimitado") + "^000000";
+							}
+							next;
+							break;
+						// Itens para Membros
+						case 2:
+							set .@Timer, getvariableofnpc(.RechargeTimer, "Pack Guild#main");
+							copyarray .@Items[0], getvariableofnpc(.MembersItems[0], "Pack Guild#main"), getarraysize(getvariableofnpc(.MembersItems[0], "Pack Guild#main"));
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Membros do Clã recebe os seguintes itens:";
+							for( set .@i,0; .@i < getarraysize(.@Items); set .@i,.@i+3 ) {
+								mes " ";
+								mes "^FF0000" + .@Items[.@i+1] + "x " + getitemname(.@Items[.@i]) + "^000000";
+								mes "^0000FFDuração: " + (.@Timer&&.@Items[.@i+2]?callfunc("Time3Str", .@Timer):"Ilimitado") + "^000000";
+							}
+							next;
+							break;
+						// O que é um Clã?
+						case 3:
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Clãs, ou guildas, são personagens que se reúnem para diversas finalidades, como disputar na Guerra do Emperium.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Clãs comportam mais membros que um grupo e ganham habilidades a cada nível evoluído.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Qualquer personagem pode ser líder de um Clã, basta seguir os procedimentos...";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "1. Tenha o item ^0000FFEmperium^000000 em seu inventário.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "2. Digite ^0000FF/guild 'Nome do seu Clã'^000000 ou aperte ^0000FFALT+G e clique em criar Clã^000000.";
+							mes "Escolha com cuidado o nome do seu Clã, pois ele não poderá ser mudado.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "3. Pronto! Agora você é líder de um Clã! Se mudar de ideia, você não pode passar a liderança pra outro personagem, somente destruindo seu Clã e fazendo outro.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "4. Para convidar membros para o Clã, clique com o botão direito do mouse sobre um personagem e selecione a opção ^0000FF'convidar para o Clã'^000000.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "5. Se o personagem já estiver em uma guilda, você pode solicitar uma aliança ou estabelecer o Clã dele como inimigo.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "6. Para administrar o Clã, acesse a janela da guilda pelo comando ^0000FFALT+G^000000.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "7. Na aba ^0000FF'Informações'^000000, você gerencia os membros do seu ^0000FFClã^000000.";
+							mes "Você também decide quem pode doar experiência para o Clã evoluir, quem pode recrutar novos membros e quem pode expulsar membros.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "8. Na aba ^0000FF'Posição'^000000, é possível definir títulos para seus membros.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "9. Na aba ^0000FF'Habilidades'^000000, você pode evoluir habilidades requeridas para funções em Castelos, Suporte a NPC's e Jogadores.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "10. O líder também pode deixar uma mensagem de aviso do Clã, ela será exibida para todos os membros.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Agora está por dentro da importância dos Clãs?";
+							if( .@GID <= 0 )
+								mes "Que tal criar um agora mesmo?";
+							else
+								mes "Cuide bem do seu Clã e de seus membros, como fosse sua casa e sua família.";
+							next;
+							break;
+						// O que é Guerra do Emperium?
+						case 4:
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "A Guerra do Emperium é um evento de 2 edições com GvG ativado durante um período de 2 horas, o objetivo é destruir o Emperium de um castelo.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Conquistar um castelo garante vários benefícios para o clã, incluindo seu nome e emblema nas Bandeiras dos Castelos, visto por todos no jogo.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Cada castelo possui um mordomo que administra o tesouro e a defesa, onde você deve investir seus zenys.";
+							mes "A defesa afeta o HP e DEF dos Guardiões, que vigiam seu castelo durante a guerra.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "O tesouro é o número de Baús de Tesouro, que aumentam de quantidade a cada 5 pontos investidos, eles desaparecem com manutenções, portanto, certifique-se sempre de recolher os tesouro.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "As guerras só podem ser praticadas por clãs com a habilidade Autorização Oficial.";
+							mes "Membros de Clãs Reais não podem participar.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Apenas ataques normais afetam o Emperium, habilidades não surtem efeito.";
+							mes "Nos mapas de guerra, os personagens são considerados de Raça Humanóide, Propriedade Neutro e Tamanho médio (adultos) ou pequeno (crianças).";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Você não perde pontos de experiência ao morrer, mas retorna imediatamente para o ponto de retorno.";
+							mes "Nos mapas de guerra, os personagens terão: esquiva -20%, dano físico a distância -25%, dano de habilidades -40%.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Toda numeração de dano não é exibida, incluindo ataques críticos.";
+							mes "O tempo de duração das armadilhas é 4 vezes maior.";
+							mes "Habilidades que empurram e o comando /noctrl são desabilitados.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "A conjuração pode ser interrompida, independente de cartas e equipamentos usados.";
+							mes "Efeitos gráficos das habilidades são minimizadas para melhor performance.";
+							mes "E algumas habilidades serão desabilitadas nos mapas dos castelos.";
+							next;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Agora está por dentro da Guera do Emperium?";
+							if( .@GID <= 0 )
+								mes "Que tal criar um Clã agora mesmo e participar da próxima Guerra?";
+							next;
+							break;
+						// Requisitos
+						case 5:
+							set .@n,1;
+							mes "^FFD700[Mestre da Guerra]^000000";
+							mes "Para membros de um Clã pegar itens que irão auxiliar na Guerra do Emperium, devem estar dentro dos seguintes requisitos:";
+							if( .@MinPlayer > 1 ) {
+								next;
+								mes "^0000FFQuantidade de Membros^000000";
+								mes "O Clã do membro deve ter no mínimo " + .@MinPlayer + " jogadores.";
+								mes "^0000FFSeu Clã possuí " + .@CurrentPlayers + " jogadore(s).^000000";
+							}
+							if( .@Mark ) {
+								next;
+								mes "^0000FFRegisto de Atividade^000000";
+								
+								if( .@MarkType ) 
+									mes "O Clã deve ser registrado para pode pegar itens, somente os Líderes podem fazer o registro.";
+								else
+									mes "O Clã deve ser registrado para pode pegar itens, qualquer membro pode fazer o registro.";
+
+								if( .@MarkInWoe )
+									mes "Registros só podem ser feitos durante a Guerra do Emperium.";
+								
+								if( .@Mark > 1 ) {
+									mes "É necessário fazer o registro " + .@Mark + " vezes.";
+									mes "O registro pode ser feito novamente após " + callfunc("Time2Str", gettimetick(2)+.@MarkTimer) + ".";
+								
+									if( .@GCount < .@Mark ) {
+										next;
+										mes "^0000FFResumo de Atividade^000000";
+										if( .@GExpire > gettimetick(2) ) 
+											mes "Seu Clã deve aguardar " + callfunc("Time2Str", .@GExpire) + " para se registrar novamente.";
+										mes "^0000FFQuantidades de registro restantes:^000000 " + (.@Mark-.@GCount) + ".";
+									}
+								}
+							}
+							next;
+							break;
+						// Voltar
+						case 6:
+							set .@loop_2,0;
+							break;
+						// Cancelar
+						case 7:
+							set .@loop_2,0;
+							set .@loop_1,0;
+							break;
+							
+					}
+				}
+				break;
+			case 4:
+				set .@loop_1,0;
+				break;
+		}
+	}
+	mes "^FFD700[Mestre da Guerra]^000000";
+	mes "Tudo bem, volte assim que estiver pronto para Resgatar Itens que serão valiosos em uma ^FF0000Guerra do Emperium^000000.";
+	close;
+}
+
+// Pack Guild Function
+// callfunc "pack_guild", <GID>, <type>{, args...};
+// callfunc("pack_guild", <GID>, <type>{, args...});
+//
+// - Type
+//	0: Pega a quantidade de vezes que um Clã se registro.
+//	1: Pega o tempo de expiração para novos registros.
+//  2: Atualiza informações de registro do Clã.
+function	script	pack_guild	{
+	deletearray .@tmpRet;
+	switch( getarg(1) ) {
+		default:
+			debugmes "Pack Guild Function: Unknow type " + getarg(1) + "!";
+			set .@tmpRet, -1;
+			break;
+		case 0:
+			query_sql "SELECT `count` FROM `pack_guild` WHERE `guild_id`='" + getarg(0) + "'", .@tmpRet;
+			break;
+		case 1:
+			query_sql "SELECT `expire_time` FROM `pack_guild` WHERE `guild_id`='" + getarg(0) + "'", .@tmpRet;
+			break;
+		case 2:
+			query_sql "REPLACE INTO `pack_guild` (`guild_id`, `count`, `expire_time`) VALUES (" + getarg(0) + ", " + getarg(2) + ", " + getarg(3) + ")";
+			set .@tmpRet, 1;
+			break;
+	}
+	return .@tmpRet;
+}
+
+// Pack Guild Players
+// callfunc "pack_guild_players", <CID>, <type>{, args...};
+// callfunc("pack_guild_players", <CID>, <type>{, args...});
+//
+// - Type
+//	0: Pega a flag de que um jogador pegou o Pack Guild.
+//	1: Pega o tempo de expiração para pegar novamente.
+//  2: Atualiza informações de um jogador.
+function	script	pack_guild_players	{
+	deletearray .@tmpRet;
+	switch( getarg(1) ) {
+		default:
+			debugmes "Pack Guild Players Function: Unknow type " + getarg(1) + "!";
+			set .@tmpRet, -1;
+			break;
+		case 0:
+			query_sql "SELECT `flag` FROM `pack_guild_players` WHERE `char_id`='" + getarg(0) + "'", .@tmpRet;
+			break;
+		case 1:
+			query_sql "SELECT `expire_time` FROM `pack_guild_players` WHERE `char_id`='" + getarg(0) + "'", .@tmpRet;
+			break;
+		case 2:
+			query_sql "REPLACE INTO `pack_guild_players` (`char_id`, `flag`, `expire_time`) VALUES (" + getarg(0) + ", " + getarg(2) + ", " + getarg(3) + ")";
+			set .@tmpRet, 1;
+			break;
+	}
+	return .@tmpRet;
+}
+
+// Pack Guild Resgatar Itens
+// Entrega de itens para membros do Clã.
+// callfunc "pack_guild_get";
+// callfunc("pack_guild_get");
+function	script	pack_guild_get	{
+	set .@tmpGID, getcharid(2);
+	set .@tmpCID, getcharid(0);
+	set .@tmpAID, callfunc("getaccountid",.@tmpCID);
+	
+	if( .@tmpCID <= 0 || .@tmpAID <= 0 || !isloggedin(.@tmpAID,.@tmpCID) )
+		return -4;
+	
+	// Checa se o Jogador está em um Clã.
+	if( .@tmpGID <= 0 )
+		return -3;
+		
+	// Checar se o jogador já pegou e ainda não expirou o tempo.
+	set .@tmpCHK, callfunc("pack_guild_players", .@tmpCID, 0);
+	set .@itemTimer, callfunc("pack_guild_players", .@tmpCID, 1);
+	if( .@tmpCHK1 && .@itemTimer < gettimetick(2) )
+		return -2;
+
+	// Calibrando tempo que os itens deve ficar no inventário.
+	if( .@itemTimer <= gettimetick(2) )
+		set .@itemTimer, getvariableofnpc(.RechargeTimer, "Pack Guild#main");
+	else
+		set .@itemTimer, .@itemTimer - gettimetick(2);
+		
+	// Define os Itens para Líderes ou Membros e pega o Tempo de Expiração.
+	deletearray .@ItemTemp;
+	set .@MasterID, getguildmasterid(.@tmpGID);
+	
+	if( .@tmpCID == .@MasterID )
+		copyarray .@ItemTemp[0], getvariableofnpc(.MasterItems[0], "Pack Guild#main"), getarraysize(getvariableofnpc(.MasterItems[0], "Pack Guild#main"));
+	else
+		copyarray .@ItemTemp[0], getvariableofnpc(.MembersItems[0], "Pack Guild#main"), getarraysize(getvariableofnpc(.MembersItems[0], "Pack Guild#main"));
+		
+	// Checagem e entrega de itens
+	freeloop(1);
+	for( set .@j,0; .@j < getarraysize(.@ItemTemp); set .@j,.@j+3 ) {
+		set .@tmpAmount, countguilditem(.@ItemTemp[.@j],0,.@ItemTemp[.@j+2],.@tmpCID);
+		set .@tmpAmount, .@tmpAmount + countguilditem(.@ItemTemp[.@j],1,.@ItemTemp[.@j+2],.@tmpCID);
+		set .@tmpAmount, .@tmpAmount + countguilditem(.@ItemTemp[.@j],2,.@ItemTemp[.@j+2],.@tmpCID);
+		
+		if( .@tmpAmount > .@ItemTemp[.@j+1] )
+			continue;
+				
+		if( .@tmpAmount < .@ItemTemp[.@j+1] )
+			set .@tmpAmount, .@ItemTemp[.@j+1] - .@tmpAmount;
+					
+		if( !checkweight(.@ItemTemp[.@j],.@tmpAmount) )
+			return -1; // Fail Overweight
+	}
+	
+	set .@tmpCount, 0;
+	for( set .@j,0; .@j < getarraysize(.@ItemTemp); set .@j,.@j+3 ) {
+		set .@tmpAmount, countguilditem(.@ItemTemp[.@j],0,.@ItemTemp[.@j+2],.@tmpCID);
+		set .@tmpAmount, .@tmpAmount + countguilditem(.@ItemTemp[.@j],1,.@ItemTemp[.@j+2],.@tmpCID);
+		set .@tmpAmount, .@tmpAmount + countguilditem(.@ItemTemp[.@j],2,.@ItemTemp[.@j+2],.@tmpCID);
+		
+		if( .@tmpAmount > .@ItemTemp[.@j+1] )
+			continue;
+				
+		if( .@tmpAmount < .@ItemTemp[.@j+1] )
+			set .@tmpAmount, .@ItemTemp[.@j+1] - .@tmpAmount;
+			
+		set .@tmpTimer, .@ItemTemp[.@j+2] ? .@ItemTimer : 0;
+		getguilditem .@ItemTemp[.@j], .@tmpAmount, .@ItemTimer;
+		set .@tmpCount, 1;
+	}
+	freeloop(0);
+	
+	// Update Player Flags
+	if( .@tmpCount )
+		callfunc("pack_guild_players", .@tmpCID, 2, 1, (gettimetick(2)+.@itemTimer));
+		
+	return .@tmpCount;
+}

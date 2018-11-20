@@ -1,0 +1,770 @@
+function	script	F_EncHeadtop	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 18570:
+			@enc_type[.@i] = 12; return 1;
+		case 18849: //Laço da Celine
+		case 18848: //Presilha de Rosas
+			@enc_type[.@i] = 6; return 1;
+		case 5583:
+			@enc_type[.@i] = 9; return 1;
+	}
+	
+	return 0;
+}
+
+function	script	F_EncHeadmid	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 18603:
+		case 18507:
+		case 2204:
+		case 2202:
+			@enc_type[.@i] = 14; return 1;
+	}
+	return 0;
+}
+
+function	script	F_EncHeadlow	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	return 0;
+}
+
+function	script	F_EncArmor	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 2307: case 2308: case 2309: case 2310:
+		case 2314: case 2315: case 2316: case 2317:
+		case 2321: case 2322: case 2325: case 2326:
+		case 2330: case 2331: case 2332: case 2333:
+		case 2335: case 2336: case 2337: case 2341:
+		case 2342: case 2327: case 2328: case 2334:
+		case 2386: case 2394: case 2395: case 2396:
+		case 2311: case 2318: case 2319: case 2320:
+		case 2324: case 2344: case 2345: case 2346:
+		case 2347: case 2348: case 2349: case 2350:
+		case 2351: case 2364: case 2365: case 2374:
+		case 2375: case 2376: case 2377: case 2378:
+		case 2379: case 2380: case 2381: case 2382:
+		case 2387: case 2388: case 2389: case 2390:
+		case 2391: case 2357: case 2340: case 2355:
+			@enc_type[.@i] = 1; return 1;
+		
+		case 15044:
+			@enc_type[.@i] = 12; return 1;
+			
+		case 15031:
+			@enc_type[.@i] = 9; return 1;
+			
+		case 15054:
+		case 15055:
+		case 15056:
+			@enc_type[.@i] = 13; return 1;
+			
+		/**
+		 * Mora
+		 **/
+		 
+		case 15025:
+		case 15026:
+		case 15027:
+		case 15028:
+		case 15029:
+		case 15030:
+		case 15036:
+		case 15037:
+		case 15042:
+		case 15043:
+		case 15038:
+		case 15039:
+			@enc_type[.@i] = 7; return 1;
+		
+		case 15128:
+			@enc_type[.@i] = 16; return 1;
+			
+		//Rock Ridge
+		case 15177:
+		case 15179:
+		case 15176:
+		case 15178:
+		case 15180:
+			@enc_type[.@i] = 18; return 1;
+		
+		//Verus
+		case 15111:
+		case 15110:
+			@enc_type[.@i] = 19; return 1;
+		
+		//Royal Banquet
+		case 15146:
+		case 15147:
+			@enc_type[.@i] = 20; return 1;
+		
+	}
+	return 0;
+}
+
+function	script	F_EncWeapon	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( getiteminfo(.@id,11) ) {
+		case 1: ///Adagas
+			switch( .@id ) {
+				case 13071: //Adaga aprimorada
+					@enc_type[.@i] = 2; return 1;
+				case 13069: //Garra Celeste
+				case 13070: //Garra Escarlate
+					@enc_type[.@i] = 12; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 1224: 
+				case 1225: 
+				case 1227:
+				case 1229:
+				case 1232: 
+				case 1233:
+				case 1235: 
+				case 1236: 
+				case 1237: 
+				case 1240: 
+				case 1241: 
+				case 1242:
+				case 1244: 
+				case 13046:
+				case 13047: 
+				case 13061: 
+				case 1223: 
+				case 1228: 
+				case 1234: 
+				case 1230: 
+				case 1231:
+				case 13062:
+					@enc_type[.@i] = 8; return 1;
+				/** 
+				 * Éden 
+				 **/				
+				case 13050:
+				case 13051:
+				case 13066:
+					@enc_type[.@i] = 9; return 1;
+				
+				case 13076:
+				case 13078:
+					@enc_type[.@i] = 13; return 1;
+			}
+			break;
+		case 2: ///Espadas de uma mão
+			switch( .@id ) {
+				case 13442: //Guarda-Chuva Antiquado
+					@enc_type[.@i] = 6; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1131:
+				case 1133:
+				case 1134:
+				case 1135:
+				case 1136:
+				case 1138:
+				case 1139:
+				case 1140:
+				case 1141:
+				case 1148:
+				case 13421:
+				case 13431:
+				case 1137:
+				case 1130:
+				case 1132:
+					@enc_type[.@i] = 8; return 1;
+					
+				/** 
+				 * Éden 
+				 **/
+				 case 13423:
+				 case 13424:
+				 case 13434:
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 3: ///Espadas de duas mãos
+			switch( .@id ) {
+				case 21000: //Espada aprimorada de duas mãos
+					@enc_type[.@i] = 2; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1164:
+				case 1166:
+				case 1167:
+				case 1168:
+				case 1170:
+				case 1171:
+				case 1176:
+				case 1178:
+				case 1180:
+				case 1181:
+				case 1182:
+				case 1188:
+				case 1189:
+				case 1196:
+				case 1165:
+				case 1169:
+				case 1179:
+				case 1175:
+				case 1185:
+				case 1186:
+				case 21018:
+					@enc_type[.@i] = 8; return 1;
+					
+				/** 
+				 * Éden 
+				 **/
+				 case 1192:
+				 case 1193:
+				 case 1197:
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 4: ///Lanças de uma mão
+			switch( .@id ) {
+				case 1435: //Lança-canhão
+					@enc_type[.@i] = 12; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 1420:
+				case 1413:
+				case 1414:
+				case 1416:
+				case 1418:
+				case 1433:
+				case 1415:
+				case 1421:
+				case 1422:
+					@enc_type[.@i] = 8; return 1;
+					
+				case 1434: //Lança I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 5: ///Lanças de duas mãos
+			switch( .@id ) {
+				case 1491: //Lança aprimorada de duas mãos
+					@enc_type[.@i] = 2; return 1;
+				case 1490: //Lança Gigante
+					@enc_type[.@i] = 12; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1466:
+				case 1467:
+				case 1468:
+				case 1469:
+				case 1470:
+				case 1471:
+				case 1474:
+				case 1477:
+				case 1478:
+				case 1479:
+				case 1480:
+				case 1481:
+				case 1484:
+					@enc_type[.@i] = 8; return 1;
+			}
+			break;
+		case 6: ///Machados de uma mão
+			switch( .@id ) {
+				/** 
+				 * Malangdo 
+				 **/
+				case 1305:
+				case 1311:
+					@enc_type[.@i] = 8; return 1;
+			}
+			break;
+		case 7: ///Machados de duas mãos
+			switch( .@id ) {
+				case 1394: //Machado aprimorado de duas mãos
+					@enc_type[.@i] = 2; return 1;
+				case 1393: //Sectora Final
+				case 1392: //Aço Ígneo]
+					@enc_type[.@i] = 12; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 1364:
+				case 1365:
+				case 1385:
+				case 1367:
+				case 1368:
+				case 1387:
+				case 1369:
+				case 1363:
+				case 1376:
+				case 1377:
+				case 1366:
+				case 1370:
+				case 1371:
+					@enc_type[.@i] = 8; return 1;
+					
+				case 1391: //Machado de 2 Mãos I do Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 8: ///Maças
+			switch( .@id ) {
+				case 16019: //Maças aprimorada
+					@enc_type[.@i] = 2; return 1;
+				case 16017: //Cruz sangrenta
+					@enc_type[.@i] = 2; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1524:
+				case 1525:
+				case 1527:
+				case 1539:
+				case 1541:
+				case 16000:
+				case 16001:
+				case 16010:
+				case 1523:
+				case 1538:
+				case 1526:
+				case 1528:
+				case 1540:
+					@enc_type[.@i] = 8; return 1;
+					
+				/** 
+				 * Éden 
+				 **/
+				 case 16004:
+				 case 16005:
+				 case 16014:
+					@enc_type[.@i] = 9; return 1;
+				case 16013:
+					@enc_type[.@i] = 7; return 1;
+				
+				/**
+				 *
+				 **/
+				case 16018:
+					@enc_type[.@i] = 7; return 1;
+			}
+			break;
+		case 10: ///Cajados
+			switch( .@id ) {
+				case 1659: //Luz da recuperação
+					@enc_type[.@i] = 12; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1616:
+				case 1629:
+				case 1631:
+				case 1643:
+				case 1654:
+				case 1636:
+				case 1637:
+				case 1473:
+					@enc_type[.@i] = 8; return 1;
+					
+				/** 
+				 * Éden 
+				 **/
+				 case 1650:
+				 case 1651:
+				 case 1658:
+					@enc_type[.@i] = 9; return 1;
+					
+				//Mora
+				case 1657:
+				case 1660:
+					@enc_type[.@i] = 7; return 1;
+			}
+			break;
+		case 11: ///Arcos
+			switch( .@id ) {
+				case 18112: //Arco aprimorado
+					@enc_type[.@i] = 2; return 1;
+				case 18110: //Besta Grande
+				case 18109: //Catapulta
+				case 18111: //Arco de Trepadeiras
+					@enc_type[.@i] = 12; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 1719:
+				case 1722:
+				case 1724:
+				case 1725:
+				case 1727:
+				case 1737:
+				case 1740:
+				case 1741:
+				case 1745:
+				case 18103:
+				case 1720:
+					@enc_type[.@i] = 8; return 1;
+					
+				/** 
+				 * Éden 
+				 **/
+				 case 1747:
+				 case 1748:
+				 case 18106:
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 12: ///Garras
+			switch( .@id ) {
+				/** 
+				 * Malangdo 
+				 **/
+				case 1813:
+				case 1814:
+				case 1815:
+				case 1816:
+				case 1830:
+					@enc_type[.@i] = 8; return 1;
+
+				case 1831: //Garra I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 13: ///Instrumento musicais
+			switch ( .@id ) {
+				/** 
+				 * Malangdo 
+				 **/
+				case 1913:
+				case 1918:
+				case 1920:
+				case 1922:
+				case 1926:
+				case 1930:
+					@enc_type[.@i] = 8; return 1;
+					
+				case 1931: //Guitarra I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 14: ///Chicotes
+			switch ( .@id ) {
+				case 1962:
+				case 1963:
+				case 1964:
+				case 1969:
+				case 1970:
+				case 1972:
+				case 1973:
+				case 1974:
+				case 1976:
+				case 1979:
+				case 1984:
+				case 1985:
+					@enc_type[.@i] = 8; return 1;
+					
+				case 1986: //Chicote I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 15: ///Livros
+			switch( .@id ) {
+				case 1585: //Livro aprimorado
+					@enc_type[.@i] = 2; return 1;
+				case 1584: //Livro de Feiticeiro do Frio
+					@enc_type[.@i] = 12; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 1557:
+				case 1558:
+				case 1559:
+				case 1561:
+				case 1562:
+				case 1565:
+					@enc_type[.@i] = 8; return 1;
+				
+				case 1583: //Dicionário I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 16: ///Katares
+			switch( .@id ) {
+				case 1292: //Katar aprimorada
+					@enc_type[.@i] = 2; return 1;
+				case 1291: //Katar do Sicário
+				case 1290: //Katar de Agente
+					@enc_type[.@i] = 12; return 1;
+				
+				/** 
+				 * Malangdo 
+				 **/
+				case 1271:
+				case 1263:
+				case 1270:
+				case 1284:
+				case 1285:
+				case 1268:
+				case 1269:
+				case 1265:
+				case 1261:
+				case 1266:
+				case 28010:
+					@enc_type[.@i] = 8; return 1;
+					
+				case 1289: //Katar I do Grupo Éden
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 17: ///Pistolas
+			switch( .@id ) {
+				case 13115: //Pistola aprimorada
+				case 28226:
+				case 28225:
+				case 28224:
+				case 28223:
+					@enc_type[.@i] = 2; return 1;
+				
+				/** 
+				 * Éden 
+				 **/
+				 case 13112:
+				 case 13113:
+				 case 13114:
+					@enc_type[.@i] = 9; return 1;
+			}
+			break;
+		case 18: ///Rifles
+			break;
+		case 19: ///Metralhadoras
+			break;
+		case 20: ///Espingardas
+			break;
+		case 21: ///Lançadores-de-granada
+			break;
+		case 22: ///Shurikens Huuma
+			switch( .@id ) {
+				case 13316: //Shuriken huuma aprimorada
+					@enc_type[.@i] = 2; return 1;
+				
+				case 13310: //Shuriken Huuma I do Éden
+					@enc_type[.@i] = 9; return 1;
+					
+				case 13313:
+				case 13314:
+				case 13315:
+					@enc_type[.@i] = 13; return 1;
+			}
+			break;
+		case 23: ///Cajados de duas mãos
+			switch( .@id ) {
+				case 2015: //Cajado aprimorado
+					@enc_type[.@i] = 2; return 1;
+					
+				/** 
+				 * Malangdo 
+				 **/
+				case 2004:
+				case 2005:
+				case 2001:
+				case 2000:
+				case 2027:
+					@enc_type[.@i] = 8; return 1;
+				
+				/**
+				 * Mora
+				 **/
+				case 2007:
+				case 2008:
+				case 2009:
+				case 2010:
+				case 2011:
+				case 2012:
+				case 2013:
+				case 2014:
+					@enc_type[.@i] = 7; return 1;
+			}
+			break;
+	}
+	return 0;
+}
+
+function	script	F_EncShield	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 2160: //Escudo Gigante
+		case 2161: //Livro Antigo de Geffênia - Água
+		case 2162: //Biblia da Promessa (Volume 2)
+			@enc_type[.@i] = 12; return 1;
+			
+		case 2172:
+		case 2173:
+			@enc_type[.@i] = 13; return 1;
+		
+		case 2156:
+			@enc_type[.@i] = 7; return 1;
+	}
+	return 0;
+}
+
+function	script	F_EncGarment	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 2573: //Asas de Arcanjo
+			@enc_type[.@i] = 3; return 1;
+		case 2589: //Asas de Arcanjo Caído
+			@enc_type[.@i] = 4; return 1;
+		case 2582: //Capa Recuperada
+			@enc_type[.@i] = 12; return 1;
+			
+		case 2571:
+			@enc_type[.@i] = 9; return 1;
+		//Mora
+		case 2569:
+		case 2570:
+		case 2580:
+		case 2581:
+		case 2574:
+		case 2575:
+		case 2577:
+		case 2578:
+			@enc_type[.@i] = 7; return 1;
+		case 20717:
+		case 20718:
+			@enc_type[.@i] = 17; return 1;
+		case 20773:
+			@enc_type[.@i] = 16; return 1;
+			
+		//Rock Ridge
+		case 20820:
+		case 20822:
+		case 20821:
+			@enc_type[.@i] = 18; return 1;
+		
+		//Verus
+		case 20733:
+		case 20732:
+			@enc_type[.@i] = 19; return 1;
+	}
+	return 0;
+}
+
+function	script	F_EncShoes	{ 
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ){
+		case 22000: //Botas temporais FOR
+		case 22001: //Botas temporais INT
+		case 22002: //Botas temporais AGI
+		case 22003: //Botas temporais VIT
+		case 22004: //Botas temporais DES
+		case 22005: //Botas temporais SOR
+		case 22107: //Botas modificadas FOR
+		case 22108: //Botas modificadas INT
+		case 22109: //Botas modificadas AGI
+		case 22110: //Botas modificadas VIT
+		case 22111: //Botas modificadas DES
+		case 22112: //Botas modificadas SOR
+		
+			@enc_type[.@i] = 5; return 1;
+		case 2486: //Passo das Sombras
+			@enc_type[.@i] = 6; return 1;
+			
+		case 2473:
+			@enc_type[.@i] = 9; return 1;
+		
+		/**
+		 * Mora
+		 **/
+		case 2467:
+		case 2468:
+		case 2469:
+		case 2470:
+		case 2471:
+		case 2472:
+		case 2475:
+		case 2476:
+		case 2479:
+		case 2480:
+		case 2477:
+		case 2478:
+			@enc_type[.@i] = 7; return 1;
+		
+		//Verus
+		case 22044:
+		case 22043:
+			@enc_type[.@i] = 19; return 1;
+	}
+	return 0;
+}
+
+function	script	F_EncAcc	{
+	.@id = getarg(0);
+	.@i = getarg(1);
+	switch( .@id ) {
+		case 2892:
+			@enc_type[.@i] = 12; return 1;
+		case 2980:  //Luva dos Espíritos Malignos
+		case 2977:  //Coração Partido
+		case 2978:  //Coração Bondoso
+		case 2976:  //Lampião das Trevas
+			@enc_type[.@i] = 6; return 1;
+		case 2966:
+		case 2967:
+		case 2968:
+		case 2969:
+			@enc_type[.@i] = 14; return 1;
+			
+		/**
+		 * Mora
+		 **/
+		case 2859:
+		case 2860:
+		case 2861:
+		case 2862:
+		case 2864:
+		case 2865:
+		case 2866:
+		case 2883:
+		case 2884:
+		case 2890:
+		case 2891:
+		case 2886:
+		case 2887:
+			@enc_type[.@i] = 7; return 1;
+			
+		///Bios Island
+		case 2981:
+			@enc_type[.@i] = 15; return 1;
+		
+		//Rock Ridge
+		case 28441:
+		case 28442:
+			@enc_type[.@i] = 18; return 1;
+		
+		//Verus
+		case 2996:
+		case 2995:
+			@enc_type[.@i] = 19; return 1;
+	}
+	return 0;
+}

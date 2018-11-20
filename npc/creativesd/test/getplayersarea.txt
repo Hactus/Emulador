@@ -1,0 +1,20 @@
+prontera,150,150,4	script	Test Area Players	1_M_04,{
+	getplayersarea "prontera", 148, 151, 155, 144;
+	mes "Total: " + .@area_players_count;
+	for( set .@i,0; .@i < .@area_players_count; set .@i,.@i+1 ) {
+		mes "--";
+		mes "CID: " + .@area_players_cid[.@i];
+		mes "AID: " + .@area_players_aid[.@i];
+		mes "Name: " + .@area_players_name$[.@i];
+	}
+	next;
+	getplayersarea "prontera", 148, 151, 155, 144;
+	mes "Total: " + .@area_players_count;
+	for( set .@i,0; .@i < getarraysize(.@area_players_cid); set .@i,.@i+1 ) {
+		mes "--";
+		mes "CID: " + .@area_players_cid[.@i];
+		mes "AID: " + .@area_players_aid[.@i];
+		mes "Name: " + .@area_players_name$[.@i];
+	}
+	close;
+}

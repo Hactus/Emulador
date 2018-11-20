@@ -1,0 +1,339 @@
+prontera,147,151,6	script	Porteiro Instâncias	657,{
+
+mes "Para qual instância você quer ir?";
+switch(select("Altar do Selo","Bakonawa","Buwaya","Caverna do Polvo","Esgotos de Malangdo","Fábrica do Terror","Geffen Magic Tournament","Hospital Abandonado","Labirinto da Neblina","Laboratório Central","Laboratório de Wolfchev","Memorial dos Orcs","Memórias de Sarah","Ninho da Faceworm","Ninho de Nidhogg","Old Glast Heim","Palácio das Mágoas","Sala Final","Sarah e Fenrir","Torre sem Fim","Ilha Bios","Airship Assault")) {
+
+case 1:
+next;
+mes "[Altar do Selo]";
+mes "Nível Mínimo: 75";
+mes "Dificuldade da Instância: 5";
+mes "Espera: 12 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Altar_do_Selo</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "monk_test",309,145;
+end;}
+
+case 2:
+next;
+mes "[Lago de Bakonawa]";
+mes "Nível Mínimo: 140";
+mes "Dificuldade da Instância: 5";
+mes "Espera: 06 dias e 20 horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Lago_de_Bakonawa</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "ma_scene01",174,179;
+end;}
+
+case 3:
+next;
+mes "[Caverna de Buwaya]";
+mes "Nível Mínimo: 130";
+mes "Dificuldade da Instância: 5";
+mes "Espera: 23 horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Caverna_de_Buwaya</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "ma_fild02",311,315;
+end;}
+
+case 4:
+next;
+mes "[Caverna do Polvo]";
+mes "Nível Mínimo: 90";
+mes "Dificuldade da Instância: 3";
+mes "Espera: 3 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Caverna_do_Polvo</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "mal_dun01",151,234;
+end;}
+
+case 5:
+next;
+mes "[Esgotos de Malangdo]";
+mes "Níveis: 90 Modo Normal / 140 Modo Difícil";
+mes "Dificuldade da Instância: 5";
+mes "Espera: 3 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Esgotos_de_Malangdo</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "mal_in01",171,28;
+end;}
+
+case 6:
+next;
+mes "[Fábrica do Terror]";
+mes "Nível Mínimo: 140";
+mes "Dificuldade da Instância: 9";
+mes "Espera: 23 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/F%C3%A1brica_do_Terror</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "xmas",236,302;
+end;}
+
+case 7:
+next;
+mes "[Geffen Magic Tournament]";
+mes "Nível Mínimo: 90";
+mes "Dificuldade da Instância: 8";
+mes "Espera: 23 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Torneio_de_Magia</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali",97,140;
+end;}
+
+case 8:
+next;
+mes "[Hospital Abandonado]";
+mes "Nível Mínimo: 100";
+mes "Dificuldade da Instância: 7";
+mes "Espera: 6 dias e 20 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Hospital_Abandonado</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "ma_dun01",147,10;
+end;}
+
+case 9:
+next;
+mes "[Labirinto da Neblina]";
+mes "Nível Mínimo: 99";
+mes "Dificuldade da Instância: 3";
+mes "Espera: 2 Horas e 30 minutos";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Labirinto_da_Neblina</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "bif_fild01",157,339;
+end;}
+
+case 10:
+next;
+mes "[Laboratório Central]";
+mes "Nível Mínimo: 130";
+mes "Dificuldade da Instância: 9";
+mes "Espera: 23 horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Laborat%C3%B3rio_Central</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "verus01",149,155;
+end;} 
+
+
+case 11:
+next;
+mes "[Laboratório de Wolfchev]";
+mes "Nível Mínimo: 90";
+mes "Dificuldade da Instância: 9";
+mes "Espera: 3 dias";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Laborat%C3%B3rio_de_Wolfchev</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "lhz_dun04",151,276;
+end;}
+
+case 12:
+next;
+mes "[Memorial dos Orcs]";
+mes "Nível: 30 a 80";
+mes "Dificuldade da Instância: 2";
+mes "Espera: 2 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Memorial_dos_Orcs</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "gef_fild10",238,200;
+end;}
+
+case 13:
+next;
+mes "[Memórias de Sarah]";
+mes "Nível: 99";
+mes "Dificuldade da Instância: 5";
+mes "Espera: 20 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Mem%C3%B3rias_de_Sarah</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali",130,107;
+end;}
+
+case 14:
+next;
+mes "[Ninho da Faceworm]";
+mes "Nível Mínimo: 140";
+mes "Dificuldade da Instância: 8";
+mes "Espera: 23 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Covil_de_Vermes</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali",82,61;
+end;}
+
+case 15:
+next;
+mes "[Ninho de Nidhogg]";
+mes "Nível Mínimo: 70";
+mes "Dificuldade da Instância: 6";
+mes "Espera: 3 Dias";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Ninho_de_Nidhogg</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "nyd_dun02",93,192;
+end;}
+
+case 16:
+next;
+mes "[Old Glast Heim]";
+mes "Nível Mínimo: 130";
+mes "Dificuldade da Instância: 7";
+mes "Espera: 12 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Maldi%C3%A7%C3%A3o_de_Glast_Heim</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "glast_01",204,273;
+end;}
+
+case 17:
+next;
+mes "[Palácio das Mágoas]";
+mes "Nível Mínimo: 120";
+mes "Dificuldade da Instância: 6";
+mes "Espera: 23 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Pal%C3%A1cio_das_M%C3%A1goas</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali02",44,130;
+end;}
+
+case 18:
+next;
+mes "[Sala Final]";
+mes "Nível Mínimo: 150";
+mes "Dificuldade da Instância: 9";
+mes "Espera: 23 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>https://irowiki.org/wiki/The_Last_Room</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "un_myst",159,38;
+end;}
+
+case 19:
+next;
+mes "[Sarah e Fenrir]";
+mes "Nível Mínimo: 145";
+mes "Dificuldade da Instância: 7";
+mes "Espera: 07 dias";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>https://irowiki.org/wiki/Sarah_and_Fenrir</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali02",92,141;
+end;}
+
+
+case 20:
+next;
+mes "[Torre sem Fim]";
+mes "Nível Mínimo: 50";
+mes "Dificuldade da Instância: 9";
+mes "Espera: 6 Dias e 20 Horas";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Torre_sem_Fim</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "alberta",214,77;
+end;}
+
+case 21:
+next;
+mes "[Ilha Bios]";
+mes "Nível Mínimo: 160";
+mes "Dificuldade da Instância: 7";
+mes "Espera: 12:00am";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>http://browiki.org/wiki/Ilha_Bios</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "moro_cav",45,60;
+end;}
+
+case 22:
+next;
+mes "[Airship Assault]";
+mes "Nível Mínimo: 125";
+mes "Dificuldade da Instância: 7";
+mes "Espera: 12:00am";
+mes "Guia da Instância:";
+mes "<URL>Clique Aqui<INFO>https://irowiki.org/wiki/Airship_Raid</INFO></URL>";
+mes "Quer ir para a porta da instância?";
+switch (select("Sim:Não")) {
+case 2: close;
+case 1:
+warp "dali02",140,81;
+end;}
+
+}
+}

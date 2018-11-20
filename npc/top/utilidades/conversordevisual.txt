@@ -1,0 +1,32 @@
+prontera,147,154,6	script	Ticket Visual	408,{
+
+mes "Converta seus equipamentos de cabeça ou capas em visuais!.";
+mes "Lembrando que as capas só ficarão visíveis se já forem visíveis como itens normais, caso contrário não serão também!";
+next;
+mes "Escolha o item a ser convertido.";
+mes "^F20808Lembre-se, cartas, atributos dos  equipamentos e refinamentos serão perdidos...^000000";
+setarray .@Position$[1],"Topo","Meio","Baixo","Capa";
+setarray .@Position[1],EQI_HEAD_TOP,EQI_HEAD_MID,EQI_HEAD_LOW,EQI_GARMENT;
+set .@Menu$,"";
+
+for( set .@i, 1; .@i < 5; set .@i, .@i + 1 ) {
+if( getequipisequiped(.@Position[.@i]) )
+set .@Menu$, .@Menu$ + .@Position$[.@i] + "-" + "[" + getequipname(.@Position[.@i]) + "]";
+set .@Menu$, .@Menu$ + ":";
+}
+set .@Part, .@Position[ select(.@Menu$) ];
+
+if( !getequipisequiped(.@Part) ) {mes "Não tem nada equipado ai..."; close;}
+next;
+mes "Você deseja transforma este item " + getitemname(getequipid(.@Part)) + " em visual?";
+next;
+
+if( select("Sim, continuar com o processo.:Não, Desculpe-me.") == 2 ) {close;}
+if (countitem(20675) < 1) {next; mes "Você não tem Ticket Visual para fazer a conversão."; close;}
+else {
+next;
+costume .@Part; // Convert the Headgear
+delitem 20675,1;
+mes "Pronto! Aproveite seu novo visual.";
+close;
+}}

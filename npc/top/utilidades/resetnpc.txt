@@ -1,0 +1,38 @@
+//===== rAthena Script =======================================
+//= Reset NPC
+//===== By: ==================================================
+//= rAthena Dev Team
+//===== Current Version: =====================================
+//= 1.4
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= Resets skills, stats, or both.
+//===== Additional Comments: =================================
+//= 1.0 First Version
+//= 1.1 Optimized for the greater good. [Kisuka]
+//= 1.2 Cleaning [Euphy]
+//= 1.3 All statuses removed upon skill reset. [Euphy]
+//= 1.4 Compressed Script, Added limit use option [Stolao]
+//=	Changed set -> setarray, Improved text with F_InsertPlural
+//============================================================
+-	script	Resetadora	-1,{
+	OnReset:
+	//	 		Skills,	Stats,	Both,	Limit
+	setarray .@Reset,	1,	1,	2;
+	mes "[Resetador VIP]";
+	mes "Olá! Eu posso resetar todos os seus tributos.";
+	mes "Deseja fazer o uso dos meus serviços?";
+	next;
+	set .@i,(select("^FF3355Resetar Atributos^000000:Cancelar"));
+	if(.@i > 1) close;
+	mes "[Resetadora]";
+	if (Zeny < .@Reset[.@i-1] && getgmlevel() < 1 ) {
+		mes "Desculpa, você não tem zenys o suficiente.";
+		close;
+	}
+
+	if(.@i&1) ResetStatus;
+	mes "Prontinho!";
+	close;
+}

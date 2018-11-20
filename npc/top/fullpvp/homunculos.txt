@@ -1,0 +1,98 @@
+prontera,147,164,6	script	Adestrador de Homunculos#1	4_M_HUMAN_01,{
+
+	if(Class == 18 || Class == 4019 || Class == 4041 || Class == 4071 || Class == 4078 || Class == 4107){
+		
+		mes "[^FF8000Adestrador de Homúnculos^000000]";
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "Caso tenha interesse, eu posso lhe ajudar a conseguir um Homúnculos facilmente.";
+		next;
+		mes "Você tem interesse?";
+		switch(select("- Sim.:- Não, obrigado.")) {
+		case 2:
+	next;
+	mes "[^FF8000Adestrador de Homúnculos^000000]";
+	mes "Tudo bem,";
+	mes "Estarei esperando caso pecise.";
+	close;
+		
+		case 1:
+		next;
+		mes "[^FF8000Adestrador de Homúnculos^000000]";
+		if(!getskilllv("AM_BIOETHICS")){
+			mes "Ora, volte aqui quando aprender a habilidade necessária.";
+			close3;
+		}
+		if(checkhomcall() != -1) {
+			next;
+			mes "Hmm... observei aqui que você já possui um homúnculos, o máximo que posso fazer aqui é resetar os status do seu homúnculos, você tem interesse nisso?";
+			next;
+			if(select("- Sim;:- Não, obrigado;") == 2){
+				next;
+				mes "[^FF8000Adestrador de Homúnculos^000000]";
+				mes "Ok, volte quando quiser.";
+				close3;
+			}
+			homshuffle;
+			next;
+			mes "[^FF8000Adestrador de Homúnculos^000000]";
+			mes "Pronto, já resetei os status dele, você gostaria de tentar a sorte novamente?";
+			while(select("- Resetar novamente.:Não, obrigado.") == 1) {
+				homshuffle;
+			}
+			close3;
+		}
+		
+		mes "Perfeito!";
+		mes "Agora selecione o homúnculos desejado.";
+		next;
+		switch(select("Bayeri","Dieter","Eira","Eleanor","Sera")){
+			case 1:
+				.@hid = 6049; break; // Bayeri
+			case 2:
+				.@hid = 6051; break; // Dieter
+			case 3:
+				.@hid = 6048; break; // Eira
+			case 4:
+				.@hid = 6052; break; // Eleanor
+			case 5:
+				.@hid = 6050; break; // Sera
+		}
+
+		mes "[^FF8000Adestrador de Homúnculos^000000]";
+		mes "Qual homúnculo você quer que seja a base?";
+		next;
+		switch(select("Amistr","Filir","Lif","Vanilmirth")){
+			case 1:
+				atcommand "@makehomun 6010"; // Amistr
+				break;
+			case 2:
+				atcommand "@makehomun 6011"; // Filir
+				break;
+			case 3:
+				atcommand "@makehomun 6009"; // Lif
+				break;
+			case 4:
+				atcommand "@makehomun 6012"; // Vanilmirth
+				break;
+		}
+		sleep2 250;
+		atcommand "@homfriendly 1000";
+		atcommand "@homlvl 150";
+		homevolution;
+		morphembryo;
+		sleep2 250;
+		hommutate .@hid;
+		atcommand "@homlvl 150";
+		atcommand "@homhungry 100";
+	
+	close3;
+	} }
+	
+	mes "[^FF8000Adestrador de Homúnculos^000000]";
+	mes "Olá companheiro!";
+	mes "Sinto muito mas eu não posso te ajudar em nada";
+	close;
+	
+
+}
+

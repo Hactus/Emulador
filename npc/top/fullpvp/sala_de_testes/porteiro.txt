@@ -1,0 +1,30 @@
+prontera,147,160,6	script	Sala de Testes	4_M_GRANDMONK,{
+				
+			mes "[Sala de Testes]";
+			mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+			mes "Gostaria de testar o que exatamente?";
+			next;
+			switch(select("- Nada, obrigado.:- Testar dano em monstros.:- Testar dano em MVPS.:- Testar no Emperium.")) {
+				
+				case 1:
+				mes "[Sala de Testes]";
+				mes "Tudo bem, caso precise testar algo é só me procurar";
+				close;
+				
+					case 2:
+					close2;
+					doevent "MobTest::OnMenuMobTest";
+					end;
+				
+					case 3:
+					close2;
+					doevent "TesteMVP::OnMenuMVP";
+					end;
+
+					case 4:
+					close2;
+					doevent "EmperiumTest::OnMenuEmperium";
+					end;
+
+			}
+			}

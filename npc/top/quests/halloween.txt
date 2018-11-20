@@ -1,0 +1,456 @@
+prontera,152,182,5	script	Afonso	10085,{
+if (quest_halloween < 1) {
+mes "[Afonso]";
+mes "Oi, estou precisando de ajuda, poderia me ajudar a encontrar o meu netinho?";
+next;
+switch(select("Não, eu estou ocupado.:Como assim? O que aconteceu??")) {
+
+case 1:
+mes "[Afonso]";
+mes "Mas ei, por favor, eu não consigo encontrá-lo...";
+next;
+select("Eu não me importo.");
+close; 
+
+case 2:
+mes "[Afonso]";
+mes "Bom, o meu neto saiu de casa às pressas dizendo que iria encontrar os pais dele...";
+select("E qual o problema nisso?");
+next;
+mes "[Afonso]";
+mes "Bom....";
+next;
+mes "[Afonso]";
+mes "Meu filho e minha nora faleceram a alguns meses lutando na invasão que ocorreu em Morroc.";
+mes "Eu já superei a perda, mas meu neto não... Ele diz o tempo todo que eles ainda estão vivos";
+next;
+mes "[Afonso]";
+mes "Meu netinho sempre foi um garoto esperto, mas desde a morte de seus pais ele está estranho...";
+mes "Começou a ler alguns livros estranhos, sobre vida após a morte... Sobre rituais... Sobre bruxas e outras coisas macabras...";
+next;
+mes "[Afonso]";
+mes "No começo achei normal, que era só durante a sua fase de luto, mas ele começou a levar a sério toda a história e começou a me assustar...";
+next;
+mes "[Afonso]";
+mes "Então ele começou a falar sobre esperar o dia das bruxas, pois seria nesse dia que ele iria reencontrar os pais dele.";
+next;
+mes "[Afonso]";
+mes "Eu já estava cansado de tudo aquilo, ele estava sofrendo, mas precisava cair na real, já não é tão jovem assim...";
+next;
+mes "[Afonso]";
+mes "Briguei com ele, disse que os pais dele não voltariam não importa o que ele fizesse...";
+next;
+mes "[Afonso]";
+mes "E então eu peguei todos os livros e os queimei.";
+next;
+mes "[Afonso]";
+mes "Nesse momento ele ficou furioso comigo... eu nunca havia visto meu neto nervoso, principalmente daquele jeito...";
+next;
+mes "[Afonso]";
+mes "Ele me chingou muito e começou a chorar, pegou sua mochila saindo de casa correndo dizendo apenas que iria encontrar os pais dele.";
+next;
+mes "[Afonso]";
+mes "Eu tentei ir atrás dele, mas o garoto é jovem, e eu sou só um velhote, minhas pernas não me permitem mais correr, então ele simplesmente sumiu da minha vista.";
+next;
+select("Então eu imagino onde ele possa ter ido...");
+next;
+mes "[Afonso]";
+mes "Mesmo? Para onde você acha que ele foi?";
+next;
+select("Na cidade Fantasma, Nifflheim...");
+next;
+mes "[Afonso]";
+mes "Nossa, mas é muito perigoso, ele não irá sobreviver...";
+mes "Você pode encontrá-lo para mim? Por favor";
+next;
+switch(select("Sinto muito, eu não posso...:Claro que sim, irei trazê-lo para casa.")){
+
+case 1:
+mes "[Afonso]";
+mes "Por favor... preciso encontrá-lo...";
+select("Sinto muito.");
+close;
+
+case 2:
+mes "[Afonso]";
+mes "Sério?? Muito obrigado...";
+mes "Lembre-se, ele se chama ^ff9000Ryan^000000";
+select("Ok.");
+next;
+mes "[Afonso]";
+mes "Tenha cuidado....";
+mes "E por favor, salve meu neto.";
+quest_halloween = 1;
+// Adicionar o 1º if quest_halloween aqui 
+close;
+}}}
+if (quest_halloween == 1) {
+mes "[Afonso]";
+mes "E então? Conseguiu encontrá-lo?";
+next;
+select("Ainda não...");
+next;
+mes "[Afonso]";
+mes "Por favor, ele não está seguro naquela cidade...";
+close;}
+if (quest_halloween == 2) {
+mes "[Afonso]";
+mes "E então? Conseguiu encontrá-lo?";
+next;
+select("Sim, mas ele não voltará ainda.");
+next;
+mes "[Afonso]";
+mes "Como assim? porque não?...";
+next;
+select("Está determinado a encontrá-los.");
+mes "[Afonso]";
+mes "Ah... Ele puxou isso do pai...";
+mes "Tudo bem, sei que você irá protegê-lo, ele está em boas mãos.";
+close;}
+if (quest_halloween == 3) {
+mes "[Afonso]";
+mes "E então? Conseguiu encontrá-lo?";
+next;
+select("Sim, mas ele não voltará ainda.");
+next;
+mes "[Afonso]";
+mes "Como assim? porque não?...";
+next;
+select("Está determinado a encontrá-los.");
+mes "[Afonso]";
+mes "Ah... Ele puxou isso do pai...";
+mes "Tudo bem, sei que você irá protegê-lo, ele está em boas mãos.";
+close;}
+if (quest_halloween == 4) {
+mes "[Afonso]";
+mes "E então? Conseguiu encontrá-lo?";
+next;
+select("Sim, mas ele não voltará ainda.");
+next;
+mes "[Afonso]";
+mes "Como assim? porque não?...";
+next;
+select("Está determinado a encontrá-los.");
+mes "[Afonso]";
+mes "Ah... Ele puxou isso do pai...";
+mes "Tudo bem, sei que você irá protegê-lo, ele está em boas mãos.";
+close;}
+if (quest_halloween == 5) {
+mes "[Afonso]";
+mes "E então? Conseguiu encontrá-lo?";
+next;
+select("Sim, mas ele não voltará ainda.");
+next;
+mes "[Afonso]";
+mes "Como assim? porque não?...";
+next;
+select("Está determinado a encontrá-los.");
+mes "[Afonso]";
+mes "Ah... Ele puxou isso do pai...";
+mes "Tudo bem, sei que você irá protegê-lo, ele está em boas mãos.";
+close;}
+if (quest_halloween == 6) {
+mes "[Afonso]";
+mes "Nossa, eu não sei como lhe agradecer por trazê-lo de volta para casa, eu já estava desesperado.";
+next;
+mes "Apesar de tudo ele está muito feliz por ter conseguido encontrar seus pais";
+next;
+mes "Conversei muito com ele, e ele está muito feliz por ter tido a oportunidade de despedir deles.";
+select("Que bom, fico feliz com isso.");
+next;
+mes "Enfim, você não deve querer mais ver a mim ou a meu neto tão cedo, por culpa dele você correu grandes riscos...";
+next;
+mes "Peço desculpas mas não sou uma pessoa rica, e a única forma de lhe agradecer é lhe entregando esse Ovo que guardo a anos comigo, ainda não tive coragem de abri-lo, é muito estranho...";
+getitem 16757,1;
+close2;
+quest_halloween = 7;
+erasequest 99998;
+setquest 99999;
+end;
+}
+if (quest_halloween == 7) {
+if (checkquest(99999,PLAYTIME) != 2) {
+		mes "[Afonso]";
+		mes "Você ainda não pode começar outra quest.";
+		mes "A quest só pode ser iniciada a cada 12h.";
+		close;
+	} else {
+		mes "[Afonso]";
+		mes "Quest resetada!";
+		erasequest 99999;
+		quest_halloween = 0;
+		close;
+	}
+}}
+
+niflheim,348,249,2	script	Garoto Estranho	896,{
+if (quest_halloween == 1) {
+mes "[Garoto Estranho]";
+mes "Ei... você está sentindo essa energia também?";
+next;
+select("Energia? Do que está falando?");
+mes "[Garoto Estranho]";
+mes "Estou sentindo a presença deles aqui... Tenho certeza...";
+next;
+select("Deles quem garoto??");
+mes "[Garoto Estranho]";
+mes "Dos meus pais, é claro.";
+select("Ei espera, seu nome é Ryan?");
+next;
+mes "[Garoto Estranho]";
+mes "Sim, como sabe?";
+select("Seu avô me pediu para encontrá-lo.");
+next;
+mes "[Ryan]";
+mes "Ahh sim... O vovô não me entende, meus pais estão vivos, eu sei. Posso sentí-los...";
+next;
+select("Ryan, seus pais estão mortos!!");
+mes "[Ryan]";
+mes "Não estão! Eu sei disso...";
+mes "Acredito que só foram transferidos para outro plano espiritual, eles estão vivos!";
+next;
+mes "[Ryan]";
+mes "Me falaram que há uma senhora que pode me ajudar a trazê-los de volta, mas ela pede itens que não posso conseguir sozinho";
+switch(select("Esqueça isso, vamos para casa.:Hmm, o que ela quer?")){
+case 1:
+next;
+mes "[Ryan]";
+mes "Você é igual ao meu avô, não acredita em mim. Saia daqui!!!";
+close;
+case 2:
+next;
+mes "[Ryan]";
+mes "Bom, pelo o que soube, ela requer ^0000ff60 Lanterna de Abóbora, 10 Alma Capturada e 100 Tortas de Abóbora^000000";
+next;
+select("Nossa, são muitos itens...");
+mes "[Ryan]";
+mes "Sim, eu sei... Pode me ajudar a pegar? Preciso disso para ver meus pais...";
+next;
+switch(select("Tudo bem...:Não, me desculpe.")){
+case 2:
+mes "[Ryan]";
+mes "Sem problemas, darei meu jeito... Sempre dou...";
+close;
+case 1:
+mes "[Ryan]";
+mes "Enquanto isso irei procurar essa senhora, ^0000ffme falaram que sua casa é no norte dessa cidade^000000";
+select("Então nos encontramos lá!");
+quest_halloween = 2;
+// Adicionar mais um if quest_halloween aqui, ficando = 3
+close;
+}}}
+
+if (quest_halloween == 2) {
+mes "[Ryan]";
+mes "Ei... você conseguiu os ^0000ff60 Lanterna de Abóbora, 10 Alma Capturada e 100 Tortas de Abóbora^000000 que lhe pedi?";
+next;
+mes "[Garoto Estranho]";
+mes "Quando conseguir basta me encontrar no ^0000ffnorte dessa cidade^000000";
+close;
+}
+
+if (quest_halloween < 1) {
+mes "[Garoto Estranho]";
+mes "Ei... você está sentindo essa energia também?";
+next;
+select("Energia? Do que está falando?");
+mes "[Garoto Estranho]";
+mes "Estou sentindo a presença deles aqui... tenho certeza...";
+next;
+select("Deles quem garoto??");
+mes "[Garoto Estranho]";
+mes "Dos meus pais, é claro.";
+select("Você está louco...");
+close;
+}}
+
+nif_in,98,99,2	script	Ryan	896,{
+OnInit:
+if (quest_halloween < 2) {
+mes "O que foi??? Não me incomode, estou esperando alguém.";
+close;
+}
+if (quest_halloween == 2) {
+mes "[Ryan]";
+mes "Olá! Você demorou...";
+mes "Está com todos os itens?";
+switch(select("Ainda não...:Sim, está tudo aqui.")){
+case 1:
+next;
+mes "[Ryan]";
+mes "Qual o problema? Você disse que iria me ajudar...";
+next;
+mes "[Ryan]";
+mes "Volte quando tiver com todos os itens, mas por favor, não demore, a energia deles está cada vez mais distante.";
+mes "São ^0000ff60 Lanterna de Abóbora, 10 Alma Capturada e 100 Tortas de Abóbora^000000";
+close;
+case 2:
+next;
+if ((countitem(7225) < 60) || (countitem(6915) < 10) || (countitem(12192) < 100)) {
+mes "[Ryan]";
+mes "Você ainda não tem todos os itens, volte quando conseguir";
+mes "Lembre-se que você poderá conseguir os itens necessários matando os montros Organic Pumpkin, Inorganic Pumpkin e Ghostring espalhados pelos mapas";
+close; }
+mes "[Ryan]";
+mes "Que bom, me dê que vou entregá-los à essa senhora logo, não vejo a hora de rever meus pais...";
+select("Certo, tome!");
+delitem 7225,60;
+delitem 6915,10;
+delitem 12192,100;
+next;
+mes "...";
+next;
+mes "[Ryan]";
+mes "Tome senhora, todos os itens que você pediu!!";
+mes "Pode trazê-los de volta?";
+next;
+mes "^ff1000[Senhora]^000000";
+mes "^ff1000Mas é claro... irei te levar até eles.^000000";
+quest_halloween = 3;
+next;
+// Adicionar mais um if quest_halloween aqui, ficando = 4
+warp "nif_fild02",356,141;
+close;}}
+}
+nif_in,95,100,5	script	Senhora	856,{}
+nif_fild02,360,142,3	script	Espírito#1	10029,{}
+nif_fild02,360,137,3	script	Espírito#2	10083,{}
+
+nif_fild02,357,139,6	script	Ryan	896,{
+if (quest_halloween == 3) {
+quest_halloween = 4;
+initnpctimer;
+npctalk "Ryan: Mamãe??? Papai???";
+end;
+OnTimer3000:
+npctalk "Kate: Filho?! O que está fazendo aqui?", ("Espírito#2");
+end;
+OnTimer6000:
+npctalk "Ryan: Eu sabia que encontraria vocês! Eu Sabia!!!!";
+end;
+OnTimer9000:
+npctalk "Kate: Filho, você não pode ficar aqui, é muito perigoso!!", ("Espírito#2");
+end;
+OnTimer12000:
+npctalk "Ryan: Eu não me importo, eu quero ficar com vocês";
+end;
+OnTimer15000:
+npctalk "Kate: Querido, eu sinto muito, mas não somos os mesmos...", ("Espírito#2");
+end;
+OnTimer18000:
+npctalk "Ryan: Como assim Mamãe??";
+end;
+OnTimer21000:
+npctalk "Kate: Estamos... diferentes...", ("Espírito#2");
+end;
+OnTimer24000:
+npctalk "Kate: A cada dia que se passa, espíritos malignos tomam conta de nós...", ("Espírito#2");
+end;
+OnTimer27000:
+npctalk "Kate: Entram em nossas mentes, embaralham nossas memórias e nos fazem ter raiva de tudo!", ("Espírito#2");
+end;
+OnTimer30000:
+npctalk "Arrgggghhhhh!!!!!!!!", ("Espírito#1");
+end;
+OnTimer33000:
+npctalk "Kate: Filho, tenha cuidado, ele não tem mais a consciência de seu pai, a raiva já tomou conta dele!", ("Espírito#2");
+end;
+OnTimer36000:
+npctalk "Ryan: Como assim mamãe? Ele é meu Pai!";
+end;
+OnTimer39000:
+npctalk "Ryan: Papai... converse comigo papai... por favor...";
+end;
+OnTimer42000:
+npctalk "Kate: Filho, não adianta... Ele já foi quase que completamente consumido por espíritos malignos.", ("Espírito#2");
+end;
+OnTimer45000:
+npctalk "Ryan: Mas Mamãe, quem são esses espíritos malignos?";
+end;
+OnTimer48000:
+npctalk "Kate: São alguns seres malignos meu querido, alguns monstros que encontram-se espalhados por esse plano espiritual.", ("Espírito#2");
+end;
+OnTimer51000:
+npctalk "Ryan: Quais monstros Mamãe? Eu irei derrotá-los para salvá-los.";
+end;
+OnTimer54000:
+npctalk "Kate: Tem certeza meu filho? É algo muito perigoso...", ("Espírito#2");
+end;
+OnTimer57000:
+npctalk "Ryan: Tenho! Me diga quais são os monstros.";
+end;
+OnTimer60000:
+npctalk "Kate: Tudo bem filho, para nos salvar você precisará derrotar 25 Espíritos Malignos e 25 Ghostrings, eles ficam espalhados em algumas mapas, e principalmente em Nifflheim e em seus arredores.", ("Espírito#2");
+end;
+OnTimer62000:
+npctalk "Kate: Mas você não poderá demorar muito, pois caso contrário não conseguirá salvar seu pai. Eu ainda tenho algum tempo, mas o seu pai não....", ("Espírito#2");
+end;
+OnTimer65000:
+npctalk "Ryan: Tudo bem Mamãe, não se preocupe, iremos derrotá-los.";
+stopnpctimer;
+end;
+}
+if (quest_halloween == 4 && checkquest(99998) == -1 ) {
+mes "[Ryan]";
+mes "Ei "+strcharinfo(0)+", você pode me ajudar a derrotar os 25 Espíritos Malignos e 25 Ghostrings?";
+mes "Infelizmente não consiguirei sozinho, preciso de sua ajuda";
+select("Não sei... parece perigoso.");
+next;
+mes "[Ryan]";
+mes "Por favor, eu não tenho a quem mais recorrer, e tenho certeza que você consegue, me ajude... preciso ajudá-los...";
+select("Tudo bem, irei ajudá-lo.");
+next;
+mes "[Ryan]";
+mes "Obrigado, não sei como lhe agradecer...";
+close2;
+setquest 99998;
+end;
+}
+if (checkquest(99998,HUNTING) != 2 ) {
+mes "[Ryan]";
+mes "Vamos, precisamos nos apressar antes que meus pais sejam consumidos para sempre, precisamos matar 25 Espíritos Malignos e 25 Ghostrings.";
+close;
+}
+if (checkquest(99998,HUNTING) == 2) {
+if (quest_halloween == 4) {
+setnpctimer 73000;
+quest_halloween = 5;
+startnpctimer;
+npctalk "Ryan: Mamãe, Mamãe, conseguimos matar todos os montros, vocês estão salvos!";
+end;
+OnTimer73000:
+npctalk "Kate: Ohhh Filho, graças a Deus, você nos salvou, o seu pai já está até mesmo recobrando a consciência.", ("Espírito#2");
+end;
+OnTimer76000:
+npctalk "Krum: Ryan, meu filho... Você foi muito corajoso, estamos orgulhosos de você!", ("Espírito#1");
+end;
+OnTimer79000:
+npctalk "Krum: Não podemos ficar mais nesse plano espiritual, senão tudo voltará novamente. Cuide-se Filho!.", ("Espírito#1");
+end;
+OnTimer82000:
+npctalk "Kate: Lembre-se filho: Amamos você, e estamos orgulhosos de você!", ("Espírito#2");
+end;
+stopnpctimer;
+}
+if (quest_halloween == 5) {
+mes "[Ryan]";
+mes "Obrigado "+strcharinfo(0)+", agradeço do fundo do meu coração por tudo o que você fez.";
+next;
+mes "[Ryan]";
+mes "Para demonstrar minha gratidão, entrego-lhe esse Medalhão que peguei na casa da Senhora que nos trouxe para esse plano espiritual.";
+next;
+mes "[Ryan]";
+mes "Você achou mesmo que eu daria tudo aquilo para ela, sem nenhum plano ou garantia de como voltaríamos para a casa?.";
+next;
+mes "[Ryan]";
+mes "Pelo o que li em meus livros, o medalhão de uma bruxa é muito poderoso, e pode nos teletransportar entre todos os planos espirituais.";
+next;
+mes "[Ryan]";
+mes "Vamos utilizá-lo para retornar para casa, e depois disso você poderá ficar com ele, acredito que pagarão muito bem por ele.";
+getitembound 7313,1,bound_account;
+close2;
+quest_halloween = 6;
+warp "prontera",155,185;
+end;
+// Após a entrega do item ficará == 6
+}}}

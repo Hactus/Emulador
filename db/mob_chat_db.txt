@@ -1,0 +1,46 @@
+// Monster Chat Database
+//
+// Structure of Database:
+// Line_ID#Color_Code#Dialog
+
+1#0xFF0000#Fraco! Me desafie se você tiver alguma coragem!
+2#0xFF0000#Impressionante! Eu me pergunto até onde sua imprudência irá te levar.
+3#0xFF0000#Quase sinto pena que seja contra você. Agora prepare-se para o meu ataque!
+4#0xFF0000#Meus leias servos! Receba-os com uma morte dolorosa!
+5#0xFF0000#Não fuja!
+6#0xFF0000#Humanos sem valor. Seus poderes sagrados invocados não têm efeito sobre mim!
+7#0xFF0000#Subordinados inúteis!...Bem, tudo bem, tenho mais armas para usar e descartar.
+8#0xFF0000#Reze para os seus Deuses!
+9#0xFF0000#Você ainda acha que é um jogo para mim?!
+10#0xFF0000#Desapareça!
+11#0xFF0000#Vamos ver quanto tempo você aguenta o meu poder!
+12#0xFF0000#Isso é tudo que você tem?!
+13#0xFF0000#Você está me fazendo cócegas!
+14#0xFF0000#É assim que você ataca? Fraco, veja e aprenda!
+15#0xFF0000#Chegou a hora de terminar o jogo!
+16#0xFF0000#Oh, você é mais forte do que eu pensava!
+17#0xFF0000#Não, isso não pode estar acontecendo! Eu sou Imperador Morroc, o Rei Demônio da Destruição!
+18#0xFF0000#Eu não posso morrer! Eu voltarei a você!
+19#0xFF0000#Eu nasci para conquistar este mundo! Ninguém pode me parar!
+20#0xFF0000#Seus dias estão contados!
+21#0xFF0000#Golpe de Pulso! Meus dedos rasgam aço!
+22#0xFF0000#Hahaha, me diga quem eu sou! Eu sou Bafomé, o herdeiro do inferno!
+23#0xFF0000#Aproveite seu tempo no plano mortal enquanto pode, sua esperança logo se transformará em desespero!
+24#0xFF0000#Quando você vai aprender sua lição? Na morte?
+25#0xFF0000#Não... não posso perder! Eu não vou implorar pela minha vida! Eu não estou fugindo! Eu não aceito esta derrota!
+26#0xFF0000#Argh... eu estou enfraquecendo...
+27#0xFF0000#O que você quer de mim?
+28#0xFF0000#Não! Eu não fiz isso! Ele planejou tudo isso sozinho!
+29#0xFF0000#Eu só queria encontrar a paz..! É por isso que eu tenho fugido!
+30#0xFF0000#Ahhhh!!! Agora eu só tenho que matar todos vocês!
+31#0xFF0000#Moscas irritantes!! Saia de perto de mim!
+32#0xFF0000#Sofra no inferno!
+33#0xFF0000#Mwahahaha! Prove a ira da terra!!!
+34#0xFF0000#Não... eu não vou aceitar esta derrota!
+35#0xFF0000#Será que vai aliviar sua solidão me bater? Por que você não fica aqui comigo para sempre, humano?
+36#0xFF0000#Você vai esquecer o significado do tempo. Me pergunto quanto tempo você pode durar aqui...
+37#0xFF0000#Há alguém lá fora esperando por você? Esqueça todos eles, você é meu agora...
+38#0xFF0000#Descarte sua vida e fique confinado aqui. Em seu cativeiro você vai ansiar por liberdade!
+39#0xFF0000#Quanto o mundo exterior mudará se você ficar aqui em solidão por mil anos?
+40#0xFF0000#Sim! Anseiem por sua liberdade deste lugar confinado, seu cativeiro aqui será permanente !!
+

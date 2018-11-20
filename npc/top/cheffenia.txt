@@ -1,0 +1,406 @@
+prontera,126,186,0	script	Utan Chief	784,{
+OnInit:
+hideonnpc	"Cheffenia#2";
+end;
+}
+prontera,137,192,5	script	Utan Chief	784,{
+		if(getgmlevel() > 90){
+		mes "[Cheffenia]";
+		mes	"Olá "+strcharinfo(0)+". O que deseja?";
+		switch(select("Abrir")){
+		case 1:
+			mes "[Cheffenia]";
+			mes "Tem certesa que deseja abrir a Cheffenia?";
+			switch(select("Sim:Não")){
+				case 1:
+					mes "[Cheffenia]";
+					mes "Ok.";
+					next;
+					mes "[Cheffenia]";
+					mes "A Cheffenia foi aberta com sucesso.";
+					close2;
+					goto	ligar;
+					end;
+				case 2:
+					mes "[Cheffenia]";
+					mes "Ok, volte mais tarde.";
+					close;
+					end;
+					}
+		
+		}
+		}
+		if(getgmlevel() < 90){		
+		mes "[Cheffenia]";
+		mes "Olá "+strcharinfo(0)+"!";
+		mes "O evento Cheffenia ocorre aleatóreamente.";
+		mes "Quando o evento ocorrer será avisado Globalmente.";
+		mes "E um NPC ^FF0000Teleportador^000000 estará disponível aqui em Prontera neste mesmo local.";
+		close;
+		end;
+		}
+
+ligar:
+sleep 2000;
+announce "O Teleportador para Cheffenia está disponível em Prontera 147,176! Seja rápido!",8;
+sleep 2500;
+announce "Para entrar na Cheffenia você precisa ter o Passe para Cheffenia!",8;
+hideonnpc	"Cheffenia#1";
+hideonnpc	"Cheffenia#2";
+
+set $mobs,250;
+monster "bossnia_01",0,0,"Senhora Tanee",1688,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Amon Ra",1511,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Bacsojin",1630,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Besouro Ladrão Dourado",1086,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Doppelganger",2098,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Drácula",1389,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Drake",1112,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Eddga",2095,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Maya",1147,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Abelha Rainha",1059,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Flor do Luar",1150,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Orc Heroi",1087,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Osiris",1038,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Faraó",1157,1,"Cheffenia#1::Ondead1";
+monster "bossnia_01",0,0,"Freonii",1159,1,"Cheffenia#1::Ondead1";
+
+
+set $mobs,250;
+monster "bossnia_02",0,0,"Hatii",1252,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Senhor dos Orcs",1190,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Senhor das Trevas",2052,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Atroce",1785,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Bafomé",1039,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Boitata",2068,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Serpente Suprema",2104,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Gopinich",1885,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Samurai Encarnado",1492,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"General Tartaruga",1312,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Tao Gunka",1583,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Senhor dos Mortos",1373,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Dragão Perdido",2131,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"Rainha Scaraba",2087,1,"Cheffenia#1::Ondead2";
+monster "bossnia_02",0,0,"RSX-0806",1623,1,"Cheffenia#1::Ondead2";
+
+set $mobs,250;
+monster "bossnia_03",0,0,"General Daehyun",2253,1,"Cheffenia#1::Ondead6";
+monster "bossnia_03",0,0,"Gioia",2251,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Pesar Noturno",1768,1,"Cheffenia#1::Ondead6";
+monster "bossnia_03",0,0,"Kades",2255,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Kiel D-01",1734,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Ktullanux",1779,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Leak",2156,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Alma Corrupta",2475,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Nidhogg",2022,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Valquíria Randgris",1751,1,"Cheffenia#1::Ondead6";
+monster "bossnia_03",0,0,"Vesper",1685,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Egnigem Cenia",1658,1,"Cheffenia#1::Ondead6";
+monster "bossnia_03",0,0,"Thanatos",1708,1,"Cheffenia#1::Ondead6";
+monster "bossnia_03",0,0,"Pyuriel",2249,1,"Cheffenia#1::Ondead3";
+monster "bossnia_03",0,0,"Amon Ra Sombrio",2362,1,"Cheffenia#1::Ondead3";
+
+set $mobs,250;
+monster "bossnia_04",0,0,"Amdarais",2476,1,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Algoz Eremes",1647,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Belzebu",1874,1,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Buwaya",2319,1,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Detardeuros",1719,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Bispo Decadente",1871,1,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Rainha Scaraba Dourada",2165,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Sumo Sacerdotisa Margaretha",1649,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Ifrit",1832,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Kraken",2202,1,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Lorde Seyren",1646,1,"Cheffenia#1::Ondead7";
+monster "bossnia_04",0,0,"Atiradora-de-Elite Cecil",1650,25,"Cheffenia#1::Ondead5";
+monster "bossnia_04",0,0,"Incarnação de Morroc",1917,1,"Cheffenia#1::Ondead5";
+
+
+monster "ordeal_2-2",0,0,"Paladino Randel",2235,50,"Cheffenia#1::Ondead8";
+monster "ordeal_2-2",0,0,"Criador Flamel",2236,50,"Cheffenia#1::Ondead4";
+monster "ordeal_2-2",0,0,"Professora Celia",2237,50,"Cheffenia#1::Ondead8";
+monster "ordeal_2-2",0,0,"Mestre Chen",2238,50,"Cheffenia#1::Ondead8";
+monster "ordeal_2-2",0,0,"Desordeira Gertie",2239,50,"Cheffenia#1::Ondead4";
+monster "ordeal_2-2",0,0,"Menestrel Alphoccio",2240,50,"Cheffenia#1::Ondead4";
+monster "ordeal_2-2",0,0,"Cigana",2241,50,"Cheffenia#1::Ondead4";
+
+
+monster "ordeal_1-2",0,0,"Rainha Verme Demoníaco",2529,50;
+monster "ordeal_1-2",0,0,"Senhor da Treta",1876,50;
+monster "ordeal_1-2",0,0,"Poring?",2502,50;
+monster "ordeal_1-2",0,0,"Craby?",2075,50;
+
+
+Ondead1:
+set $mobs,$mobs-1;
+getitem	7307,1;
+end;		
+	
+Ondead2:
+set $mobs,mobs-1;
+getitem	7307,2;
+end;
+
+Ondead3:
+set $mobs,mobs-1;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+1 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+getitem	7307,3;
+end;
+
+Ondead4:
+set $mobs,mobs-1;
+getitem	7307,5;
+getitem	12850,1;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+3 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+end;		
+
+Ondead5:
+set $mobs,mobs-1;
+getitem	7307,4;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+2 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+getitem	17064,1;
+end;	
+
+Ondead6:
+set $mobs,mobs-1;
+getitem	7307,4;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+1 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+getitem	6100,1;
+end;
+
+Ondead7:
+set $mobs,mobs-1;
+getitem	7307,3;
+getitem	6100,1;
+getitem	17064,1;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+2 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+end;		
+
+Ondead8:
+set $mobs,mobs-1;
+getitem	7307,4;
+getitem	6100,1;
+getitem	12850,1;
+query_sql "UPDATE `char` SET `mvp` = `mvp`+3 WHERE `char_id` AND `name` = '"+strcharinfo(0)+"'";
+end;
+			}
+			
+prontera,137,192,5	script	Utan Chief	784,{
+		if(getgmlevel() > 99){
+		mes "[Cheffenia]";
+		mes	"Olá "+strcharinfo(0)+". O que deseja?";
+		switch(select("Fechar:Teleportar")){
+		case 1:
+			mes .@n$;
+			mes "Tem certesa que deseja fechar a Cheffenia?";
+			switch(select("Sim:Não")){
+				case 1:
+					mes "[Cheffenia]";
+					mes "Ok.";
+					next;
+					mes "[Cheffenia]";
+					mes "A Cheffenia foi fechada com sucesso.";					
+					close2;
+					goto	desligar;
+					end;
+				case 2:
+					mes "[Cheffenia]";
+					mes "Ok, volte mais tarde.";
+					close;
+					end;
+					}
+		case 2:
+				close;
+				end;
+					}
+		
+		}
+		mes "[Cheffenia]";
+		mes "Olá "+strcharinfo(0)+"!";
+		mes "O portal para Cheffenia está aberto.";
+		mes "Mas para entrar você precisa de um ^FF0000Ticket Bossnia^000000";
+		mes "A menos que você tenha um, não posso te deixar entrar.";
+		next;
+		mes "[Cheffenia]";
+		mes "Então, o que deseja?";
+		next;
+		switch(select("Entrar:Informações:Nada")){
+		case 1:
+			if(countitem(6673)	<	1){
+			mes "[Cheffenia]";
+			mes "Desculpe, mas você não possui ^FF0000Ticket Bossnia^000000.";
+			mes "Volte quando tiver um.";
+			close;
+			end;
+			}
+		mes "[Cheffenia]";
+		mes "Para entrar no nível Nightmare e Very Hard você precisa de ^FF0000Fumaça Negra^000000.";
+		mes "Obtido de alguns MVP's da arena Hard.";
+		mes "Por favor escolha o modo que deseja ir.";
+		next;
+		switch(select("Spartan(Easy):Titan(Medium):God(Hard):Chaos^FF0000(Very Hard)^000000:^FF0000~Nightmare~^000000:~Oh Fuck?!~")){
+			case 1:
+				mes "[Cheffenia]";
+				mes "Você tem certeza que deseja ir para o modo";
+				mes "^FF0000Spartan^000000?";
+				switch(select("Sim:Não")){
+				case 1:
+				mes "[Cheffenia]";
+				mes "Tudo bem, boa sorte!";
+				warp	"bossnia_01",203,203;
+				close;
+				end;
+				case 2:
+				mes "[Cheffenia]";
+				mes "Volte quando quiser.";
+				close;
+				end;
+				}
+			case 2:
+				mes "[Cheffenia]";
+				mes "Você tem certeza que deseja ir para o modo";
+				mes "^FF0000Titan^000000?";
+				switch(select("Sim:Não")){
+				case 1:
+				mes "[Cheffenia]";
+				mes "Tudo bem, boa sorte!";
+				warp	"bossnia_02",203,203;
+				close;
+				end;
+				case 2:
+				mes "[Cheffenia]";
+				mes "Volte quando quiser.";
+				close;
+				end;
+				}
+			case 3:
+				mes "[Cheffenia]";
+				mes "Você tem certeza que deseja ir para o modo";
+				mes "^FF0000God^000000?";
+				switch(select("Sim:Não")){
+				case 1:
+				mes "[Cheffenia]";
+				mes "Tudo bem, boa sorte!";
+				warp	"bossnia_03",203,203;
+				close;
+				end;
+				case 2:
+				mes "[Cheffenia]";
+				mes "Volte quando quiser.";
+				close;
+				end;
+				}
+			case 4:
+				mes "[Cheffenia]";
+				mes "Você é mesmo de coragem!";
+				mes "Você tem certeza que deseja ir para o modo";
+				mes "^FF0000Chaos^000000?";
+				switch(select("Sim:Não")){
+				case 1:
+				if(countitem(6100) < 1){
+					mes "[Cheffenia]";
+					mes "Desculpe, você precisa de";
+					mes "^FF0000Fumaça Negra^000000";
+					mes "Para entrar aqui.";
+					close;
+					end;
+					}				
+				mes "[Cheffenia]";
+				mes "Tudo bem, boa sorte!";
+				delitem	6100,1;
+				warp	"bossnia_04",203,203;
+				close;
+				end;
+				case 2:
+				mes "[Cheffenia]";
+				mes "Volte quando quiser.";
+				close;
+				end;
+				}
+			case 5:
+				mes "[Cheffenia]";
+				mes "Uau! Você é louco!";
+				next;
+				mes "[Cheffenia]";
+				mes "Você é forte o suficiente para suportar esse modo?";
+				mes "Tem certeza que deseja ir para o modo";
+				mes "^FF0000Nightmare^000000?";
+				switch(select("Sim:Não")){
+				case 1:
+				if(countitem(6100) < 1){
+					mes "[Cheffenia]";
+					mes "Desculpe, você precisa de";
+					mes "^FF0000Fumaça Negra^000000";
+					mes "Para entrar aqui.";
+					close;
+					end;
+					}
+				mes "[Cheffenia]";
+				mes "Tudo bem, boa sorte!";
+				delitem	6100,1;
+				warp	"ordeal_2-2",105,153;
+				close;
+				end;
+				case 2:
+				mes "[Cheffenia]";
+				mes "Volte quando quiser.";
+				close;
+				end;
+				}
+			case 6:
+			mes "[Cheffenia]";
+			mes "Você é louco.";
+			close;
+			end;
+				
+			}
+		case 2:
+			mes "[Cheffenia]";
+			mes "Na Cheffenia existem os níveis de dificuldade.";
+			next;
+			mes "Easy(Fácil)";
+			mes "Medium(Moderado)";
+			mes "Hard(Difícil)";
+			mes "Very Hard(Muito difícil)";
+			mes "Nightmare(Insano)";
+			mes "~OhFuck?!(?????)";
+			next;
+			mes "[Cheffenia]";
+			mes "Cada nível apresentam monstros do tipo Chefe diferente.";
+			mes "Em cada nível, cada MvP derrotado você ganhará um item diferente.";
+			mes "Alguns desses itens são necessários para adentrar ao nível ^FF0000Nightmare^00000 e ~OhFuck?!~";
+			next;
+			mes "Para entrar em qualquer nível de Cheffenia, você precisa obrigatóriamente de um ";
+			mes "^FF0000Ticket Bossnia^000000 que é vitalício.";
+			mes "Espero ter ajudado. Até logo.";
+			close;
+			end;
+			
+			
+		case 3:
+			mes "[Cheffenia]";
+			mes "Ok, até logo.";
+			close;
+			end;
+			
+		}
+desligar:
+sleep 2000;
+announce "O evento Cheffenia terminou!Obrigado a todos que participaram!",8;
+			killmonsterall "bossnia_01";
+			mapwarp "bossnia_01","prontera",256,191;
+			killmonsterall "bossnia_02";
+			mapwarp "bossnia_02","prontera",256,191;
+			killmonsterall "bossnia_03";
+			mapwarp "bossnia_03","prontera",256,191;
+			killmonsterall "bossnia_04";
+			mapwarp "bossnia_04","prontera",256,191;
+			killmonsterall "ordeal_2-2";
+			mapwarp "ordeal_2-2","prontera",256,191;
+			killmonsterall "ordeal_1-2";
+			mapwarp "ordeal_1-2","prontera",256,191;
+			
+hideonnpc	"Cheffenia#2";
+hideonnpc	"Cheffenia#1";		
+		}
+	

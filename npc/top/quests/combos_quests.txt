@@ -1,0 +1,138 @@
+//Made by Lunar
+//Version 1.7
+//Traduzido por x Twilight
+ 
+-	shop	combo_shop	-1,501:50
+ra_temsky,51,152,2,	script	Combos	571,{
+	set @i,0;
+	mes "[Quest Shop]";
+	mes "Olá, aqui você poderá escolher várias quests para fazer.";
+	mes "^FF0000*Lembre-se de escolher apenas um item por vez.*^000000";
+	switch(select("^3366FFVer Quests^000000:^800080Ver Ranking^000000")){
+	case 1:
+	close2;
+	callshop "combo_shop",1;
+	npcshopattach "combo_shop";
+	end;
+	case 2:
+	set @nomequest$,"";
+	set @pontosquest,0;
+	next;
+	query_sql "SELECT `nome`, `pontos` FROM `quests_points` ORDER BY `pontos` DESC LIMIT 10",@nomequest$,@pontosquest;
+	mes "(Posição - Nome - ^FF0000Pontos^000000)";
+	for(set @i,0;@i <= 99;set @i,@i+1){
+	mes "["+(@i+1)+"] - "+@nomequest$[@i]+"- ^FF0000"+@pontosquest[@i]+"^000000";
+	}}
+ 
+OnBuyItem:
+	if(.BuildQuest) {
+		for(set .e,0; !compare(getarg(.e+1)+ "","Zeny"); set .e,.e+2) {}
+		npcshopadditem "combo_shop",getarg(.e+2),getarg(.e)*compare(getarg(.e+1),"SZeny");
+		setarray .Shop[.i],getarg(.e+2);
+		set .i,.i+1;
+		goto Combo_Setup;
+	}
+	if(.Shop[@i]!=@bought_nameid) for(set @i,1; 1; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set .i,@i; callsub Combo_Setup; }
+	for(set @i,1; !@e; set @i,@i+1) if(.Shop[@i]==@bought_nameid) { set @e,1; set .i,@i; callsub Combo_Setup; }
+	mes "[Quest Shop]";
+	mes "Requerimento:";
+	for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) mes "^FF0000" + ((countitem(getarg(@i))>=getarg(@i+1))? "^00FF00":"") + "" + getarg(@i+1) + " " + getitemname(getarg(@i)) + " [" + countitem(getarg(@i)) + "/" + getarg(@i+1) + "]";
+	if(getarg(@i)) mes "^FF0000" + ((Zeny>=getarg(@i))? "^00FF00":"") + "" + getarg(@i) + " Zeny";
+	mes "^000000Recompensa:^0000FF";
+	for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) mes getarg(@i+1) + " " + getitemname(getarg(@i));
+	switch(select("Trocar:" + (((((getiteminfo(@bought_nameid,5) & 1) || (getiteminfo(@bought_nameid,5) & 256) || (getiteminfo(@bought_nameid,5) & 512)) && @equip==0))? "Item de Visualização":"") + ":Não, obrigado")) {
+		case 1:
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) if(countitem(getarg(@i)) < getarg(@i+1)) {
+				next;
+				mes "[Quest Shop]";
+				mes "Você tem " + countitem(getarg(@i)) + " " + getitemname(getarg(@i)) + ", enquanto eu requeiro " + getarg(@i+1) + ".";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i+1)-countitem(getarg(@i))) + " " + getitemname(getarg(@i)) + "^000000.";
+				close;
+			}
+			if(Zeny < getarg(@i)) {
+				next;
+				mes "[Quest Shop]";
+				mes "Você não tem o Zeny suficiente.";
+				mes "Por favor obtenha ^FF0000" + (getarg(@i)-Zeny) + " Zeny^000000.";
+				close;
+			}
+			for(set @i,0; !compare(getarg(@i+1)+ "","Zeny"); set @i,@i+2) delitem getarg(@i),getarg(@i+1);
+			set Zeny,Zeny-getarg(@i);
+			for(set @i,@i+2; getarg(@i+1,0); set @i,@i+2) getitem getarg(@i),getarg(@i+1);
+			if (compare(getarg(@i,0),"announce")) announce "[" + strcharinfo(0) + "] acaba de fazer a quest do item " + getitemname(@bought_nameid) + "!",bc_all;
+				set @nomequest$,"";
+				set @QuestsPoints,0;
+				query_sql "SELECT `nome`,`pontos` FROM `quests_points` WHERE `char_id` = '"+getcharid(0)+"'",@nomequest$,@QuestsPoints;
+				if(@nomequest$ == "") query_sql "INSERT INTO `quests_points` (`account_id`,`char_id`,`nome`, `pontos`) VALUES ('"+getcharid(3)+"','"+getcharid(0)+"','"+strcharinfo(0)+"',1)"; else
+				query_sql "UPDATE `quests_points` SET `pontos` = `pontos`+1 WHERE `char_id` = '"+getcharid(0)+"'";
+			close;
+		case 2:
+			set @bottomview, getlook(3);
+			set @topview, getlook(4);
+			set @midview, getlook(5);
+			addtimer 1000, strnpcinfo(3)+"::On_Leave";
+			set @equip,getiteminfo(@bought_nameid, 5);
+			set @view, getiteminfo(@bought_nameid, 11);
+			if(@equip != -1 && @view > 0) {
+				if(@equip & 1) atcommand "@changelook 3 " + @view;
+				if(@equip & 256) atcommand "@changelook 1 " + @view;
+				if(@equip & 512) atcommand "@changelook 2 " + @view;
+			}
+			next;
+			goto OnBuyItem;
+		case 3:
+			close;
+	}
+On_Leave:
+	atcommand "@changelook 1 " + @topview;
+	atcommand "@changelook 2 " + @midview;
+	atcommand "@changelook 3 " + @bottomview;
+	set @equip,0;
+	set @view,0;
+	set @topview,0;
+	set @midview,0;
+	set @bottomview,0;
+	end;
+OnInit:
+	npcshopdelitem "combo_shop",501;
+	set .BuildQuest,1;
+	set .i,1;
+Combo_Setup:
+	switch(.i) {
+		default: set .BuildQuest,0; set .e,0; set .i,0; end;
+		case 1: callsub OnBuyItem,2421,1,15000000,"SZeny",2483,1,"announce";
+		case 2: callsub OnBuyItem,2421,1,15000000,"SZeny",2484,1,"announce";
+		case 3: callsub OnBuyItem,2421,1,15000000,"SZeny",2485,1,"announce";
+		case 4: callsub OnBuyItem,2524,1,15000000,"SZeny",2586,1,"announce";
+		case 5: callsub OnBuyItem,2524,1,15000000,"SZeny",2587,1,"announce";
+		case 6: callsub OnBuyItem,2357,1,15000000,"SZeny",15046,1,"announce";
+		case 7: callsub OnBuyItem,2357,1,15000000,"SZeny",15047,1,"announce";
+		case 8: callsub OnBuyItem,2357,1,15000000,"SZeny",15048,1,"announce";
+		case 9: callsub OnBuyItem,1099,300,20673,1,0,"SZeny",15040,1,"announce";
+		case 10: callsub OnBuyItem,1098,300,20673,1,0,"SZeny",2913,1,"announce";
+		case 11: callsub OnBuyItem,1815,3,6224,300,7030,300,0,"SZeny",28321,1,"announce";
+		case 12: callsub OnBuyItem,2619,1,1741,2,6403,300,0,"SZeny",28322,1,"announce";
+		case 13: callsub OnBuyItem,2229,2,956,300,951,250,0,"SZeny",18728,1,"announce";
+		case 14: callsub OnBuyItem,2532,3,960,300,2528,3,0,"SZeny",20700,1,"announce";
+		case 15: callsub OnBuyItem,2424,3,964,300,2422,3,0,"SZeny",2495,1,"announce";
+		case 16: callsub OnBuyItem,2386,2,1024,300,15014,2,0,"SZeny",15061,1,"announce";
+		case 17: callsub OnBuyItem,2125,2,7108,2,7122,150,0,"SZeny",2165,1,"announce";
+		case 18: callsub OnBuyItem,2524,1,2508,3,7097,300,0,"SZeny",20701,1,"announce";
+		case 19: callsub OnBuyItem,5172,3,7019,1,2254,2,976,5,0,"SZeny",18816,1,"announce";
+		case 20: callsub OnBuyItem,5172,3,7019,1,2255,2,975,5,0,"SZeny",18817,1,"announce";
+		case 21: callsub OnBuyItem,2365,2,738,5,982,3,978,3,0,"SZeny",15088,1,"announce";
+		case 22: callsub OnBuyItem,5123,1,983,5,5118,5,628,100,0,"SZeny",18756,1,"announce";
+		case 23: callsub OnBuyItem,2654,10,6403,250,1175,1,0,"SZeny",2959,1,"announce";
+		case 24: callsub OnBuyItem,2258,2,6021,200,5104,2,0,"SZeny",5360,1,"announce";
+		case 25: callsub OnBuyItem,12373,3,7206,200,942,100,0,"SZeny",2855,1,"announce";
+		case 26: callsub OnBuyItem,2235,1,7754,2,7568,100,7442,50,7510,2,0,"SZeny",5306,1,"announce";
+		case 27: callsub OnBuyItem,2357,1,7442,50,7510,2,7069,100,0,"SZeny",2369,1,"announce";
+		case 28: callsub OnBuyItem,2516,2,2524,1,7442,50,7510,2,12040,30,0,"SZeny",2533,1,"announce";
+		case 29: callsub OnBuyItem,2421,1,7510,2,7442,50,1030,3,0,"SZeny",2428,1,"announce";
+
+	}
+}
+
+
+
+//	case 13: callsub OnBuyItem,7048,5,7116,300,2619,2,7063,150,0,"SZeny",18985,1,"announce";

@@ -1,0 +1,494 @@
+//==========================================================|
+//	 _    _                     _     _                     |
+//	| |  | |                   | |   (_)                    |
+//	| |__| |_   _ _ __ ___  ___| |__  _ _ __ ___   __ _     |
+//	|  __  | | | | '__/ _ \/ __| '_ \| | '_ ` _ \ / _` |    |
+//	| |  | | |_| | | | (_) \__ \ | | | | | | | | | (_| |    |
+//	|_|  |_|\__, |_|  \___/|___/_| |_|_|_| |_| |_|\__,_|    |
+// 	        __/ |Scripter                                   |
+// 	       |___/										    |
+//==========================================================|
+/* ------------------ SCRIPT INFO -------------------------	=
+Name: PvP Arena X1 				   							=
+Vers: 1.0				 					   				=
+Lang: Português-BR		 					   				=
+---------------------------------------------------------- */
+
+-	script	ArenaX1_Config	hidden_npc,{
+OnInit:
+//===========================================================
+/* Configurações relacionadas ao sistema de PvP Arena X1 ! */
+//===========================================================
+
+
+//Level Min & Max para poder entrar na arena.
+setarray $ArenaX1_Configs[0],1,175;
+
+//Custará algum valor em zeny?
+setarray $ArenaX1_Configs[2],0;
+
+//Limite de players nas filas em chatroom. (Padrão: 10)
+setarray $ArenaX1_Configs[3],10;
+
+//Mapflags
+setmapflag "arena_x1",13; //nowarp
+setmapflag "arena_x1",1; //noteleport
+setmapflag "arena_x1",2; //nosave
+setmapflag "arena_x1",0; //nomemo
+setmapflag "arena_x1",33; //noreturn
+setmapflag "arena_x1",34; //nowarpto
+//setmapflag "arena_x1",6; //pvp
+
+//Area PVP
+setcell "arena_x1", 33, 73, 41, 52, cell_pvp, 1;
+setcell "arena_x1", 45, 73, 53, 52, cell_pvp, 1;
+setcell "arena_x1", 57, 73, 65, 52, cell_pvp, 1;
+setcell "arena_x1", 69, 73, 77, 52, cell_pvp, 1;
+
+removemapflag "arena_x1",12; //remove noskill
+
+//Reset Global Vars
+set $P1_a1$,""; set $P2_a1$,""; set $A1SLP,0;
+set $P1_a2$,""; set $P2_a2$,""; set $A2SLP,0;
+set $P1_a3$,""; set $P2_a3$,""; set $A3SLP,0;
+set $P1_a4$,""; set $P2_a4$,""; set $A4SLP,0;
+
+end;
+
+
+OnPCLogoutEvent:
+
+	if(strcharinfo(3) != "arena_x1") end;
+	set .@Acc2Att,callsub(S_ArenaIfCH,2,strcharinfo(0));
+	if(.@Acc2Att){ sleep 1000; attachrid(.@Acc2Att); warp "arena_x1",54,85; detachrid; }
+	end;
+	
+OnPCKillEvent:
+
+	if(strcharinfo(3) != "arena_x1") end;
+	set .@Acc2Att,callsub(S_ArenaIfCH,1,strcharinfo(0),rid2name(killedrid));
+	callfunc "ArenaX1_Buff";
+	warp "arena_x1",54,85;
+	if(.@Acc2Att){ sleep 1000; attachrid(.@Acc2Att); warp "arena_x1",54,85; callfunc "ArenaX1_Buff"; detachrid; }
+	end;
+	
+S_ArenaIfCH:
+
+	if(getarg(0) == 1)
+	{
+		if($P1_a1$ == getarg(1) || $P2_a1$ == getarg(1)){ set .@acc2,getcharid(3,getarg(2)); set $P1_a1$,""; set $P2_a1$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" derrotou "+getarg(2)+"!",bc_map; return .@acc2; }
+		if($P1_a2$ == getarg(1) || $P2_a2$ == getarg(1)){ set .@acc2,getcharid(3,getarg(2)); set $P1_a2$,""; set $P2_a2$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" derrotou "+getarg(2)+"!",bc_map; return .@acc2; }
+		if($P1_a3$ == getarg(1) || $P2_a3$ == getarg(1)){ set .@acc2,getcharid(3,getarg(2)); set $P1_a3$,""; set $P2_a3$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" derrotou "+getarg(2)+"!",bc_map; return .@acc2; }
+		if($P1_a4$ == getarg(1) || $P2_a4$ == getarg(1)){ set .@acc2,getcharid(3,getarg(2)); set $P1_a4$,""; set $P2_a4$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" derrotou "+getarg(2)+"!",bc_map; return .@acc2; }
+		end;
+	}
+	
+	if(getarg(0) == 2)
+	{
+		if($P1_a1$ == getarg(1)){ set .@acc2,getcharid(3,$P2_a1$); }
+		if($P1_a2$ == getarg(1)){ set .@acc2,getcharid(3,$P2_a2$); }
+		if($P1_a3$ == getarg(1)){ set .@acc2,getcharid(3,$P2_a3$); }
+		if($P1_a4$ == getarg(1)){ set .@acc2,getcharid(3,$P2_a4$); }
+		if($P2_a1$ == getarg(1)){ set .@acc2,getcharid(3,$P1_a1$); }
+		if($P2_a2$ == getarg(1)){ set .@acc2,getcharid(3,$P1_a2$); }
+		if($P2_a3$ == getarg(1)){ set .@acc2,getcharid(3,$P1_a3$); }
+		if($P2_a4$ == getarg(1)){ set .@acc2,getcharid(3,$P1_a4$); }
+		
+		if($P1_a1$ == getarg(1) || $P2_a1$ == getarg(1)){ set $P1_a1$,""; set $P2_a1$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" desconectou!",bc_map; return .@acc2; }
+		if($P1_a2$ == getarg(1) || $P2_a2$ == getarg(1)){ set $P1_a2$,""; set $P2_a2$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" desconectou!",bc_map; return .@acc2; }
+		if($P1_a3$ == getarg(1) || $P2_a3$ == getarg(1)){ set $P1_a3$,""; set $P2_a3$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" desconectou!",bc_map; return .@acc2; }
+		if($P1_a4$ == getarg(1) || $P2_a4$ == getarg(1)){ set $P1_a4$,""; set $P2_a4$,""; mapannounce "arena_x1","[ Arena X1 ] O jogador "+getarg(1)+" desconectou!",bc_map; return .@acc2; }
+		end;
+	}
+	
+return;
+
+}
+
+//Arena 1
+arena_x1,35,81,5	script	Arena 1	4_M_ROOKIE,{ end;
+
+OnchFila1:
+
+	if($P1_a1$ != "" && $P2_a1$ != "")
+	{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+
+	set .a1MSG,.a1MSG+1;
+	if(.a1MSG > 1 && callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+	{
+		if(!.a1TM)
+		{
+			set .a1TM,5;
+			while(.a1TM > 0)		
+			{
+				npctalk "Se preparem, a Batalha vai começar em "+.a1TM+" segundos.";
+				set .a1TM,.a1TM-1;
+				if(!.a1TM) set .a1MSG,0;				
+				sleep 1000;
+			}
+			if(callfunc("ChatRoomCheck",strnpcinfo(1),1) < 2){ npctalk "Adversário não encontrado!"; set .a1MSG,callfunc("ChatRoomCheck",strnpcinfo(1),1); }
+		}
+		
+	}
+	
+	while(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 0)
+	{
+		if(!.a1MSG)
+		{			
+			if($P1_a1$ == "" && $P2_a1$ == "")
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+			
+			if($P1_a1$ == "" || $P2_a1$ == "")		
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),3))
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+		}
+		sleep 5000;
+	}
+	end;	
+	
+OnInit:
+	waitingroom "Fila: [Arena I]",$ArenaX1_Configs[3],strnpcinfo(0)+"::OnchFila1",1,$ArenaX1_Configs[2],$ArenaX1_Configs[0],$ArenaX1_Configs[1];
+	set .a1MSG,0;
+	set .a1TM,0;
+	end;
+}
+
+//Arena 2
+arena_x1,47,81,5	script	Arena 2	4_M_ROOKIE,{ end;
+
+OnchFila2:
+
+	if($P1_a2$ != "" && $P2_a2$ != "")
+	{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+	
+	set .a2MSG,.a2MSG+1;
+	if(.a2MSG > 1 && callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+	{
+		if(!.a2TM)
+		{
+			set .a2TM,5;
+			while(.a2TM > 0)		
+			{
+				npctalk "Se preparem, a Batalha vai começar em "+.a2TM+" segundos.";
+				set .a2TM,.a2TM-1;
+				if(!.a2TM) set .a2MSG,0;				
+				sleep 1000;
+			}
+			if(callfunc("ChatRoomCheck",strnpcinfo(1),1) < 2){ npctalk "Adversário não encontrado!"; set .a2MSG,callfunc("ChatRoomCheck",strnpcinfo(1),1); }
+		}
+	}
+
+
+	while(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 0)
+	{
+		if(!.a2MSG)
+		{			
+			if($P1_a2$ == "" && $P2_a2$ == "")
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+			
+			if($P1_a2$ == "" || $P2_a2$ == "")		
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),3))
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+		}
+		sleep 5000;
+	}
+	end;
+
+OnInit:
+	waitingroom "Fila: [Arena II] ",$ArenaX1_Configs[3],strnpcinfo(0)+"::OnchFila2",1,$ArenaX1_Configs[2],$ArenaX1_Configs[0],$ArenaX1_Configs[1];
+	set .a2MSG,0;
+	set .a2TM,0;
+	end;
+}
+
+//Arena 3
+arena_x1,59,81,5	script	Arena 3	4_M_ROOKIE,{ end;
+
+OnchFila3:
+
+	if($P1_a3$ != "" && $P2_a3$ != "")
+	{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+	
+	set .a3MSG,.a3MSG+1;
+	if(.a3MSG > 1 && callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+	{
+		if(!.a3TM)
+		{
+			set .a3TM,5;
+			while(.a3TM > 0)		
+			{
+				npctalk "Se preparem, a Batalha vai começar em "+.a3TM+" segundos.";
+				set .a3TM,.a3TM-1;
+				if(!.a3TM) set .a3MSG,0;				
+				sleep 1000;
+			}
+		}
+		if(callfunc("ChatRoomCheck",strnpcinfo(1),1) < 2){ npctalk "Adversário não encontrado!"; set .a3MSG,callfunc("ChatRoomCheck",strnpcinfo(1),1); }
+	}
+	
+	while(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 0)
+	{
+		if(!.a3MSG)
+		{		
+			if($P1_a3$ == "" && $P2_a3$ == "")
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+			
+			if($P1_a3$ == "" || $P2_a3$ == "")		
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),3))
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+		}
+		sleep 5000;
+	}
+	end;
+
+OnInit:
+	waitingroom "Fila: [Arena III]",$ArenaX1_Configs[3],strnpcinfo(0)+"::OnchFila3",1,$ArenaX1_Configs[2],$ArenaX1_Configs[0],$ArenaX1_Configs[1];
+	set .a3MSG,0;
+	set .a3TM,0;
+	end;
+}
+
+//Arena 4
+arena_x1,71,81,5	script	Arena 4	4_M_ROOKIE,{ end;
+
+OnchFila4:
+
+	if($P1_a4$ != "" && $P2_a4$ != "")
+	{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+	
+	set .a4MSG,.a4MSG+1;
+	if(.a4MSG > 1 && callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+	{
+		if(!.a4TM)
+		{
+			set .a4TM,5;
+			while(.a4TM > 0)		
+			{
+				npctalk "Se preparem, a Batalha vai começar em "+.a4TM+" segundos.";
+				set .a4TM,.a4TM-1;
+				if(!.a4TM) set .a4MSG,0;				
+				sleep 1000;
+			}
+		}
+		if(callfunc("ChatRoomCheck",strnpcinfo(1),1) < 2){ npctalk "Adversário não encontrado!"; set .a4MSG,callfunc("ChatRoomCheck",strnpcinfo(1),1); }
+	}
+
+	
+	while(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 0)
+	{
+		if(!.a2MSG)
+		{		
+			if($P1_a4$ == "" && $P2_a4$ == "")
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1)
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+			
+			if($P1_a4$ == "" || $P2_a4$ == "")		
+			{
+				if(callfunc("ChatRoomCheck",strnpcinfo(1),3))
+				{ callfunc "ChatRoomCheck",strnpcinfo(1),2; }
+			}
+		}
+		sleep 5000;
+	}
+	end;
+
+OnInit:
+	waitingroom "Fila: [Arena IV]",$ArenaX1_Configs[3],strnpcinfo(0)+"::OnchFila4",1,$ArenaX1_Configs[2],$ArenaX1_Configs[0],$ArenaX1_Configs[1];
+	set .a4MSG,0;
+	set .a4TM,0;
+	end;
+}
+
+//Gerencia as filas dos chats
+function	script	ChatRoomCheck	{
+
+	getwaitingroomusers getarg(0);
+	
+	if(getarg(1) == 1){ return getarraysize(.@waitingroom_users); }
+	
+	
+	if(getarg(1) == 3)
+	{
+		if(compare(getarg(0),"1")) set .@arena,1;
+		if(compare(getarg(0),"2")) set .@arena,2;
+		if(compare(getarg(0),"3")) set .@arena,3;
+		if(compare(getarg(0),"4")) set .@arena,4;
+				
+		switch(.@arena)
+		{
+			case 1: if($P1_a1$ != "" || $P2_a1$ != "") return 1;  else return 0;
+			case 2: if($P1_a2$ != "" || $P2_a2$ != "") return 1;  else return 0;
+			case 3: if($P1_a3$ != "" || $P2_a3$ != "") return 1;  else return 0;
+			case 4: if($P1_a4$ != "" || $P2_a4$ != "") return 1;  else return 0;
+			default: return;
+		}
+	}
+
+GoLoop:
+
+	if(getarg(1) == 2 && callfunc("ChatRoomCheck",strnpcinfo(1),1))
+	{
+		attachrid(.@waitingroom_users[(.@gop < 1 ? 0:1)]);	
+		
+		if(compare(getarg(0),"1")) set .@arena,1;
+		if(compare(getarg(0),"2")) set .@arena,2;
+		if(compare(getarg(0),"3")) set .@arena,3;
+		if(compare(getarg(0),"4")) set .@arena,4;
+				
+		switch(.@arena)
+		{
+			case 1: if($P1_a1$ == strcharinfo(0) || $P2_a1$ == strcharinfo(0)){ waitingroomkick getarg(0),strcharinfo(0); return; } break;
+			case 2: if($P1_a2$ == strcharinfo(0) || $P2_a2$ == strcharinfo(0)){ waitingroomkick getarg(0),strcharinfo(0); return; } break;
+			case 3: if($P1_a3$ == strcharinfo(0) || $P2_a3$ == strcharinfo(0)){ waitingroomkick getarg(0),strcharinfo(0); return; } break;
+			case 4: if($P1_a4$ == strcharinfo(0) || $P2_a4$ == strcharinfo(0)){ waitingroomkick getarg(0),strcharinfo(0); return; } break;
+			default: return;
+		}
+		
+		switch(.@arena)
+		{
+			case 1: set .@x,rand(33,41); break;	
+			case 2: set .@x,rand(45,53); break;
+			case 3: set .@x,rand(57,64); break;	
+			case 4: set .@x,rand(69,77); break;
+		}
+		set .@y,rand(52,73);
+		
+		if($ArenaX1_Configs[2]) set Zeny,Zeny-$ArenaX1_Configs[2];
+		
+		warp "arena_x1",.@x,.@y;
+		callfunc "ArenaX1_Buff";
+		callsub S_CheckPArena,strcharinfo(0);
+			
+		if(compare(getarg(0),"1"))
+		{
+			if($P1_a1$ == "" && strcharinfo(0) != $P2_a1$) set $P1_a1$,strcharinfo(0);
+			if($P2_a1$ == "" && strcharinfo(0) != $P1_a1$) set $P2_a1$,strcharinfo(0);
+		}
+		if(compare(getarg(0),"2"))
+		{
+			if($P1_a2$ == "" && strcharinfo(0) != $P2_a2$) set $P1_a2$,strcharinfo(0);
+			if($P2_a2$ == "" && strcharinfo(0) != $P1_a2$) set $P2_a2$,strcharinfo(0);
+		}
+		if(compare(getarg(0),"3"))
+		{
+			if($P1_a3$ == "" && strcharinfo(0) != $P2_a3$) set $P1_a3$,strcharinfo(0);
+			if($P2_a3$ == "" && strcharinfo(0) != $P1_a3$) set $P2_a3$,strcharinfo(0);
+		}
+		if(compare(getarg(0),"4"))
+		{
+			if($P1_a4$ == "" && strcharinfo(0) != $P2_a4$) set $P1_a4$,strcharinfo(0);
+			if($P2_a4$ == "" && strcharinfo(0) != $P1_a4$) set $P2_a4$,strcharinfo(0);
+		}
+		detachrid;
+		if(!.@gop && callfunc("ChatRoomCheck",strnpcinfo(1),1) > 1){ set .@gop,.@gop+1; goto GoLoop; }
+	}
+	
+return;
+
+S_CheckPArena:
+
+	if($P1_a1$ == getarg(0)){ set $P1_a1$,""; set $A1SLP,5000; }
+	if($P2_a1$ == getarg(0)){ set $P2_a1$,""; set $A1SLP,5000; }
+	if($P1_a2$ == getarg(0)){ set $P1_a2$,""; set $A2SLP,5000; }
+	if($P2_a2$ == getarg(0)){ set $P2_a2$,""; set $A2SLP,5000; }
+	if($P1_a3$ == getarg(0)){ set $P1_a3$,""; set $A3SLP,5000; }
+	if($P2_a3$ == getarg(0)){ set $P2_a3$,""; set $A3SLP,5000; }
+	if($P1_a4$ == getarg(0)){ set $P1_a4$,""; set $A4SLP,5000; }
+	if($P2_a4$ == getarg(0)){ set $P2_a4$,""; set $A4SLP,5000; }
+	
+return;
+	
+}
+
+function	script	ArenaX1_Buff	{
+
+			if(getgroupid() == 0) {
+			if(Class == 23 || Class == 4190 || Class == 4191){ sc_start4 sc_spirit, 3600000, 5, 451,0,0; }
+			sc_start 30,3600000,10;        // Ben?					Dura?: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura?: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura?: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura?: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura?: 600 seg.
+			sc_start 41,3600000,10;          // Gl??					Dura?: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura?: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura?: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura?: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura?: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura?: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			percentheal 100,100;
+			if( getbrokenid(1) ) repairall; }
+			
+			if(getgroupid() > 0) {
+			if(Class == 23 || Class == 4190 || Class == 4191){ sc_start4 sc_spirit, 3600000, 5, 451,0,0; }			
+			sc_start 30,3600000,10;        // Ben?					Dura?: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura?: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura?: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura?: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura?: 600 seg.
+			sc_start 41,3600000,10;          // Gl??					Dura?: 600 seg.
+			sc_start SC_RENOVATIO,3600000,10;                 // Renovatio		Dura?: 600 seg.
+			sc_start SC_EXTRACT_SALAMINE_JUICE,3600000,10;                 // Suco Celular Enriquecido		Dura?: 600 seg.
+			sc_start 23,3600000,10;                 // Concentra?		Dura?: 600 seg.
+			sc_start 121,3600000,10;	               // Caminho do Vento			Dura?: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura?: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura?: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura?: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura?: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura?: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura?: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			percentheal 100,100;
+		if( getbrokenid(1) ) repairall; }
+	
+return;
+}
+
+arena_x1,55,95,0	warp	ArenaX1	1,1,prontera,155,184
+arena_x1	mapflag	nogo

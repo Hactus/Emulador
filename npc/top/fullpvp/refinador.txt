@@ -1,0 +1,269 @@
+prontera,167,173,3	script	Ferreiro#prt	826,{
+		
+		mes $@nome$;
+		mes "Olá ^0000CD"+strcharinfo(0)+"^000000!";
+		mes "O que você deseja?:";
+		next;
+		switch(select("- Refinamento seguro:- Refinar do +11 até o +16:- Refinar do +17 até o +20:- Refinar com Pergaminho:- Refinar equipamento Shadow:- Nada, obrigado")) {
+
+// Refinamento seguro
+						case 1:
+
+						if (@refine_cooldown >= gettimetick(2)) {
+							if (@refine_cooldown - gettimetick(2) > 4) {
+								@refine_cooldown = 0;
+							}
+							dispbottom "Espere 3 segundos para usar novamente.";
+							end;
+						}
+								mes $@nome$;
+								mes "Tudo bem, posso refinar todos seus equipamentos refináveis até o +10.";
+								mes "Já os equipamentos Shadows, só posso refiná-los até o +4.";
+								close2;
+						setarray .@equip_pos[1],EQI_HEAD_TOP,EQI_HEAD_MID,EQI_HEAD_LOW,EQI_ARMOR,EQI_HAND_R,EQI_HAND_L,EQI_GARMENT,EQI_SHOES,EQI_ACC_R,EQI_ACC_L;
+						setarray .@shadow_pos[1],EQI_SHADOW_ARMOR,EQI_SHADOW_WEAPON,EQI_SHADOW_SHIELD,EQI_SHADOW_SHOES,EQI_SHADOW_ACC_R,EQI_SHADOW_ACC_L;
+						@refine_cooldown = (gettimetick(2) + 3);
+						for (.@i = 1; .@i <= getarraysize(.@equip_pos); ++.@i) {
+							if (getequipisequiped(.@equip_pos[.@i])) {
+								if (getequipisenableref(.@equip_pos[.@i])) {
+									if (getequiprefinerycnt(.@equip_pos[.@i]) < 10) {
+										successrefitem .@equip_pos[.@i], 10 - getequiprefinerycnt(.@equip_pos[.@i]);
+									}
+									else {
+										++.@count;
+									}
+								}
+								else {
+									++.@count;
+								}
+							}
+							else {
+								++.@count;
+							}
+						}
+
+						for (.@i = 1; .@i <= getarraysize(.@shadow_pos); ++.@i) {
+							if (getequipisequiped(.@shadow_pos[.@i])) {
+								if (getequipisenableref(.@shadow_pos[.@i])) {
+									if (getequiprefinerycnt(.@shadow_pos[.@i]) < 4) {
+										successrefitem .@shadow_pos[.@i], 4 - getequiprefinerycnt(.@shadow_pos[.@i]);
+									}
+									else {
+										++.@count;
+									}
+								}
+								else {
+									++.@count;
+								}
+							}
+							else {
+								++.@count;
+							}
+						}
+						if (.@count == getarraysize(.@equip_pos) + getarraysize(.@shadow_pos))
+							message strcharinfo(0), "Todos os seus itens já estão refinados para o máximo que posso.";
+						else
+							message strcharinfo(0), "Todos os seus itens foram refinados para o +10.";
+						end;
+
+					OnInit:
+					end;
+					
+
+// Refinamento do +11 até o +16
+					case 2:
+					close2;
+					doevent "Basta::OnMenuHD";
+					end;
+	
+case 3:
+
+	disable_items;
+	mes "[Ferreiro Especialista]";
+	mes "Eu posso refinar seus equipamentos do +16 até o +20!";
+	next;
+	mes "[Ferreiro Especialista]";
+	mes "Eu vou precisar de um ^ff9999Omni-Oridecon^000000 para armas, e ^ff9999Mega-Elunium^000000 para equipamentos.";
+	mes "Se o refinamento falhar ^FF0000você não perderá o equipamento nem mesmo o nível de refinamento irá regredir, vai perder somente o minério e o zeny^000000.";
+	next;
+	mes "[Ferreiro Especialista]";
+	mes "O que você deseja refinar?";
+	next;
+	setarray .@indices[1], EQI_HEAD_TOP, EQI_ARMOR, EQI_HAND_L, EQI_HAND_R, EQI_GARMENT, EQI_SHOES, EQI_ACC_L, EQI_ACC_R, EQI_HEAD_MID, EQI_HEAD_LOW;
+	for(set .@i,1; .@i<=10; set .@i,.@i+1)
+		set .@menu$, .@menu$ + ( getequipisequiped(.@indices[.@i]) ? getequipname(.@indices[.@i]) : F_getpositionname(.@indices[.@i]) +"-[Desequipado]" ) +":";
+	set .@part, .@indices[ select(.@menu$) ];
+	if (!getequipisequiped(.@part)) {
+
+		mes "[Ferreiro Especialista]";
+		switch(.@part) {
+		case 1:
+			mes "Sua cabeça é um equipamento?";
+			break;
+		case 2:
+			mes "Com meu martelo, farei de você uma estrela do céu.";
+			break;
+		case 3:
+		case 4:
+			mes "Fazer mãos artificiais não é minha especialidade.";
+			break;
+		case 5:
+			mes "Traga o item para que eu possa refiná-lo!";
+			break;
+		case 6:
+			mes "De onde vem esse cheiro estranho?";
+			break;
+		case 7:
+		case 8:
+			mes "Onde está o acessório?";
+			break;
+		case 9:
+			mes "O que você quer que eu refine?";
+			break;
+		case 10:
+			mes "Hã? O que você quer que eu faça?";
+			break;
+		}
+		close;
+	}
+	if (!getequipisenableref(.@part)) {
+		mes "[Ferreiro Especialista]";
+		mes "Este item não pode ser refinado.";
+		close;
+	}
+	.@equip_refine = getequiprefinerycnt(.@part);
+	if (.@equip_refine < 16) {
+		mes "[Ferreiro Especialista]";
+		mes "Este equipamento está refinado em "+.@equip_refine+". Eu só posso refinar equipamentos +16, +17, +18 e +19!";
+		close;
+	}
+	.@equip_lv = getequipweaponlv(.@part);
+	switch(.@equip_lv) {
+	default:
+	case 0:
+		.@price = 1;
+		.@material = 6439; //Unbreakable_Def
+		.@type$ = "Armadura";
+		break;
+	case 1:
+		.@price = 1;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Arma";
+		break;
+	case 2:
+		.@price = 1;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Arma";
+		break;
+	case 3:
+		.@price = 1;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Arma";
+		break;
+	case 4:
+		.@price = 1;
+		.@material = 6438; //Unbreakable_Weap
+		.@type$ = "Arma";
+		break;
+	}
+	.@ore$ = "^ff9999um Mega-elunium em caso de equipamento, e Omni-Oridecon em caso de armas^000000";
+	mes "[Ferreiro Especialista]";
+	mes "Essa item está refinado em "+.@equip_refine+". Para refiná-lo vou precisar de "+.@ore$+".";
+	mes "Deseja continuar?";
+	next;
+	if(select("Sim:Não") == 2) {
+	mes "[Ferreiro Especialista]";
+		mes "Estou ocupado, não brinque comigo.";
+		close;
+	}
+	if (getequippercentrefinery(.@part) < 100) {
+		mes "[Ferreiro Especialista]";
+		mes "Essse item já foi refinado muitas vezes. Embora seu equipamento não se perca, em caso de falha, o minério irá ser destruído!";
+		next;
+		mes "[Ferreiro Especialista]";
+		mes "Você quer continuar?";
+		next;
+		if(select("Sim:Não") == 2) {
+			mes "[Ferreiro Especialista]";
+			mes "Bom. Eu ficaria triste se falhasse também.";
+			close;
+		}
+	}
+	if (countitem(.@material) == 0 || Zeny < .@price) {
+		mes "[Ferreiro Especialista]";
+		mes "Material insuficiente.";
+		mes "Para refinar eu preciso de "+.@ore$+".";
+		close;
+	}
+	delitem .@material,1;
+	Zeny -= .@price;
+	mes "[Ferreiro Especialista]";
+	mes "Tac! Tac! Tac!";
+	if (getequippercentrefinery(.@part) > rand(100) || getequippercentrefinery(.@part) > rand(100)) {
+		specialeffect EF_BLESSING;
+		successrefitem .@part;
+		next;
+		mes "[Ferreiro Especialista]";
+		mes "Hahahahahaha!!!";
+		next;
+		mes "[Ferreiro Especialista]";
+		mes "O refinamento foi um enorme sucesso~ Hahaha!";
+		close;
+	}
+	specialeffect EF_CURSEATTACK;
+	specialeffect2 EF_SUI_EXPLOSION;
+	next;
+	emotion (!rand(5))?ET_ANGER:ET_HUK;
+	mes "[Ferreiro Especialista]";
+	mes "Ohh meu Deus!!!!";
+	next;
+	mes "[Ferreiro Especialista]";
+	mes "Sinto muito, o refinamento falhou...";
+	next;
+	mes "[Ferreiro Especialista]";
+	mes "Espero que não fique desanimado. seu item já está quase atingindo a perfeição!!";
+	close;
+
+// Ticket Refiner
+
+					case 4:
+					mes $@nome$;
+					mes "O que você deseja refinar?:";
+				switch(select("- Equipamento Comum:- Equipamento Sombrio:- Nada, obrigado")) {
+					
+					case 1:	
+					close2;
+					doevent "TRefiner::OnMenuTicket";
+					end;
+					case 2:	
+					close2;
+					doevent "TSRefiner::OnMenuTicketS";
+					end;
+					case 3:
+					close;
+				}
+// Set Shadow
+					case 5:
+					close2;
+					doevent "ShadowBlacksmith::OnMenuShadow";
+					end;
+
+// Não
+case 6:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando caso precise de mim.";
+close;
+}
+
+nao:
+next;
+mes $@nome$;
+mes "Tudo bem,";
+mes "Estarei esperando caso precise de mim.";
+close;
+
+set $@nome$,"[^FF8000Ferreiro^000000]"; // Nome do NPC que vai aparecer
+
+}

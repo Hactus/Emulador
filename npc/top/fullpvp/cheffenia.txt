@@ -1,0 +1,396 @@
+/**
+CREATE TABLE IF NOT EXISTS `ranking_mvp` (
+  `char_id` int(11) unsigned NOT NULL default '0',
+  `name` varchar(30) NOT NULL DEFAULT '',
+  `class` smallint(6) unsigned NOT NULL default '0',
+  `hair` tinyint(4) unsigned NOT NULL default '0',
+  `hair_color` smallint(5) unsigned NOT NULL default '0',
+  `clothes_color` smallint(5) unsigned NOT NULL default '0',
+  `body` smallint(5) unsigned NOT NULL default '0',
+  `kill` smallint(6) unsigned NOT NULL default '0',
+  `death` smallint(6) unsigned NOT NULL default '0',
+  `kdr` smallint(6) NOT NULL default '0',
+  PRIMARY KEY  (`char_id`)
+) ENGINE=MyISAM;
+*/
+//prontera,145,184,5	script	Cheffênia#hide	723,{ }
+prontera,145,184,5	script	Cheffênia#1	4_M_JOHNNYJAMES,{
+	function	MvPCount;
+	mes "[ "+.nome$+" ]";
+	mes "Olá ^5566FF"+strcharinfo(0)+"^000000!";
+	mes "Você deseja entrar na Cheffenia ou consultar o Ranking MVP?";
+	next;
+	.@choice = select("Cheffênia [^0000FF"+MvPCount()+"^000000]","Ranking MvP")-1;
+	if (.@choice) {
+		query_sql("SELECT `char_id`, `class`, `name`, `kill`,`death`,`kdr` FROM `"+.table$+"` ORDER BY `kdr` DESC LIMIT 20", .@char_id, .@class, .@name$, .@kill, .@death, .@kdr);
+			mes "====================";
+			for (.@i=0; .@i<getarraysize(.@class); .@i++) {
+				mes ""+(.@i+1)+": ["+jobname(.@class[.@i])+"]";
+				mes "Nome: ^FF0000"+.@name$[.@i]+"^000000";
+				mes "Pontuação: "+.@kill[.@i]+" - "+.@death[.@i]+" = "+.@kdr[.@i]+"";
+				mes "====================";
+			}
+			close3;
+	}
+	else {
+	next;
+	mes "[ "+.nome$+" ]";
+	mes "Perfeito!";
+	mes "Escolha qual andar você deseja visitar:";
+	next;
+		set .@i, select("Fácil [^0000FF"+getmapusers("bossnia_01")+"^000000]",
+						"Médio [^0000FF"+getmapusers("bossnia_02")+"^000000]",
+						"Difícil [^0000FF"+getmapusers("bossnia_03")+"^000000]",
+						"Insano [^0000FF"+getmapusers("bossnia_04")+"^000000]");
+		mes "[ "+.nome$+" ]";
+		mes "Tudo bem, irei lhe enviar para lá agora mesmo!.";
+		close2;
+		atcommand "@autoloot +2";
+		warp "bossnia_0" + .@i, rand(202,204), rand(202,204);
+		end;
+	}
+
+OnNPCKillEvent:
+	for (.@i = 1; .@i <= 4; ++.@i) {
+		if (strcharinfo(3) == "bossnia_0" + .@i) {
+			for (.@a = 0; .@a < getarraysize(.mvp_list); ++.@a) {
+				if (killedrid == .mvp_list[.@a]) {
+					#pontos_mvp += 1;
+					if (!mvp_kdr_verify) {
+						query_sql("INSERT INTO `"+.table$+"` (`char_id`, `name`, `class`, `hair`, `hair_color`, `clothes_color`, `body`, `kill`, `death`, `kdr`) VALUES ('"+getcharid(0)+"', '"+strcharinfo(0)+"', '"+readparam(Class)+"', '"+getlook(LOOK_HAIR)+"', '"+getlook(LOOK_HAIR_COLOR)+"', '"+getlook(LOOK_CLOTHES_COLOR)+"', '"+getlook(LOOK_BODY2)+"', '0', '0', '0')");
+						mvp_kdr_verify = 1;
+					}
+					//Puxa da database
+					query_SQL("SELECT `kill`,`death` FROM `"+.table$+"` WHERE `char_id`='"+getcharid(0)+"'", .@kill, .@death);
+					.@kill = .@kill + 1;
+					if (.@death >= .@kill)
+						.@kdr = 0;
+					else
+						.@kdr = .@kill - .@death;
+					
+					dispbottom "[Ranking] Sua pontuação: "+ .@kill +" - "+ .@death +" = "+ .@kdr +".";
+					dispbottom "[Pontos MvP] Seus pontos: " + #pontos_mvp;
+					//Atualiza a database
+					query_sql("UPDATE `"+.table$+"` SET `hair`='"+getlook(LOOK_HAIR)+"', `hair_color`='"+getlook(LOOK_HAIR_COLOR)+"', `clothes_color`='"+getlook(LOOK_CLOTHES_COLOR)+"', `body`='"+getlook(LOOK_BODY2)+"', `kill`='"+.@kill+"', `kdr`='"+.@kdr+"' WHERE `char_id`='"+getcharid(0)+"'");
+				}
+			}
+		}
+	}
+end;
+	
+OnPCDieEvent:
+	for (.@i=1; .@i<=4; .@i++){
+		if (strcharinfo(3) == "bossnia_0"+.@i+"") {
+			//Insere na DB se ainda não tiver dados.
+			if (!mvp_kdr_verify) {
+				query_sql("INSERT INTO `"+.table$+"` (`char_id`, `name`, `class`, `hair`, `hair_color`, `clothes_color`, `body`, `kill`, `death`, `kdr`) VALUES ('"+getcharid(0)+"', '"+strcharinfo(0)+"', '"+readparam(Class)+"', '"+getlook(LOOK_HAIR)+"', '"+getlook(LOOK_HAIR_COLOR)+"', '"+getlook(LOOK_CLOTHES_COLOR)+"', '"+getlook(LOOK_BODY2)+"', '0', '0', '0')");
+				mvp_kdr_verify = 1;
+			}
+			
+			//Puxa da database
+			query_SQL("SELECT `kill`,`death` FROM `"+.table$+"` WHERE `char_id`='"+getcharid(0)+"'", .@kill, .@death);
+			.@death =  .@death + 1;
+			if (.@death >= .@kill)
+				.@kdr = 0;
+			else
+				.@kdr = .@kill - .@death;
+			
+			dispbottom "[Ranking] Sua pontuação no ranking MVP agora é: "+ .@kill +" - "+ .@death +" = "+ .@kdr +".";
+			//Atualiza a database
+			query_sql("UPDATE `"+.table$+"` SET `hair`='"+getlook(LOOK_HAIR)+"', `hair_color`='"+getlook(LOOK_HAIR_COLOR)+"', `clothes_color`='"+getlook(LOOK_CLOTHES_COLOR)+"', `body`='"+getlook(LOOK_BODY2)+"', `death`='"+.@death+"', `kdr`='"+.@kdr+"' WHERE `char_id`='"+getcharid(0)+"'");
+				
+
+				
+			for (.@b=5; .@b>0;	.@b--) {
+				if (strcharinfo(3) != "bossnia_0"+.@i+"")
+					break;
+				message strcharinfo(0),"Aguarde, você irá renascer em "+.@b+" segundos."; sleep2 1000; }
+			
+			if (strcharinfo(3) == "bossnia_0"+.@i+"") { //Terceira verificação de segurança
+
+			warp strcharinfo(3),0,0;
+			if(getgroupid() == 0) {
+			percentheal 100,100;
+			specialeffect2 223;
+			specialeffect2 325;
+			sc_start 30,3600000,10;        // Ben?					Dura?: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura?: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura?: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura?: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura?: 600 seg.
+			sc_start 41,3600000,10;          // Gl??					Dura?: 600 seg.
+			//sc_start SC_ASPERSIO,3600000,10;        // Aspersio					Dura?: 600 seg.
+			sc_start 39,3600000,10;           // Kyrie Eleison				Dura?: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura?: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura?: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura?: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura?: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura?: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura?: 600 seg.
+			//sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			//sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			//sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			//sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			//sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			//sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			if( getbrokenid(1) ) repairall;
+			dispbottom "Obrigado por jogar no "+ @ServerName$ +"!";
+			emotion 51; }
+			
+            if(getgroupid() > 0) {
+			percentheal 100,100;
+			specialeffect2 238;
+			specialeffect2 325;
+			sc_start 30,3600000,10;        // Ben?					Dura?: 600 seg.
+			sc_start 29,3600000,10;         // Angelus					Dura?: 600 seg.
+			sc_start 32,3600000,10;         // Aumentar Agilidade		Dura?: 600 seg.
+			sc_start 35,3600000,10;       // Impositio Manus			Dura?: 600 seg.
+			sc_start 40,3600000,10;      // Magnificat				Dura?: 600 seg.
+			sc_start 41,3600000,10;          // Gl??					Dura?: 600 seg.
+			//sc_start SC_ASPERSIO,3600000,10;        // Aspersio					Dura?: 600 seg.
+			sc_start 39,3600000,10;           // Kyrie Eleison				Dura?: 600 seg.
+			//sc_start SC_PROTECTWEAPON,3600000,10;   // Revestimento Arma			Dura?: 600 seg.
+			//sc_start SC_REFLECTSHIELD,3600000,10;   // Escudo Refletor			Dura?: 600 seg.
+			sc_start SC_RENOVATIO,3600000,10;                 // Renovatio		Dura?: 600 seg.
+			sc_start SC_CP_WEAPON,3600000,10;                 // FP		Dura?: 600 seg.
+			sc_start SC_CP_SHIELD,3600000,10;                 // FP		Dura?: 600 seg.
+			sc_start SC_CP_ARMOR,3600000,10;                 // FP		Dura?: 600 seg.
+			sc_start SC_CP_HELM,3600000,10;                 // FP		Dura?: 600 seg.
+			//sc_start SC_EXTRACT_SALAMINE_JUICE,3600000,10;                 // Suco Celular Enriquecido		Dura?: 600 seg.
+			sc_start 23,3600000,10;                 // Concentra?		Dura?: 600 seg.
+			//sc_start 110,3600000,5;                 // Dedica?				Dura?: 600 seg.
+			//sc_start 122,3600000,10;                // Golpe Estilha?te		Dura?: 600 seg.
+			//sc_start 156,3600000,1;                 // For?Violent?ima		Dura?: 600 seg.
+			sc_start 121,3600000,10;	               // Caminho do Vento			Dura?: 600 seg.
+			sc_start SC_SAVAGE_STEAK,3600000,20;        // Comida STR+20				Dura?: 600 seg.
+			sc_start SC_COCKTAIL_WARG_BLOOD,3600000,20;        // Comida INT+20				Dura?: 600 seg.
+			sc_start SC_MINOR_BBQ,3600000,20;        // Comida VIT+20				Dura?: 600 seg.
+			sc_start SC_SIROMA_ICE_TEA,3600000,20;        // Comida DEX+20				Dura?: 600 seg.
+			sc_start SC_DROCERA_HERB_STEAMED,3600000,20;        // Comida AGI+20				Dura?: 600 seg.
+			sc_start SC_PUTTI_TAILS_NOODLES,3600000,20;        // Comida LUK+20				Dura?: 600 seg.
+			sc_start SC_STRFOOD,3600000,10;        // Comida STR+10				Dura?: 600 seg.
+			sc_start SC_INTFOOD,3600000,10;        // Comida INT+10				Dura?: 600 seg.
+			sc_start SC_VITFOOD,3600000,10;        // Comida VIT+10				Dura?: 600 seg.
+			sc_start SC_AGIFOOD,3600000,10;        // Comida AGI+10				Dura?: 600 seg.
+			sc_start SC_DEXFOOD,3600000,10;        // Comida DEX+10				Dura?: 600 seg.
+			sc_start SC_LUKFOOD,3600000,10;        // Comida LUK+10				Dura?: 600 seg.
+			sc_end SC_STONE;
+			sc_end SC_FREEZE;
+			sc_end SC_STUN;
+			sc_end SC_SLEEP;
+			sc_end SC_POISON;
+			sc_end SC_CURSE;
+			sc_end SC_SILENCE;
+			sc_end SC_CONFUSION;
+			sc_end SC_BLIND;
+			sc_end SC_PETRIFIC;
+			sc_end SC_BLEEDING;
+			sc_end SC_HALLUCINATION;
+			} 
+			}
+		}
+	}
+end;
+
+
+function	MvPCount	{
+	for (.@i = 1; .@i <= 4; ++.@i) {
+		.@count += getmapusers("bossnia_0"+.@i);
+	}
+	return .@count;
+}
+
+OnInit:
+	.nome$ = "^0000FFChefenia^000000";
+	.table$ = "ranking_mvp";
+	setarray .mvp_list[0],2237,3074,2156,1685,2362,2187,2317,2253,2190,2188,2475,1647,2322,2319,1039,2189,1251,2476,1511,1785,2483,1874,1871,2068,2241,1719,1046,1112,1658,1157,1312,1885,2255,1252,1832,1734,2202,1779,1688,1646,1147,1708,1768,2219,2087,1623,1492,1272,1373,1418,2022,1583,1751;
+	end;
+}
+
+// Monster Spawns
+//============================================================
+//----------------------------------------------------------------------------
+// bossnia_01 - Fácil
+//----------------------------------------------------------------------------
+bossnia_01,0,0	monster	Abelha-Rainha	1059,9,8000
+bossnia_01,0,0	monster	Amon Ra	1511,9,8000
+bossnia_01,0,0	monster	Golden Thief Bug	1086,9,8000
+bossnia_01,0,0	monster	Doppelganger	1046,9,8000
+bossnia_01,0,0	monster	Drácula	1389,9,8000
+bossnia_01,0,0	monster	Drake	1112,9,8000
+bossnia_01,0,0	monster	Eddga	1115,9,8000
+bossnia_01,0,0	monster	Faraó	1157,9,8000
+bossnia_01,0,0	monster	Flor do Luar	1150,9,8000
+bossnia_01,0,0	monster	Phreeoni	1159,9,8000
+bossnia_01,0,0	monster	Lady Branca	1630,9,8000
+bossnia_01,0,0	monster	Lady Tanee	1688,9,8000
+bossnia_01,0,0	monster	Maya	1147,9,12000
+bossnia_01,0,0	monster	Orc Herói	1087,9,8000
+bossnia_01,0,0	monster	Orc Lord	1190,9,8000
+bossnia_01,0,0	monster	Osíris	1038,9,8000
+bossnia_01,0,0	monster	Polvo Gigante	2219,9,8000
+bossnia_01,0,0	monster	Stormy Knight	1251,9,8000
+bossnia_01,0,0	monster	Atroce	1785,9,8000
+bossnia_01,0,0	monster	Serpente Suprema	1418,9,8000
+
+//----------------------------------------------------------------------------
+// bossnia_02 - Médio
+//----------------------------------------------------------------------------
+
+bossnia_02,0,0	monster	Baphomet	1039,9,8000
+bossnia_02,0,0	monster	Buwaya	2319,9,8000
+bossnia_02,0,0	monster	Bakonawa	2322,9,8000
+bossnia_02,0,0	monster	Corrupted Soul	2475,9,8000
+bossnia_02,0,0	monster	Detardeurus	1719,9,8000
+bossnia_02,0,0	monster	Egnigem Cenia	1658,9,8000
+bossnia_02,0,0	monster	Gorynych	1885,9,8000
+bossnia_02,0,0	monster	Kraken	2202,9,8000
+bossnia_02,0,0	monster	Ktullanux	1779,9,8000
+bossnia_02,0,0	monster	Leak	2156,9,8000
+bossnia_02,0,0	monster	RSX-0806	1623,9,8000
+bossnia_02,0,0	monster	Samurai Encarnado	1492,9,8000
+bossnia_02,0,0	monster	Senhor das Trevas	1272,9,8000
+bossnia_02,0,0	monster	Senhor dos Mortos	1373,9,8000
+bossnia_02,0,0	monster	Hatii	1252,9,8000
+bossnia_02,0,0	monster	Mutant Coelacanth	2189,5,12000
+
+
+//----------------------------------------------------------------------------
+// bossnia_03 - Difícil
+//----------------------------------------------------------------------------
+bossnia_03,0,0	monster	Desordeira Gertie	2239,2,12000
+bossnia_03,0,0	monster	Boitatá	2068,6,12000
+bossnia_03,0,0	monster	Bispo Decadente	1871,5,12000
+bossnia_03,0,0	monster	Dark Coelacanth	2187,5,12000
+bossnia_03,0,0	monster	Grotesque Coelacanth	2188,5,12000
+bossnia_03,0,0	monster	Rainha Verme com Rosto Azul	2534,3,12000
+bossnia_03,0,0	monster	Daehyon	2253,5,12000
+bossnia_03,0,0	monster	General Tartaruga	1312,5,8000
+bossnia_03,0,0	monster	Kiel-D-01	1734,5,12000
+bossnia_03,0,0	monster	Nightmare Amon Ra	2362,5,8000
+bossnia_03,0,0	monster	Pesar Noturno	1768,5,8000
+bossnia_03,0,0	monster	Rainha Scaraba	2087,5,8000
+bossnia_03,0,0	monster	Tao Gunka	1583,5,12000
+bossnia_03,0,0	monster	Vesper	1685,5,8000
+bossnia_03,0,0	monster	Sombra de Nidhogg	2022,9,8000
+
+//----------------------------------------------------------------------------
+// bossnia_04 - Insano
+//----------------------------------------------------------------------------
+bossnia_04,0,0	monster	Amdarais	2476,5,8000
+bossnia_04,0,0	monster	Belzebu  	1874,4,8000
+bossnia_04,0,0	monster	Bafomé Amaldiçoado	2483,5,8000
+bossnia_04,0,0	monster	Rainha Verme com Rosto	2529,3,8000
+bossnia_04,0,0	monster	Ifrit	1832,5,8000
+bossnia_04,0,0	monster	Lorde Seyren	1646,1,12000
+bossnia_04,0,0	monster	Memória de Thanatos	1708,4,12000
+bossnia_04,0,0	monster	Time Holder	3074,5,8000
+bossnia_04,0,0	monster	Valquíria Randgris	1751,4,8000
+
+bossnia_01	mapflag	noteleport
+bossnia_02	mapflag	noteleport
+bossnia_03	mapflag	noteleport
+bossnia_04	mapflag	noteleport
+
+// Loja MVP
+
+-	shop	MVSHOP1	-1,512:-1
+-	shop	MVSHOP2	-1,512:-1
+
+prontera,147,185,3	script	Loja MVP	858,{
+
+	mes "[^FF0000MVP Points^000000]";
+	mes "Olá ^5566FF"+strcharinfo(0)+"^000000!";
+	mes "Você deseja trocar seus Pontos MvP por itens?";
+switch(select("[^339966+^000000] Sim.:[^FF0000+^000000] Não."))
+{
+case 1:
+
+		if (!checkweight(1202,(+1))) { 
+		next;
+			mes "[^FF0000MVP Points^000000]";
+			mes "^3355FFEspere só um momento!!!";
+			mes "Eu não posso te vender nada, esvazie seu inventário e volte aqui.";
+			close;
+			}
+					
+next;
+	mes "[^FF0000MVP Points^000000]";
+	mes "Certo. ^5566FFVocê possui "+#pontos_mvp+" Ponto(s) MvP.^000000";
+	mes "Escolha a categoria de itens que lhe interessa:";
+	set @s, select("[^339966+^000000] Variados:[^339966+^000000] Visuais");
+	close2;
+	message strcharinfo(0),"Esta loja só aceita Pontos MvP !";
+	dispbottom "Você possui "+#pontos_mvp+" Ponto(s) MvP.";
+	callshop "MVSHOP"+@s,1;
+	npcshopattach "MVSHOP"+@s;
+	close;
+case 2:
+next;
+mes "[^FF0000MVP Points^000000]";
+mes "Qualquer coisa estou aqui...";
+mes "Bom jogo!";
+close;
+}
+
+OnBuyItem:
+mes "[^FF0000MVP Points^000000]";
+if (#pontos_mvp==0){mes "Você não possui Pontos Mvp !"; close;}
+if (#pontos_mvp>=1){
+	set .@i,0;
+	while (.@i < getarraysize(@bought_nameid)) {
+		set .@j, 0;
+		while (.@j < getarraysize(getd(".Shop"+@s))) {
+			if(getd(".Shop"+@s+"["+.@j+"]") == @bought_nameid[.@i]) {
+				set @itemcost, (getd(".Shop"+@s+"["+(.@j+1)+"]") * @bought_quantity[.@i]);
+				set @totalcost, @totalcost + @itemcost;
+				break; }
+			set .@j, .@j+2; }
+		set .@i, .@i+1; }
+	if (@totalcost > #pontos_mvp) dispbottom "Você não tem Pontos MvP suficiente."; 
+
+	else {
+		set .@i,0;
+		while (.@i < getarraysize(@bought_nameid)) {
+			getitem @bought_nameid[.@i], @bought_quantity[.@i];
+			
+			dispbottom "Negociação concluída, você comprou "+@bought_quantity[.@i]+"x "+getitemname(@bought_nameid[.@i])+" e agora possui "+#pontos_mvp+" Ponto(s) MvP.";
+		
+			set .@i, .@i+1; }
+		set #pontos_mvp,#pontos_mvp-@totalcost;
+		mes "Negociação concluída, agora você possui "+#pontos_mvp+" Ponto(s) MvP."; }
+	set @totalcost, 0;
+	deletearray @bought_nameid[0], 128;
+	deletearray @bought_quantity[0], 128;
+close2;
+	end;
+}
+
+OnInit:
+	setarray .Currency[1],507;
+	setarray .Shop1[0],20668,350,20675,250,6456,800,6457,800,6230,1000,6234,1000,7619,30,7620,30,6241,30,6240,30,6226,50,6225,50,6438,100,6439,100;
+	setarray .Shop2[0],20132,200,20509,200,20500,200,20798,200,20071,100,20243,100,20164,100,19990,100;
+
+	set .@i,1;
+	while (.@i <= getarraysize(.Currency)) {
+		set .@j,0;
+while (.@j < getarraysize(getd(".Shop"+.@i))) {
+			npcshopdelitem "MVSHOP"+.@i,512;
+			npcshopadditem "MVSHOP"+.@i, getd(".Shop"+.@i+"["+.@j+"]"), getd(".Shop"+.@i+"["+(.@j+1)+"]");
+			set .@j, .@j+2; }
+		set .@i, .@i+1; }
+	end;
+
+}

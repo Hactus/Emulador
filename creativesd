@@ -1,0 +1,90 @@
+echo "Creative Services and Development";
+echo "Suporte: www.creativesd.com.br";
+case $1 in
+    're')
+        (exec replace "char-server-linux-x64-pre.a" "char-server-linux-x64-re.a" -- src/char/Makefile.in) &&
+        (exec replace "map-server-linux-x64-pre.a" "map-server-linux-x64-re.a" -- src/map/Makefile.in) &&
+        (echo "Compilar em Modo Renewal") &&
+        (echo "Voce ja pode compilar seu emulador!") &&
+		(echo "Para compilar o emulador use:") &&
+		(echo "  ./creativesd compilar")
+;;
+    'pre')
+        (exec replace "char-server-linux-x64-re.a" "char-server-linux-x64-pre.a" -- src/char/Makefile.in) &&
+        (exec replace "map-server-linux-x64-re.a" "map-server-linux-x64-pre.a" -- src/map/Makefile.in) &&
+        (echo "Compilar em Modo Pre-Renewal") &&
+        (echo "Voce ja pode compilar seu emulador!") &&
+		(echo "Para compilar o emulador use:") &&
+		(echo "  ./creativesd compilar")
+;;
+    'ligar')
+        exec ./login-server > login-server.txt &
+        exec ./char-server > char-server.txt &
+        exec ./map-server > map-server.txt &
+        echo "Servidor esta sendo ligado...";
+        echo "Os Logs do Login-Server ficarao salvos em 'login-server.txt";
+        echo "Os Logs do Char-Server ficarao salvos em 'char-server.txt";
+        echo "Os Logs do Map-Server ficarao salvos em 'map-server.txt";
+;;
+    'desligar')
+        ps ax | grep -E "login-server|char-server|map-server" | awk '{print $1}' | xargs kill
+        echo "Servidor esta sendo desligado...";
+;;
+    'reiniciar')
+        $0 desligar
+        $0 ligar
+;;
+    'compilar')
+		(exec chmod 777 configure) &&
+	    (exec ./configure --enable-64bits) &&
+		(exec make clean) &&
+		(exec make) &&
+		(echo "Compilacao finalizada...")
+;;
+    'ajuda')
+        echo "Para ligar o servidor use:";
+        echo "   ./creativesd ligar";
+        echo "Para desligar o servidor use:";
+        echo "   ./creativesd desligar";
+        echo "Para reiniciar o servidor use:";
+        echo "   ./creativesd reiniciar";
+        echo "Para preparar as bibliotecas para compilar em Renewal use:";
+        echo "  ./creativesd re";
+        echo "Para preparar as bibliotecas para compilar em Pre-Renewal use:";
+        echo "  ./creativesd pre";
+		echo "Para compilar o emulador use:";
+		echo "  ./creativesd compilar";
+		echo "Para essas informacoes use:";
+		echo "  ./creativesd ajuda";
+		read -n 1 -s -r -p "Pressione qualquer tecla para continuar...";
+;;
+    'dev-compiler-re')
+		(exec rm -rf src/creativesd/map-server/map-server-linux-x64-re.a || true) &&
+		(exec rm -rf src/creativesd/map-server/creativesd.o || true) &&
+		(exec gcc -c -o src/creativesd/map-server/creativesd.o src/creativesd/map-server/creativesd.cpp) &&
+		(exec ar rcs src/creativesd/map-server/map-server-linux-x64-re.a src/creativesd/map-server/creativesd.o) &&
+		(exec rm -rf src/creativesd/map-server/creativesd.o || true) &&
+		(exec rm -rf src/creativesd/char-server/char-server-linux-x64-re.a || true) &&
+		(exec rm -rf src/creativesd/char-server/creativesd.o || true) &&
+		(exec gcc -c -o src/creativesd/char-server/creativesd.o src/creativesd/char-server/creativesd.cpp) &&
+		(exec ar rcs src/creativesd/char-server/char-server-linux-x64-re.a src/creativesd/char-server/creativesd.o) &&
+		(exec rm -rf src/creativesd/char-server/creativesd.o || true) &&
+		(echo "Compialcao da biblioteca Renewal finalizada com sucesso!")
+;;
+    'dev-compiler-pre')
+		(exec rm -rf src/creativesd/map-server/map-server-linux-x64-pre.a || true) &&
+		(exec rm -rf src/creativesd/map-server/creativesd.o || true) &&
+		(exec gcc -c -o src/creativesd/map-server/creativesd.o src/creativesd/map-server/creativesd.cpp) &&
+		(exec ar rcs src/creativesd/map-server/map-server-linux-x64-pre.a src/creativesd/map-server/creativesd.o) &&
+		(exec rm -rf src/creativesd/map-server/creativesd.o || true) &&
+		(exec rm -rf src/creativesd/char-server/char-server-linux-x64-pre.a || true) &&
+		(exec rm -rf src/creativesd/char-server/creativesd.o || true) &&
+		(exec gcc -c -o src/creativesd/char-server/creativesd.o src/creativesd/char-server/creativesd.cpp) &&
+		(exec ar rcs src/creativesd/char-server/char-server-linux-x64-pre.a src/creativesd/char-server/creativesd.o) &&
+		(exec rm -rf src/creativesd/char-server/creativesd.o || true) &&
+		(echo "Compialcao da biblioteca Pre-Renewal finalizada com sucesso!")
+;;
+    *)
+        $0 ajuda
+;;
+esac

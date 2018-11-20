@@ -1,0 +1,55 @@
+// ========================================================== //
+//         __  __ _____ _    _          ______ _              //
+//        |  \/  |_   _| |  | |   /\   |  ____| |             //
+//        | \  / | | | | |__| |  /  \  | |__  | |             //
+//        | |\/| | | | |  __  | / /\ \ |  __| | |             //
+//        | |  | |_| |_| |  | |/ ____ \| |____| |____         //
+//        |_|  |_|_____|_|  |_/_/    \_\______|______|        //
+//                 forum.brathena.org                         //
+//                                                            //
+// ===================== Licença ============================ //
+//     Esta script está protegida por uma licença Creative    //
+//          Commons Atribuido ao Uso-Não-Comercial            //
+//                      Compartilhado                         //
+// ========================================================== //
+// Nome:	Anunciador                                        //
+// ========================================================== //
+// Autor:	Mihael                                            //
+// ========================================================== //
+// Versão:	1.0                                               //
+// ========================================================== //
+// Descrição:	Um npc feito para mandar mensagens sensacio   //
+//                nalistas dentro do seu servidor.            //
+// ========================================================== //
+// Comentários Adicionais:	Favor manter os créditos pois     //
+//                          da trabalho para fazer.           //
+// ========================================================== //
+// Change Log:	1.0 - Script criado.            [Mihael]      //
+// ========================================================== //
+
+-	script	news	-1,{
+
+OnInit:
+setarray .News$[0],	// Random Mensagens
+		"[InfinityRO] : Lembre-se: Quando quiser falar com a Staff é só utilizar o sistema de chat em nosso site.",
+		"[InfinityRO] : Nós da staff agradecemos a sua presença em nosso Servidor!",
+		"[InfinityRO] : Visite nosso fórum e conheça nossas as novidades",
+		"[InfinityRO] : Já votou hoje? Não se esqueça: http://infinityro.com.br/cp/",
+		"[InfinityRO] : Lembre-se: Quando quiser falar com a Staff é só utilizar o sistema de chat em nosso site.",
+		"[InfinityRO] : Nunca forneça seu login/senha a ninguém. Não nos responsabilizamos por itens e contas roubadas nesse caso.",
+		"[InfinityRO] : Não somos responsaveis por itens roubados ou vendidos em npc!",
+		"[InfinityRO] : Temos um grupo oficial do servidor no Facebook, caso tenha interesse basta nos procurar no Facebook,",
+		"[InfinityRO] : Lembre-se: Quando quiser falar com a Staff é só utilizar o sistema de chat em nosso site.",
+		"[InfinityRO] : Faça sua parte, divulgue nosso servidor sempre que possível.",
+		"[InfinityRO] : Ajude-nos a manter o servidor online, faça doações e receba ROPS por isso!",
+		"[InfinityRO] : Vote em nosso servidor diariamente e troque seus VotePoints por VIP!",
+		"[InfinityRO] : Sugestões para o servidor? Acesse nosso fórum e faça uma postagem infinityro.com.br/forum";		
+		end;
+		
+// Timer 10 em 10 minutos.
+OnMinute00: OnMinute12: OnMinute26: OnMinute38: OnMinute50:
+announce .News$[rand(getarraysize(.News$ ))],bc_all,0xFFFF00; // Anuncio.
+end;
+}
+
+prontera	mapflag	novending

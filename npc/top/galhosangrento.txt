@@ -1,0 +1,36 @@
+prontera,168,170,3	script	Aventureiro	455,{
+.@nomenpc$ = "[Aventureiro]";
+
+mes .@nomenpc$;
+mes "Olá ^5566FF"+strcharinfo(0)+"^000000!";
+mes "Já ouviu falar no Galho Sangrento?";
+mes "É incrível, eu não sei qual tipo de magia ele possui, mas se você quebrá-lo irá aparecer um monstro do tipo Chefe";
+next;
+mes .@nomenpc$;
+mes "Caso você tenha interesse em adquirir um Galho Sangrento eu posso lhe dar em troca de 250 Galhos Secos e 100 Galho Antigo";
+mes "Você tem interesse?";
+switch(select("Não, obrigado.:Claro!!!")){
+next;
+
+case 2:
+if ((countitem(604) < 250)) | ((countitem(7939) < 100)) {
+mes .@nomenpc$;
+mes "Me desculpe, você ainda não acumulou a quantidade de itens necessários.";
+mes "Volte quando conseguir todos.";
+close;
+}
+delitem 604,250;
+delitem 7939,100;
+mes .@nomenpc$;
+mes "Prontinho, aqui está.";
+getitem 12103,1;
+next;
+mes .@nomenpc$;
+mes "Até a próxima!";
+close;
+
+case 1:
+mes .@nomenpc$;
+mes "Tudo bem, até logo!";
+close;
+}}

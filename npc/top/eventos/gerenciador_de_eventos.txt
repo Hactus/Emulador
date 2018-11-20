@@ -1,0 +1,633 @@
+prontera,150,172,5	script	Eventos	4_F_KHELLISIA,{
+
+	mes "^6495ED           .::[ Eventos ]::.^000000";
+	if(!$sortudo)			mes "[^FF0000Indisponível^000000]: Sortudo"; else mes "[^00FF00Disponível^000000]: Sortudo";
+	if(!$prace_gate)		mes "[^FF0000Indisponível^000000]: Corrida dos Poring"; else mes "[^00FF00Disponível^000000]: Corrida dos Poring";
+	if(!$abertoarea51)		mes "[^FF0000Indisponível^000000]: Área 51 "; else mes "[^00FF00Disponível^000000]: Área 51";
+	if(!$verimaluca)		mes "[^FF0000Indisponível^000000]: Corrida Maluca"; else mes "[^00FF00Disponível^000000]: Corrida Maluca";	
+	if(!$wotcontroll)		mes "[^FF0000Indisponível^000000]: Guerra do Tesouro"; else mes "[^00FF00Disponível^000000]: Guerra do Tesouro";
+	if(!$DSveri)			mes "[^FF0000Indisponível^000000]: Devil Square"; else mes "[^00FF00Disponível^000000]: Devil Square";
+	if(!$NvZveri)			mes "[^FF0000Indisponível^000000]: Aprendiz vs Zumbi"; else mes "[^00FF00Disponível^000000]: Aprendiz vs Zumbi";
+	if(!$PvPAdvanced)		mes "[^FF0000Indisponível^000000]: Pvp Advanced"; else mes "[^00FF00Disponível^000000]: Pvp Advanced";
+	if(!$BombPoring)		mes "[^FF0000Indisponível^000000]: Poring Bomb"; else mes "[^00FF00Disponível^000000]: Poring Bomb";
+
+	menu "Horária dos Eventos",-,""+($sortudo || getgroupid() == 99 ? "Sortudo":"")+"",-,""+($prace_gate || getgroupid() == 99 ? "Corrida dos Porings":"")+"",-,""+($abertoarea51 || getgroupid() == 99 ? "Área 51":"")+"",-,""+($verimaluca || getgroupid() == 99 ? "Corrida Maluca":"")+"",-,""+($wotcontroll || getgroupid() == 99 ? "Guerra do Tesouro":"")+"",-,""+($DSveri || getgroupid() == 99 ? "Devil Square":"")+"",-,""+($NvZveri || getgroupid() == 99 ? "Aprendiz vs Zumbi":"")+"",-,""+($PvPAdvanced || getgroupid() == 99 ? "Pvp Advanced":"")+"",-,""+($BombPoring || getgroupid() == 99 ? "Poring Bomb":"")+"",-;
+
+	if(@menu ==1)
+	{
+		next;
+		mes "^6495ED           .::[ Eventos ]::.^000000",
+		"00h: Sortudo",
+		"01h: Corrida Maluca",
+		"02h: Pvp Advanced",
+		"03h: Guerra do Tesouro",
+		"04h: Corrida Poring",
+		"05h: Aprendiz vs Zumbi",
+		"06h: Poring Bomb",
+		"07h: Devil Square",
+		"08h: Corrida Maluca",
+		"09h: Sortudo",
+		"10h: Pvp Advanced",
+		"11h: Área 51",
+		"12h: Guerra do Tesouro",
+		"13h: Corrida Poring",
+		"14h: Aprendiz vs Zumbi",
+		"15h: Poring Bomb",
+		"16h: Corrida Maluca",
+		"18h: Sortudo",
+		"19h: Devil Square",
+		"20h: Pvp Advanced",
+		"21h: Guerra do Tesouro",
+		"22h: Poring Bomb",
+		"23h: Área 51";
+		close;
+	}
+
+	if(@menu == 2){ close2; doevent "Sortudo::OnMenuSortudo";					end; }
+	if(@menu == 3){ close2; doevent "Corrida dos Porings::OnMenuCP";			end; }
+	if(@menu == 4){ close2; doevent "Area 51::OnMenuArea51";					end; }
+	if(@menu == 5)
+	{
+		next;
+		set .@loop_1,1;
+		while(.@loop_1)
+		{
+			mes "^FF8C00[Corrida Maluca]^000000";
+			mes "Bem-vindo ao ^0000FFEvento Corrida Maluca^000000!";
+			if( !$@WR_FLAG )
+				mes "No momento não está havendo uma Corrida.";
+			mes " ";
+			mes "Em que posso ajudar?";
+			next;
+			
+			switch( select(
+				(getgroupid()>=$@WR_GroupID?($@WR_FLAG?"^FF0000- Desligar Evento.^000000":"^0000FF- Ligar Evento.^000000"):""),
+				($@WR_FLAG&&!$@WR_BlockStart&&$@WR_FLAG<4||$@WR_FLAG&&$@WR_BlockStart&&$@WR_FLAG<2?"- Entrar no Evento.":""),
+				(getarraysize($WR_CHAMPIONS$)?"- Pódio de Vencedores.":""),
+				"^0000FF- Sobre o Evento.^000000",
+				($@WR_EnableRewards?"^FFA500- Premiação.^000000":""),
+				"^FF0000- Cancelar.^000000"
+			) ) {
+				// Ligar/Desligar Evento
+				case 1:
+					mes "^FF8C00[Corrida Maluca]^000000";
+					if( $@WR_FLAG ) {
+						donpcevent "WackyRace#main::OnStopGM";
+						mes "O Evento foi ^FF0000desligado^000000 com sucesso!";
+					}
+					else {
+						donpcevent "WackyRace#main::OnStart";
+						mes "O Evento foi ^0000FFligado^000000 com sucesso!";
+					}
+					next;
+					break;
+				// Entrar no Evento
+				case 2:
+					if( $@WR_FLAG == 0 ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "No momento o evento está fechado!";
+						next;
+						break;
+					}
+					
+					if( $@WR_BlockStart && $@WR_FLAG > 1 ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Você não pode entrar mais no evento!";
+						next;
+						break;
+					}
+					
+					set .@checkchamp,0;
+					for( set .@i,0; .@i < getarraysize($@WR_CHAMPIONS); set .@i,.@i+1 ) {
+						if( $@WR_CHAMPIONS[.@i] == getcharid(0) ) {
+							set .@checkchamp,1;
+							mes "^FF8C00[Corrida Maluca]^000000";
+							mes "Parabéns! Você ficou em " + (.@i+1) + "º lugar!";
+							next;
+							break;
+						}
+					}
+					
+					// Skip champion!
+					if( .@checkchamp ) break;
+					
+					if( $@WR_BaseLevel && BaseLevel < $@WR_BaseLevel ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Você tem que ter no mínimo ^0000FFNível " + $@WR_BaseLevel + " de Base^000000.";
+						next;
+						break;
+					}
+					
+					if( $@WR_MaxPlayer && getmapusers($@WR_StartLine$[0]) >= $@WR_MaxPlayer ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Me desculpe, mais o evento já está lotado!";
+						next;
+						break;
+					}
+					
+					set .@baditem, 0;
+					for( set .@i,0; .@i < getarraysize($@WR_BlockItem); set .@i, .@i + 1 ) {
+						if( countitem($@WR_BlockItem[.@i]) ) {
+							if( !.@baditem ) {
+								mes "^FF8C00[Corrida Maluca]^000000";
+								mes "Você não pode entrar com o item(ns):";
+								set .@baditem, 1;
+							}
+							mes "^FF0000" + getitemname($@WR_BlockItem[.@i]) + "^000000";
+						}
+					}
+					if( .@baditem ) {
+						mes " ";
+						mes "Guarde estes itens no armazém!";
+						next;
+						break;
+					}
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "Boa sorte! Vou te mandar para o Evento.";
+					close2;
+					if( $@WR_Mount == 1 || $@WR_Mount == 3 ) {
+						if( checkriding() )
+							setriding 0;
+						if( checkdragon() )
+							setdragon 0;
+						if( checkmadogear() )
+							setmadogear 0;
+						if( checkcart() )
+							setcart 0;
+						if( checkwug() ) {
+							setoption Option_Wug,0;
+							setoption Option_Wugrider,0;
+						}
+					}
+					if( $@WR_Mount == 2 || $@WR_Mount == 3 ) {
+						if( ismounting() )
+							setmounting;
+					}
+					if( $@WR_RemoveBuffs )
+						sc_end SC_ALL;
+					percentheal 100,100;
+					set WRFreezeProtection, 0;
+					set WRConfusionProtection, 0;
+					set WRStoneProtection, 0;
+					set WRSleepProtection, 0;
+					set WRStunProtection, 0;
+					set WRBlindProtection, 0;
+					set WRCurseProtection, 0;
+					set WRDamageProtection, 0;
+					warp $@WR_StartLine$[0], atoi($@WR_StartLine$[1]), atoi($@WR_StartLine$[2]);
+					end;
+				// Pódio de Vencedores
+				case 3:
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "^0000FFPódio de Vencedores:^000000";
+					for( set .@i,0; .@i < getarraysize($WR_CHAMPIONS$); set .@i, .@i + 1 )
+						mes "^FF0000" + (.@i+1) + "º Colocado:^000000 " + $WR_CHAMPIONS$[.@i];
+					next;
+					break;
+				// Sobre o Evento
+				case 4:
+					emotion ET_SMILE;
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "O ^0000FFEvento Corrida Maluca^000000 é conhecido por muitas pessoas, em particular este é muito especial!";
+					mes "Fique de olho nas dicas e regras que vou dar sobre o evento!";
+					next;
+					emotion ET_HELP;
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "Como toda corrida você começa atrás da linha de largada, e como todas você não pode queimar antes de dar a largada!";
+					next;
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "Você irá passar por etapas, com obstáculos e armadilhas.";
+					next;
+					emotion ET_HUK;
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "Ao cair de obstáculos, você terá que fazer novamente o percurso da etapa.";
+					mes "Obstáculos pode ser portais incorretos!";
+					next;
+					if( $@WR_EnableTraps ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Cuidado com as Armadilhas, elas são invisíveis e podem te congelar, petrificar, amaldiçoar, causar dano, confusão e até sono.";
+						next;
+					}
+					if( $@WR_EnablePowerUps ) {
+						emotion ET_SMILE;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Pode parecer ruim, mais no percurso há alguns ^0000FFPower Ups^000000.";
+						mes "Que permite você ganhar proteção acumulada ou irá tirar você de uma enrascada!";
+						next;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Para identificar um Power Up é muito fácil, um monstro presente fica aguardando com que você passe por ele.";
+						next;
+					}
+					if( $@WR_Mount ) {
+						emotion ET_HELP;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						if( $@WR_Mount == 1 )
+							mes "^0000FFCarrinhos^000000, ^0000FFPeco Pecos^000000, ^0000FFGrifos^000000, ^0000FFDragões^000000, ^0000FFBestas ou ^0000FFVeículos Mecanizados^000000 não são permitidos na corrida.";
+						else if( $@WR_Mount == 2 )
+							mes "^0000FFMontarias^000000 não são permitidas na corrida.";
+						else
+							mes "^0000FFCarrinhos^000000, ^0000FFMontarias em Gerais^000000, ^0000FFBestas ou ^0000FFVeículos Mecanizados^000000 não são permitidos na corrida.";	
+						mes "Na entrada do evento você será barrado caso esteja fazendo uso de algum item citado acima.";
+						next;
+					}
+					if( getarraysize($@WR_BlockItem) ) {
+						emotion ET_STARE;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Os seguintes itens não são permitidos no evento, então guarde-os no armazém:";
+						for( set .@i,0; .@i < getarraysize($@WR_BlockItem); set .@i,.@i+1 )
+							mes "^FF0000" + getitemname($@WR_BlockItem[.@i]) + "^000000";
+						next;
+					}
+					if( $@WR_BlockSkill || $@WR_BlockConsumption || $@WR_BlockBranch ) {
+						emotion ET_STARE;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "No Evento é Bloqueado:";
+						if( $@WR_BlockSkill )
+							mes "^FF0000Habilidades^000000";
+						if( $@WR_BlockConsumption )
+							mes "^FF0000Itens Consumíveis^000000";
+						if( $@WR_BlockBranch )
+							mes "^FF0000Galho Seco^000000";
+						next;
+					}
+					if( $@WR_RemoveBuffs ) {
+						emotion ET_STARE;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Ao entrar no Evento todos ^0000FFEncatamentos^000000 serão removidos.";
+						next;
+					}
+					if( $@WR_BaseLevel ) {
+						emotion ET_HELP;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Para entrar no Evento é necessário ter no minimo ^0000FFNível de Base " + $@WR_BaseLevel + "^000000.";
+						next;
+					}
+					if( $@WR_MinPlayer || $@WR_MaxPlayer ) {
+						emotion ET_HELP;
+						mes "^FF8C00[Corrida Maluca]^000000";
+						if( $@WR_MinPlayer || $@WR_MaxPlayer )
+							mes "Para Começar o Evento é necessário ter no ^0000FFminimo " + $@WR_MinPlayer + " e o máximo de " + $@WR_MaxPlayer + " jogadores^000000.";
+						else if( $@WR_MinPlayer )
+							mes "Para Começar o Evento é necessário ter no ^0000FFminimo " + $@WR_MinPlayer + " jogadores^000000.";
+						else
+							mes "Para Começar o Evento é necessário ter no ^0000FFmáximo de " + $@WR_MaxPlayer + " jogadores^000000.";
+						next;
+					}
+					if( $@WR_BlockStart ) {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Após o a largada, ninguém mais pode entrar no evento.";
+						next;
+					}
+					else {
+						mes "^FF8C00[Corrida Maluca]^000000";
+						mes "Após o a largada, você pode entrar no evento a qualquer momento.";
+						next;
+					}
+					emotion ET_BEST;
+					mes "^FF8C00[Corrida Maluca]^000000";
+					mes "Agora que você já sabe tudo do evento já pode participar!";
+					next;
+					break;
+				// Recompensas
+				case 5:
+					set .@loop_2,1;
+					while(.@loop_2)
+					{
+						mes "^FF8C00[Corrida Maluca]^000000";
+						if( $@WR_EnableRewards == 2 )
+							mes "^FF0000As Premiações são alteatória!^FF000000";
+						mes "Qual qualificação você deseja visualizar a premiação?";
+						next;
+						set .@idx, select("^0000FF- 1º Colocado.^000000", "^0000FF- 2º Colocado.^000000", "^0000FF- 3º Colocado.^000000", (getarraysize($@WR_Reward_con$)?"- Prêmios de Consolação.":""), "^FFA500- Voltar.^000000", "^FF0000- Cancelar.^000000");
+						switch(.@idx)
+						{
+							// Listagem
+							default:
+								setarray .@ref$[1], "1st", "2nd", "3rd", "con";
+								setarray .@name$[1], "do 1º Colocado", "do 2º Colocado", "do 3º Colocado", "de Consolação";
+								set .@size, getarraysize(getd("$@WR_Reward_" + .@ref$[.@idx] + "$"));
+								
+								// No Config...
+								if( .@size <= 0 ) {
+									mes "^FF8C00[Corrida Maluca]^000000";
+									mes "Não há premiação " + .@name$[.@idx] + ".";
+									next;
+									break;
+								}
+								
+								mes "^FF8C00[Corrida Maluca]^000000";
+								mes "Premiação " + .@name$[.@idx] + ": ";
+								for( set .@i,0; .@i < .@size; set .@i,.@i+4 )
+									mes getd("$@WR_Reward_" + .@ref$[.@idx] + "$[" + (.@i+2) + "]") + "x ^0000FF" + getd("$@WR_Reward_" + .@ref$[.@idx] + "$[" + (.@i+3) + "]") + "^000000";
+								next;
+								break;
+							// Voltar
+							case 5:
+								set .@loop_2, 0;
+								break;
+							// Cancelar
+							case 6:
+								set .@loop_1, 0;
+								set .@loop_2, 0;
+								break;
+						}
+					}
+					break;
+				// Cancelar
+				case 6:
+					set .@loop_1,0;
+					break;
+			}
+		}
+		emotion ET_SMILE;
+		mes "^FF8C00[Corrida Maluca]^000000";
+		mes "Tudo bem, volte se precisar de algo!";
+		close;
+	}
+	if(@menu == 6)
+	{
+		next;
+		set .DefaultRuneMode, $@WOT_RuneMode;
+		set .@talk, 0;
+		set .@loop_1,1;
+		while(.@loop_1) {
+			mes "^FF8C00[War of Treasure]^000000";
+			if( !.@talk ) mes "Bem-vindo a ^0000FFGuerra do Tesouro^000000!";
+			mes "Em que posso ajudar?";
+			set .@talk,1;
+			next;
+			switch( select(
+				(getgmlevel()>=$@WOT_GroupID?($@WOT_FLAG?"^FF0000- Desligar Evento.^000000":"^0000FF- Ligar Evento.^000000"):""),
+				($@WOT_FLAG==1?"- Entrar no Evento.":""),
+				($@WOT_Shop_Enable?"^0000FF- Loja WOT.^000000":""),
+				($@WOT_Ranking?"^8A2BE2- Ranking.^000000":""),
+				"^FFA500- Informações.^000000",
+				"^FF0000- Cancelar.^000000"
+			) ) {
+				// Ligar/Desligar Evento
+				case 1:
+					mes "^FF8C00[War of Treasure]^000000";
+					if( $@WOT_FLAG ) {
+						donpcevent "wot#main::OnStopGM";
+						sleep2 2000;
+						if( !$@WOT_FLAG )
+							mes "O Evento foi ^FF0000desligado^000000 com sucesso!";
+						else
+							mes "Houve uma falha ao ^FF0000desligar^000000 o Evento!";
+					}
+					else {
+						donpcevent "wot#main::OnStart";
+						sleep2 2000;
+						if( $@WOT_FLAG )
+							mes "O Evento foi ^0000FFligado^000000 com sucesso!";
+						else
+							mes "Houve uma falha ao ^FF0000ligar^000000 o Evento!";
+					}
+					next;
+					break;
+				// Entrar no Evento
+				case 2:
+					mes "^FF8C00[War of Treasure]^000000";
+					if( $@WOT_BaseLevel && BaseLevel < $@WOT_BaseLevel )
+						mes "Você precisar ter no mínimo ^FF0000Nível " + $@WOT_BaseLevel + " de Base^000000 para entrar no evento.";
+					else if( getcharid(2) <= 0 )
+						mes "É necessário estar em um ^FF0000Clã^000000 para participar do evento.";
+					else if( $@WOT_MaxGuild && countguildmap("wot_castle") >= $@WOT_MaxGuild )
+						mes "Não pode entrar mais Clã no evento por que o ^FF0000limite máximo^000000 já foi alcançado.";
+					else if( $@WOT_MaxPlayer && getmapusers("wot_castle") >= $@WOT_MaxPlayer )
+						mes "O evento está lotado, você pode tentar no próximo.";
+					else {
+						announce "[War of Treasure]: " + strcharinfo(0) + " entrou no evento, boa sorte!", bc_yellow|bc_all;
+						warp "wot_castle", 99, 29;
+						end;
+					}
+					next;
+					set .@loop_1,0;
+					break;
+				// Loja WOT
+				case 3:
+					// Get Points
+					if( atoi($@WOT_Currency$[2]) ) 
+						set .@amount, getd($@WOT_Currency$[0]);
+					else
+						set .@amount, countitem(atoi($@WOT_Currency$[0]));
+						
+					mes "^FF8C00[War of Treasure]^000000";
+					mes "Você possuí ^FF0000" + .@amount + "x " + $@WOT_Currency$[1] + "^000000.";
+					mes "Muito bem, vou abrir a ^0000FFLoja WOT^000000 para você.";
+					close2;
+					announce "A Loja utiliza '" + $@WOT_Currency$[1] + "' como moeda!", bc_self, "0x00ffff";
+					callshop "wot#shop", 1;
+					end;
+				// Ranking WOT
+				case 4:
+					set .@loop_2,1;
+					while(.@loop_2) {
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "O ^0000FFRank exibie os 5 melhores em desempenho^000000.";
+						mes "Por favor, selecione o Ranking que deseja visualizar.";
+						next;
+						switch( select(($@WOT_Ranking&2?"- Rank de Clãs.":""), ($@WOT_Ranking&1?"- Rank de Jogadores.":""), "^FFA500- Voltar.^000000", "^FF0000- Cancelar.^000000") )
+						{
+							// Rank de Clãs
+							case 1:
+								deletearray .@guild_id;
+								if( .DefaultRuneMode )
+									query_sql "SELECT `w`.`guild_id`, `w`.`treasure`, `w`.`runestone`, `w`.`guardian_kill`, `w`.`guardian_death`, `w`.`player_kill`, `w`.`player_death`, `g`.`name` FROM `wot_rank_guild` AS w, `guild` AS g WHERE `w`.`guild_id`=`g`.`guild_id` ORDER BY `w`.`treasure` DESC, `w`.`runestone` DESC, (`w`.`player_kill`-`w`.`player_death`) DESC, (`w`.`guardian_kill`-`w`.`guardian_death`) DESC LIMIT 5", .@guild_id, .@treasure, .@runestone, .@gkill, .@gdeath, .@pkill, .@pdeath, .@name$;
+								else
+									query_sql "SELECT `w`.`guild_id`, `w`.`treasure`, `w`.`player_kill`, `w`.`player_death`, `g`.`name` FROM `wot_rank_guild` AS w, `guild` AS g WHERE `w`.`guild_id`=`g`.`guild_id` ORDER BY (`w`.`player_kill`-`w`.`player_death`) DESC LIMIT 5", .@guild_id, .@treasure, .@pkill, .@pdeath, .@name$;
+								
+								if( getarraysize(.@guild_id) <= 0 ) {
+									mes "Nenhum Clã está qualificado no ^0000FFRank de Clãs da WOT^000000.";
+									next;
+								}
+								else {
+									for( set .@i, 0; .@i < getarraysize(.@guild_id); set .@i, .@i + 1 ) {
+										mes "^8A2BE2 ~ Rank War of Treasure ~^000000";
+										mes "^0000FFPosição:^000000 " +(.@i+1);
+										mes "^0000FFClã:^000000 " + .@name$[.@i];
+										mes "^0000FFBaús:^000000 " + .@treasure[.@i];
+										if( .DefaultRuneMode ) {
+											mes "^0000FFRunas Guardiãs:^000000 " + .@runestone[.@i];
+											mes "^0000FFEliminação em Guardiões:^000000 " + .@gkill[.@i];
+											mes "^0000FFMortes por Guardiões:^000000 " + .@gdeath[.@i];
+											mes "^0000FFProporção:^000000 " + (.@gkill[.@i]-.@gdeath[.@i]);
+										}
+										mes "^0000FFEliminção em Jogadores:^000000 " + .@pkill[.@i];
+										mes "^0000FFMortes por Jogadores:^000000 " + .@pdeath[.@i];
+										mes "^0000FFProporção:^000000 " + (.@pkill[.@i]-.@pdeath[.@i]);
+										next;
+									}
+								}
+								break;
+							// Rank de Jogadores
+							case 2:
+								deletearray .@char_id;
+								if( .DefaultRuneMode )
+									query_sql "SELECT `w`.`char_id`, `w`.`treasure`, `w`.`runestone`, `w`.`guardian_kill`, `w`.`guardian_death`, `w`.`player_kill`, `w`.`player_death`, `c`.`name`, `g`.`name` FROM `wot_rank_player` AS w, `char` AS c, `guild` AS g WHERE `w`.`char_id`=`c`.`char_id` AND `c`.`guild_id`=`g`.`guild_id` ORDER BY `w`.`treasure` DESC, `w`.`runestone` DESC, (`w`.`player_kill`-`w`.`player_death`) DESC, (`w`.`guardian_kill`-`w`.`guardian_death`) DESC LIMIT 5", .@char_id, .@treasure, .@runestone, .@gkill, .@gdeath, .@pkill, .@pdeath, .@name$, .@gname$;
+								else
+									query_sql "SELECT `w`.`char_id`, `w`.`treasure`, `w`.`player_kill`, `w`.`player_death`, `c`.`name`, `g`.`name` FROM `wot_rank_player` AS w, `char` AS c, `guild` AS g WHERE `w`.`char_id`=`c`.`char_id` AND `c`.`guild_id`=`g`.`guild_id` ORDER BY (`w`.`player_kill`-`w`.`player_death`) DESC LIMIT 5", .@char_id, .@treasure, .@pkill, .@pdeath, .@name$, .@gname$;
+								
+								if( getarraysize(.@char_id) <= 0 ) {
+									mes "Nenhum Jogador está qualificado no ^0000FFRank de Clãs da WOT^000000.";
+									next;
+								}
+								else {
+									for( set .@i, 0; .@i < getarraysize(.@char_id); set .@i, .@i + 1 ) {
+										mes "^8A2BE2 ~ Rank War of Treasure ~^000000";
+										mes "^0000FFPosição:^000000 " +(.@i+1);
+										mes "^0000FFJogador:^000000 " + .@name$[.@i];
+										mes "^0000FFClã:^000000 " + .@gname$[.@i];
+										mes "^0000FFBaús:^000000 " + .@treasure[.@i];
+										if( .DefaultRuneMode ) {
+											mes "^0000FFRunas Guardiãs:^000000 " + .@runestone[.@i];
+											mes "^0000FFEliminação em Guardiões:^000000 " + .@gkill[.@i];
+											mes "^0000FFMortes por Guardiões:^000000 " + .@gdeath[.@i];
+											mes "^0000FFProporção:^000000 " + (.@gkill[.@i]-.@gdeath[.@i]);
+										}
+										mes "^0000FFEliminção em Jogadores:^000000 " + .@pkill[.@i];
+										mes "^0000FFMortes por Jogadores:^000000 " + .@pdeath[.@i];
+										mes "^0000FFProporção:^000000 " + (.@pkill[.@i]-.@pdeath[.@i]);
+										next;
+									}
+								}
+								break;
+							case 3:
+								set .@loop_2,0;
+								break;
+							case 4:
+								set .@loop_1,0;
+								set .@loop_2,0;
+								break;
+						}
+					}
+					break;
+				// Informações
+				case 5:
+					mes "^FF8C00[War of Treasure]^000000";
+					mes "Bem este evento é para os Clãs que desejam testar o desempenho dos seus membros em time!";
+					mes "Preste atenção na explicação que vou te dar, pronto?";
+					next;
+					set .@n, 1;
+					mes "^FF8C00[War of Treasure]^000000";
+					mes .@n + "º Você precisa estar em um ^0000FFClã^000000 para participar, ou caso contrário não irá conseguir entrar no evento.";
+					next;
+					set .@n, .@n + 1;
+					mes "^FF8C00[War of Treasure]^000000";
+					mes .@n + "º Você precisa ter no ^0000FFMínimo Nível " + $@WOT_BaseLevel + " de Base^000000 para entrar no evento.";
+					next;
+					set .@n, .@n + 1;
+					mes "^FF8C00[War of Treasure]^000000";
+					if( $@WOT_MaxGuild ) {
+						mes .@n + "º É necessário no ^0000FFmínimo " + $@WOT_MinGuild + "^000000 Clãs para começar o evento,";
+						mes "e só é permitido o ^0000FFmáximo " + $@WOT_MaxGuild + "^000000 Clãs.";
+					}
+					else
+						mes .@n + "º Também é permitido no ^0000FFmínimo " + $@WOT_MinPlayer + "^000000 jogadores no evento.";
+					next;
+					set .@n, .@n + 1;
+					mes "^FF8C00[War of Treasure]^000000";
+					if( $@WOT_MaxPlayer ) {
+						mes .@n + "º Também é necessário no ^0000FFmínimo " + $@WOT_MinPlayer + "^000000 jogadores para começar o evento,";
+						mes "e só é permitido o ^0000FFmáximo " + $@WOT_MaxPlayer + "^000000 jogadores.";
+					}
+					else if( $@WOT_MinPlayer > 1 )
+						mes .@n + "º Também é permitido no ^0000FFmínimo " + $@WOT_MinPlayer + "^000000 jogadores no evento.";
+					next;
+					set .@n, .@n + 1;
+					if( $@WOT_RuneMode ) {
+						mes "^FF8C00[War of Treasure]^000000";
+						mes .@n + "º O Evento segue ^0000FF4 etapas^000000.";
+						mes "Vou estar explicando as etapas para você, mais resumindo:";
+						mes "^FF0000 1ª Etapa:^000000 GvG.";
+						mes "^FF0000 2ª Etapa:^000000 Runas Guardiãs.";
+						mes "^FF0000 3ª Etapa:^000000 GvG.";
+						mes "^FF0000 4ª Etapa:^000000 Baús do Tesouro.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "A 1ª e 3ª etapa os Clãs devem se enfrentar como em um GvG.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						if( $@WOT_RuneGvGOff ) {
+							mes "A 2ª etapa os Clãs devem se aliar para eliminar as ^0000FFRunas Guardiãs^000000 que impede que os Tesouros sejam invocado.";
+							mes "Nesse período o ^FF0000GvG^000000 estará desligado.";
+						}
+						else
+							mes "A 2ª etapa os Clãs devem eliminar as ^0000FFRunas Guardiãs^000000 que impede que os Tesouros sejam invocados.";
+						next;
+						if( $@WOT_RuneReward_Enable ) {
+							mes "^FF8C00[War of Treasure]^000000";
+							mes "As Runas irã recompensar o jogador que a eliminar.";
+							next;
+						}
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "Existe ^0000FFseis portais^000000 no mapa, que levaram a uma sala invocação.";
+						mes "Mais sempre esteja atento, apenas dois portais levam a Runa Guardiãs.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "Os outros ^FF0000quatro portais^000000 te levam a uma emboscada com dois Guardiões.";
+						mes "Você só conseguirá sair daquela sala caso as Runas Guardiãs sejam eliminadas ou os Guardiões.";
+						next;
+						if( $@WOT_GuardReward_Enable ) {
+							mes "^FF8C00[War of Treasure]^000000";
+							mes "Os Guardiões de Emboscada irão recompensar o jogador que o eliminar.";
+							next;
+						}
+						set .@half, $@WOT_GvGBattleTimer/2;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "Neste caso o ^0000FFtempo de GvG^000000 é divido em duas etapas (dois tempos) de ^0000FF" + .@half + " minuto(s)^000000.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "Por fim, a 4ª e última etapa é a invocação dos ^0000FFBaús do Tesouro^000000,";
+						if( $@WOT_Treasure_Skills )
+							mes "a GvG sempre estará ligada.";
+						else
+							mes "a GvG sempre estará ligada e habilidades bloqueadas.";
+					}
+					else {
+						mes "^FF8C00[War of Treasure]^000000";
+						mes .@n + "º O Evento segue ^0000FF2 etapas^000000.";
+						mes "Vou estar explicando as etapas para você, mais resumindo:";
+						mes "^FF0000 1ª Etapa:^000000 GvG.";
+						mes "^FF0000 2ª Etapa:^000000 Baús do Tesouro.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "A 1ª etapa os Clãs devem se enfrentar como em um GvG por ^0000FF" + $@WOT_GvGBattleTimer + " minuto(s)^000000.";
+						next;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes "E a 2ª e última etapa é a invocação dos ^0000FFBaús do Tesouro^000000,";
+						if( $@WOT_Treasure_Skills )
+							mes "a GvG sempre estará ligada e habilidades bloqueadas.";
+						else
+							mes "a GvG sempre estará ligada.";
+					}
+					next;
+					if( $@WOT_TreasureReward_Enable ) {
+						set .@n, .@n + 1;
+						mes "^FF8C00[War of Treasure]^000000";
+						mes .@n + "º Cada ^0000FFBaú eliminado^000000 irá te recompensar.";
+						next;
+					}
+					mes "^FF8C00[War of Treasure]^000000";
+					mes "Espero que tenha entendido tudo, agora é só participar!";
+					next;
+					break;
+				// Cancelar
+				default:
+					set .@loop_1,0;
+					break;
+			}
+		}
+		mes "^FF8C00[War of Treasure]^000000";
+		mes "Tudo bem, volte se precisar de algo!";
+		close;
+	}
+	if(@menu == 7){ close2; doevent "Recrutador Devil Square#1::OnMenuDS";		end; }
+	if(@menu == 8){ close2; doevent "Evento NxZ#warp::OnMenuNvZ";				end; }
+	if(@menu == 9){ close2; doevent "Evento PvP Advanced#warp::OnPvPAMenu";		end; }
+	if(@menu == 10){ close2; doevent "Evento Bomb Poring#warp::OnMenuBombP";	end; }
+	
+
+}
+
+//vip,62,250,5	duplicate(Eventos)	Entrada para Eventos	4_F_KHELLISIA

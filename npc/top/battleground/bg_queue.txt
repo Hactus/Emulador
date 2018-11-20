@@ -1,0 +1,581 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   BG Queue Expansive System: Filas de Espera                       .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 4.7	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Funções relativas aos registros e filas de espera.               .
+  *---------------------------------------------------------------------*/
+-	script	BattleGround#queue_main	-1,{
+OnInit:
+	/* ----------------------------------------------------
+	   -		Destrói antigas Batalhas                  -
+	   ----------------------------------------------------*/
+	query_sql "SELECT `bg_id` FROM `bg_arena`", .@reset_id;
+	for( .@i=0; .@i < getarraysize(.@reset_id); .@i++ )
+	{
+		bg_destroy getd("$@BG_"+.@reset_id[.@a]+"_id1");
+		bg_destroy getd("$@BG_"+.@reset_id[.@a]+"_id2");
+		// Adicionar o resete de habilidades e de clã nesta consulta aqui...
+	}
+
+	$@BG_ACH = 0;	// Ponha 1 caso possua o Sistema de Conquistas 2.0+
+	
+	bg_console "Desenvolvido por Creative Services and Development (versao: 4.7.1)";
+	bg_console "http://creativesd.com.br";
+	
+	.@checkemulator = callfunc("bg_getconfiginfo","EMULATOR");
+	
+	if( .@checkemulator )
+		bg_console "Voce esta utilizando como base o emulador rAthena.";
+	else
+		bg_console "Voce esta utilizando como base o emulador Hercules.";
+	
+	query_sql "SELECT `group_id`, `status` FROM `bg_groups`", .@groups, .@status;
+	if( !getarraysize(.@groups) )
+	{
+		bg_console "As Batalhas Campais nao podem ser iniciada porque nenhum grupo esta ativado.";
+		end;
+	}
+	
+	.@e_arena = 0;
+	.@e_group = 0;
+	.@d_arena = 0;
+	.@d_group = 0;
+	freeloop(1);
+	for( .@g=0; .@g < getarraysize(.@groups); .@g++ )
+	{
+		deletearray .@bg_id, getarraysize(.@bg_id);
+		query_sql "SELECT `bg_id`, `map_event`, `team1_x`, `team1_y`, `team1_npc_quit_event`, `team1_npc_die_event`, `team2_x`, `team2_y`, `team2_npc_quit_event`, `team2_npc_die_event` FROM `bg_arena` WHERE `group_id`='" + .@groups[.@g] + "'", .@bg_id, .@m$, .@t1_x, .@t1_y, .@t1_q$, .@t1_d$, .@t2_x, .@t2_y, .@t2_q$, .@t2_d$;
+			
+		if( !getarraysize(.@bg_id) )
+			continue;
+			
+		if( .@status[.@g] )
+			.@e_group++;
+		else
+			.@d_group++;
+		
+		for( .@a=0; .@a < getarraysize(.@bg_id); .@a++ )
+		{
+			setd "$@BG_"+.@bg_id[.@a]+"_id1", create_bg_team(.@m$[.@a], .@t1_x[.@a], .@t1_y[.@a], .@t1_q$[.@a], .@t1_d$[.@a]);
+			setd "$@BG_"+.@bg_id[.@a]+"_id2", create_bg_team(.@m$[.@a], .@t2_x[.@a], .@t2_y[.@a], .@t2_q$[.@a], .@t2_d$[.@a]);
+			if( .@status[.@g] )
+				.@e_arena++;
+			else
+				.@d_arena++;
+		}
+	}
+	freeloop(0);
+	
+	if( !.@e_arena && !.@d_arena )
+	{
+		bg_console "As Batalhas Campais nao podem ser iniciada porque nenhuma arena foi carregada.";
+		end;
+	}
+	
+	bg_console "Carregado (" + .@e_group + ") grupos ativados.";
+	bg_console "Carregado (" + .@d_group + ") grupos desativados.";
+	bg_console "Carregado (" + .@e_arena + ") arenas ativadas.";
+	bg_console "Carregado (" + .@d_arena + ") arenas desativadas.";
+	
+	.@mode = callfunc("bg_getconfiginfo", "ARENA_MODE");
+	if( .@mode == 1 )
+	{
+		bg_console "As Batalhas Campais esta iniciando em modo circular.";
+		donpcevent "BattleGround#queue_circle::OnStart";
+	}
+	else if( .@mode == 2 )
+	{
+		bg_console "As Batalhas Campais esta iniciando em modo de tempo.";
+		donpcevent "BattleGround#queue_attacktime::OnStart";
+	}
+	else {
+		bg_console "As Batalhas Campais esta iniciando em modo seletivo.";
+		donpcevent "BattleGround#queue_selective::OnStart";
+	}
+
+	// Remove os Jogadores das Batalhas.
+	query_sql "SELECT `bg_queue_playing`.`char_id`, `char`.`account_id` FROM `bg_queue_playing`, `char` WHERE `bg_queue_playing`.`char_id`=`char`.`char_id` AND `char`.`online`='1'", .@char_id, .@account_id;
+	for( .@i=0; .@i < getarraysize(.@char_id); .@i++ )
+	{
+		if( attachrid(.@account_id[.@i]) )
+		{
+			bg_leave;
+			update_bg_position(0,0,strcharinfo(0));
+			bg_skill 0, strcharinfo(0);
+			warp "prontera",156,176;
+			detachrid;
+		}
+	}
+	
+	if( .@mode )
+		query_sql "DELETE FROM `bg_queue` WHERE `bg_id`!='" + $BG_ARENA + "'";
+		
+	query_sql "DELETE FROM `bg_queue_playing`";
+	end;
+
+OnTimer60000:
+OnCheckArena:
+	.@mode = callfunc("bg_getconfiginfo", "ARENA_MODE");
+	if( $BG_ARENA )
+	{
+		.@group_id = atoi(callfunc("bg_getarenainfo",$BG_ARENA,"group_id"));
+		.@group_status = atoi(callfunc("bg_getgroupinfo",.@group_id,"status"));
+		.@varcheck = getd(callfunc("bg_getarenainfo",$BG_ARENA,"npc_var_event"));
+		.@mapevent$ = callfunc("bg_getarenainfo",$BG_ARENA,"map_event");
+		
+		if( !.@group_status || (.@varcheck&&!getmapusers(.@mapevent$)) )
+		{
+			bg_console "O Sistema entrou em modo de depuracao de arena, o sistema ira tentar trocar as arenas, resetar fila de jogadores em jogo e mudar a arena para solucao.";
+			stopnpctimer "BattleGround#queue_circle";
+			stopnpctimer "BattleGround#queue_attacktime";
+			stopnpctimer "BattleGround#queue_selective";
+			
+			.@old_arena = $BG_ARENA;
+			.@check = callfunc("bg_nominate_arena",true,true);
+			
+			if( $BG_ARENA != .@old_arena )
+			{
+				.@base_level = callfunc("bg_getarenainfo",$BG_ARENA,"base_level");
+				query_sql "UPDATE `bg_queue`, `char` SET `bg_queue`.`bg_id`='" + $BG_ARENA + "' WHERE `bg_queue`.`bg_id`='" + .@old_arena + "' AND `bg_queue`.`char_id`=`char`.`char_id` AND `char`.`base_level`>='" + .@base_level + "'";
+				query_sql "DELETE FROM `bg_queue` WHERE `bg_id`='" + .@old_arena + "'";
+				bg_console "A batalha foi atelrada para " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + " pelo modulo de tempo.";
+				announce "[Batalhas Campais]: A batalha foi alterada para " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + ", corram agora para se alistar nas fileiras de um dos Exércitos.", bc_all, "0xFFCE00";
+				setd callfunc("bg_getarenainfo",.@old_arena,"npc_var_event"), 0;
+				callfunc "bg_queue_func", 8, .@old_arena;
+				bg_console "O Sistema fez a troca da arena com sucesso, a batalha ira acontecer em " + callfunc("bg_getarenainfo",$BG_ARENA,"arena_name") + ".";
+				announce "[Batalhas Campais]: A batalha foi alterada para " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + ", corram agora para se alistar nas fileiras de um dos Exércitos.", bc_all, "0xFFCE00";
+				if( .@mode == 1 )
+					donpcevent "BattleGround#queue_circle::OnStart";
+				else if( .@mode == 2 )
+				{
+					$BG_ATTACK_TIME = 0;
+					donpcevent "BattleGround#queue_attacktime::OnStart";
+				}
+				else
+					donpcevent "BattleGround#queue_selective::OnStart";
+			}
+			else {
+				bg_console "O Sistema nao conseguiu definir uma nova batalha, aguarde que em breve o sistema ira tentar novamente.";
+				stopnpctimer;
+				initnpctimer;
+			}
+		}
+	}
+	end;
+}
+
+// Módulo Seletivo
+-	script	BattleGround#queue_selective	-1,{
+OnStart:
+	initnpctimer;
+	end;
+	
+OnTimer60000:
+	callfunc "bg_reset";
+	callfunc "bg_seletive_arena";
+	end;
+}
+
+function	script	bg_seletive_arena	{
+	
+CheckArena:
+	stopnpctimer "BattleGround#queue_selective";
+	
+	.@mode = callfunc("bg_getconfiginfo", "ARENA_MODE");
+	if( .@mode == 1 )
+	{
+		// Perca de argumentos para seleção da arena.
+		bg_console "Modo trocado! Entrando no modo circular.";
+		donpcevent "BattleGround#queue_circle::OnStart";
+		end;
+	}
+	else if( .@mode == 2 )
+	{
+		// Perca de argumentos para seleção da arena.
+		bg_console "Modo trocado! Entrando no modo de tempo.";
+		donpcevent "BattleGround#queue_attacktime::OnStart";
+		end;
+	}
+	
+	.@announce = callfunc("bg_getconfiginfo", "ANNOUNCE");
+	freeloop(1);
+	query_sql "SELECT `group_id` FROM `bg_groups` WHERE `status`='1'", .@groups;
+	.@count = 0;
+	for( .@g=0; .@g < getarraysize(.@groups); .@g++ )
+	{
+		if( !atoi(callfunc("bg_getgroupinfo",.@groups[.@g],"status")) )
+			continue;
+			
+		deletearray .@bg_id;
+		query_sql "SELECT `bg_id`, `arena_name`, `min_player`, `max_player`, `npc_start_event`, `npc_var_event`, `npc_var_event_lock` FROM `bg_arena` WHERE `group_id`='" + .@groups[.@g] + "'", .@bg_id, .@a_name$, .@a_min_player, .@a_max_player, .@a_start_event$, .@a_var_event$, .@a_var_lock;
+		
+		if( !getarraysize(.@bg_id) )
+			continue;
+
+		for( .@a=0; .@a < getarraysize(.@bg_id); .@a++ )
+		{
+			deletearray .@bg1_char_id, getarraysize(.@bg1_char_id);
+			deletearray .@bg2_char_id, getarraysize(.@bg2_char_id);
+			query_sql "SELECT `bg_queue`.`char_id`, `char`.`name` FROM `bg_queue`, `char` WHERE `bg_queue`.`bg_id`='" + .@bg_id[.@a] + "' AND `bg_queue`.`bg_team`='0' AND (`bg_queue`.`char_id`=`char`.`char_id` AND `char`.`online`='1') LIMIT " + .@a_max_player[.@a] + "", .@bg1_char_id, .@bg1_char_name$;
+			query_sql "SELECT `bg_queue`.`char_id`, `char`.`name` FROM `bg_queue`, `char` WHERE `bg_queue`.`bg_id`='" + .@bg_id[.@a] + "' AND `bg_queue`.`bg_team`='1' AND (`bg_queue`.`char_id`=`char`.`char_id` AND `char`.`online`='1') LIMIT " + .@a_max_player[.@a] + "", .@bg2_char_id, .@bg2_char_name$;
+		
+			if( getargcount() && .@announce )
+			{
+				if( .@a_name$[.@a] == getarg(2) )
+					announce "[Batalhas Campais]: O jogador [" + getarg(0) + "] se alistou na Batalha em " + getarg(2) + " no Exército de " + (getarg(1)?"Croix":"Guillaume") + ".", bc_all, "0xFFCE00";
+			}
+			
+			if( getd(.@a_var_event$[.@a]) || getarraysize(.@bg1_char_id) < .@a_min_player[.@a] || getarraysize(.@bg2_char_id) < .@a_min_player[.@a] )
+			{
+				if( getarraysize(.@bg1_char_id) >= .@a_min_player[.@a] && getarraysize(.@bg2_char_id) < .@a_min_player[.@a] )
+					.@msg$ = "O Exército de Guillaume está completo, falta apenas " + (.@a_min_player[.@a]-getarraysize(.@bg2_char_id)) + " jogadores do Exército de Croix para começar a Batalha Campal de " + .@a_name$[.@a] + ".";
+				else if( getarraysize(.@bg2_char_id) >= .@a_min_player[.@a] && getarraysize(.@bg1_char_id) < .@a_min_player )
+					.@msg$ = "O Exército de Croix está completo, falta apenas " + (.@a_min_player[.@a]-getarraysize(.@bg1_char_id)) + " jogadores do Exército de Guillaume para começar a Batalha Campal de " + .@a_name$[.@a] + ".";
+				else if( getarraysize(.@bg1_char_id) < .@a_min_player[.@a] && getarraysize(.@bg2_char_id) < .@a_min_player[.@a] )
+					.@msg$ = "Restam " + (.@a_min_player[.@a]-getarraysize(.@bg1_char_id)) + " jogadores do Exército de Guillaume e " + (.@a_min_player[.@a]-getarraysize(.@bg2_char_id)) + " jogadores do Exército de Croix para começar a Batalha Campal de " + .@a_name$[.@a] + ".";
+				else {
+					.@msg$ = "Ambos Exércitos estão completos, mais há Batalha de " + .@a_name$[.@a] + " está ocorrendo, aguardem esta Batalha terminar.";
+					if( getargcount() )
+					{
+						sleep 3000;
+						announce .@msg$, bc_all, "0xFFCE00";
+					}
+				}
+					
+				// Avisa os jogadores que estão faltando jogadores para começar o evento.
+				for( .@i=0; .@i < getarraysize(.@bg1_char_id); .@i++ )
+				{
+					if( !callfunc("bg_checkmsg", .@bg1_char_id[.@i]) )
+						message .@bg1_char_name$[.@i], .@msg$;
+				}
+					
+				for( .@i=0; .@i < getarraysize(.@bg2_char_id); .@i++ )
+				{
+					if( !callfunc("bg_checkmsg", .@bg2_char_id[.@i]) )
+						message .@bg2_char_name$[.@i], .@msg$;
+				}
+			}
+			// Inicia a Batalha na Arena selecionada.
+			else
+			{
+				// Recrutamento do Exército de Guillaume.
+				for( .@i=0; .@i < getarraysize(.@bg1_char_id); .@i++ )
+				{
+					if( callfunc("bg_queue_func", 6, .@bg1_char_id[.@i], .@bg_id[.@a], 0) )
+					{
+						if( callfunc("bg_queue_func", 3, .@bg1_char_id[.@i]) )
+						{
+							add_bg_team(getd("$@BG_"+.@bg_id[.@a]+"_id1"), .@bg1_char_name$[.@i]);
+							update_bg_position((.@i+1), 0, .@bg1_char_name$[.@i]);
+							if( !.@i ) bg_skill 1, .@bg1_char_name$[.@i];
+							if( !callfunc("bg_checkmsg", .@bg1_char_id[.@i]) )
+								message .@bg1_char_name$[.@i], "Você ingrressou na Batalha Campal de " + .@a_name$[.@a] + " no Exército de Guillaume, você será teleportado para batalha em 10 segundos.";
+						}
+						else
+							bg_console "Erro ao tentar remover o jogador '" + .@bg1_char_name$[.@i] + "' da lista de espera queue.";
+					}
+					else
+						bg_console "Erro ao inserir o jogador '" + .@bg1_char_name$[.@i] + "' na lista de jogadores em jogo na arena " + .@a_name$[.@a] + ".";
+				}
+				
+				// Recrutamento do Exército de Croix.
+				for( .@i=0; .@i < getarraysize(.@bg2_char_id); .@i++ )
+				{
+					if( callfunc("bg_queue_func", 6, .@bg2_char_id[.@i], .@bg_id[.@a], 1) )
+					{
+						if( callfunc("bg_queue_func", 3, .@bg2_char_id[.@i]) )
+						{
+							add_bg_team(getd("$@BG_"+.@bg_id[.@a]+"_id2"), .@bg2_char_name$[.@i]);
+							update_bg_position((.@i+1), 1, .@bg2_char_name$[.@i]);
+							if( !.@i ) bg_skill 1, .@bg2_char_name$[.@i];
+							if( !callfunc("bg_checkmsg", .@bg2_char_id[.@i]) )
+								message .@bg2_char_name$[.@i], "Você ingrressou na Batalha Campal de " + .@a_name$[.@a] + " no Exército de Guillaume, você será teleportado para batalha em 10 segundos.";
+						}
+						else
+							bg_console "Erro ao tentar remover o jogador '" + .@bg2_char_name$[.@i] + "' da lista de espera queue.";
+					}
+					else
+						bg_console "Erro ao inserir o jogador '" + .@bg2_char_name$[.@i] + "' na lista de jogadores em jogo na arena " + .@a_name$[.@a] + ".";
+				}
+				
+				// Inicia o Evento relativo ao Script da BG
+				donpcevent .@a_start_event$[.@a];
+				
+				announce "[Batalhas Campais]: A Batalha Campal de " + .@a_name$[.@a] + " está completa, boa sorte a todos os guerreiros.", bc_all, "0xFFCE00";
+			}
+			.@count++;
+		}
+	}
+	
+	if( !.@count )
+	{
+		bg_console "O Sistema esta encerrando as Batalhas por nao encontrar a arena ativada.";
+		end;
+	}
+	
+	freeloop(0);
+	initnpctimer "BattleGround#queue_selective";
+	end;
+}
+
+// Módulo Circular.
+-	script	BattleGround#queue_circle	-1,{
+OnStart:
+	.@check = callfunc("bg_nominate_arena",false,false);
+	if( .@check )
+		initnpctimer;
+	end;
+	
+OnTimer60000:
+	callfunc "bg_reset";
+	callfunc "bg_circle_arena";
+	sleep 15000;
+	donpcevent "BattleGround#queue_main::OnCheckArena";
+	end;
+}
+
+function	script	bg_circle_arena	{
+	stopnpctimer "BattleGround#queue_circle";
+	stopnpctimer "BattleGround#queue_attacktime";
+	.@mode = callfunc("bg_getconfiginfo", "ARENA_MODE");
+	if( !.@mode )
+	{
+		// Perca de argumentos para seleção da arena.
+		bg_console "Modo trocado! Entrando no modo seletivo.";
+		donpcevent "BattleGround#queue_selective::OnStart";
+		end;
+	}
+	else if( .@mode == 2 && strnpcinfo(2) == "#queue_circle" )
+	{
+		// Perca de argumentos para seleção da arena.
+		bg_console "Modo trocado! Entrando no modo de tempo.";
+		donpcevent "BattleGround#queue_attacktime::OnStart";
+		end;
+	}
+	else if( .@mode == 1 && strnpcinfo(2) == "#queue_attacktime" )
+	{
+		// Perca de argumentos para seleção da arena.
+		bg_console "Modo trocado! Entrando no modo de tempo.";
+		donpcevent "BattleGround#queue_circle::OnStart";
+		end;
+	}
+	
+	.@announce = callfunc("bg_getconfiginfo", "ANNOUNCE");
+	deletearray .@bg_charid_team1, getarraysize(.@bg_charid_team1);
+	deletearray .@bg_charid_team2, getarraysize(.@bg_charid_team2);
+	freeloop(1);
+	query_sql "SELECT `arena_name`, `min_player`, `max_player`, `npc_start_event`, `npc_var_event`, `npc_var_event_lock` FROM `bg_arena` WHERE `bg_id`='" + $BG_ARENA + "'", .@a_name$, .@a_min_player, .@a_max_player, .@a_start_event$, .@a_var_event$, .@a_var_lock;
+	
+	if( !getarraysize(.@a_name$) )
+	{
+		bg_console "O Sistema esta encerrando as Batalhas por nao encontrar a arena nomeada.";
+		end;
+	}
+	
+	query_sql "SELECT `bg_queue`.`char_id`, `char`.`name` FROM `bg_queue`, `char` WHERE `bg_queue`.`bg_id`='" + $BG_ARENA + "' AND `bg_queue`.`bg_team`='0' AND (`bg_queue`.`char_id`=`char`.`char_id` AND `char`.`online`='1') LIMIT " + .@a_max_player + "", .@bg1_char_id, .@bg1_char_name$;
+	query_sql "SELECT `bg_queue`.`char_id`, `char`.`name` FROM `bg_queue`, `char` WHERE `bg_queue`.`bg_id`='" + $BG_ARENA + "' AND `bg_queue`.`bg_team`='1' AND (`bg_queue`.`char_id`=`char`.`char_id` AND `char`.`online`='1') LIMIT " + .@a_max_player + "", .@bg2_char_id, .@bg2_char_name$;
+	
+	if( getargcount() && .@announce )
+		announce "[Batalhas Campais]: O jogador [" + getarg(0) + "] se alistou na Batalha em " + getarg(2) + " no Exército de " + (getarg(1)?"Croix":"Guillaume") + ".", bc_all, "0xFFCE00";
+			
+	if( getd(.@a_var_event$) || getarraysize(.@bg1_char_id) < .@a_min_player || getarraysize(.@bg2_char_id) < .@a_min_player )
+	{
+		if( getarraysize(.@bg1_char_id) >= .@a_min_player && getarraysize(.@bg2_char_id) < .@a_min_player )
+			.@msg$ = "O Exército de Guillaume está completo, falta apenas " + (.@a_min_player-getarraysize(.@bg2_char_id)) + " jogadores do Exército de Croix para começar a Batalha Campal de " + .@a_name$ + ".";
+		else if( getarraysize(.@bg2_char_id) >= .@a_min_player && getarraysize(.@bg1_char_id) < .@a_min_player )
+			.@msg$ = "O Exército de Croix está completo, falta apenas " + (.@a_min_player-getarraysize(.@bg1_char_id)) + " jogadores do Exército de Guillaume para começar a Batalha Campal de " + .@a_name$ + ".";
+		else if( getarraysize(.@bg1_char_id) < .@a_min_player && getarraysize(.@bg2_char_id) < .@a_min_player )
+			.@msg$ = "Restam " + (.@a_min_player-getarraysize(.@bg1_char_id)) + " jogadores do Exército de Guillaume e " + (.@a_min_player-getarraysize(.@bg2_char_id)) + " jogadores do Exército de Croix para começar a Batalha Campal de " + .@a_name$ + ".";
+		else {
+			$BG_ATTACK_TIME = 0;
+			.@msg$ = "Ambos Exércitos estão completos, mais há Batalha de " + .@a_name$ + " está ocorrendo, aguardem esta Batalha terminar.";
+			if( getargcount() )
+			{
+				sleep 3000;
+				announce .@msg$, bc_all, "0xFFCE00";
+			}
+		}
+			
+		// Avisa os jogadores que estão faltando jogadores para começar o evento.
+		for( .@i=0; .@i < getarraysize(.@bg1_char_id); .@i++ )
+		{
+			if( !callfunc("bg_checkmsg", .@bg1_char_id[.@i]) )
+				message .@bg1_char_name$[.@i], .@msg$;
+		}
+			
+		for( .@i=0; .@i < getarraysize(.@bg2_char_id); .@i++ )
+		{
+			if( !callfunc("bg_checkmsg", .@bg2_char_id[.@i]) )
+				message .@bg2_char_name$[.@i], .@msg$;
+		}
+	}
+	// Inicia a Batalha na Arena selecionada.
+	else
+	{
+		$BG_ATTACK_TIME = 0;
+		// Recrutamento do Exército de Guillaume.
+		for( .@i=0; .@i < getarraysize(.@bg1_char_id); .@i++ )
+		{
+			if( callfunc("bg_queue_func", 6, .@bg1_char_id[.@i], $BG_ARENA, 0) )
+			{
+				if( callfunc("bg_queue_func", 3, .@bg1_char_id[.@i]) )
+				{
+					add_bg_team getd("$@BG_"+$BG_ARENA+"_id1"), .@bg1_char_name$[.@i];
+					update_bg_position (.@i+1), 0, .@bg1_char_name$[.@i];
+					if( !.@i ) bg_skill 1, .@bg1_char_name$[.@i];
+					if( !callfunc("bg_checkmsg", .@bg1_char_id[.@i]) )
+						message .@bg1_char_name$[.@i], "Você ingrressou na Batalha Campal de " + .@a_name$ + " no Exército de Guillaume, você será teleportado para batalha em 10 segundos.";
+				}
+				else
+					bg_console "Erro ao tentar remover o jogador '" + .@bg1_char_name$[.@i] + "' da lista de espera queue.";
+			}
+			else
+				bg_console "Erro ao inserir o jogador '" + .@bg1_char_name$[.@i] + "' na lista de jogadores em jogo na arena " + .@a_name$ + ".";
+		}
+		
+		// Recrutamento do Exército de Croix.
+		for( .@i=0; .@i < getarraysize(.@bg2_char_id); .@i++ )
+		{
+			if( callfunc("bg_queue_func", 6, .@bg2_char_id[.@i], $BG_ARENA, 1) )
+			{
+				if( callfunc("bg_queue_func", 3, .@bg2_char_id[.@i]) )
+				{
+					add_bg_team getd("$@BG_"+$BG_ARENA+"_id2"), .@bg2_char_name$[.@i];
+					update_bg_position (.@i+1), 1, .@bg2_char_name$[.@i];
+					if( !.@i ) bg_skill 1, .@bg2_char_name$[.@i];
+					if( !callfunc("bg_checkmsg", .@bg2_char_id[.@i]) )
+						message .@bg2_char_name$[.@i], "Você ingrressou na Batalha Campal de " + .@a_name$ + " no Exército de Guillaume, você será teleportado para batalha em 10 segundos.";
+				}
+				else
+					bg_console "Erro ao tentar remover o jogador '" + .@bg2_char_name$[.@i] + "' da lista de espera queue.";
+			}
+			else
+				bg_console "Erro ao inserir o jogador '" + .@bg2_char_name$[.@i] + "' na lista de jogadores em jogo na arena " + .@a_name$ + ".";
+		}
+		
+		// Inicia o Evento relativo ao Script da BG
+		donpcevent .@a_start_event$;
+		callfunc "bg_nominate_arena", true, false;
+		
+		announce "[Batalhas Campais]: A Batalha Campal de " + .@a_name$ + " está completa, boa sorte a todos os guerreiros.", bc_all, "0xFFCE00";
+		sleep 5000;
+		announce "[Batalhas Campais]: Próxima Batalha será em  " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + ", corram agora para se alistar nas fileiras de um dos Exércitos.", bc_all, "0xFFCE00";
+	}
+		
+	freeloop(0);
+	if( .@mode == 1 )
+		initnpctimer "BattleGround#queue_circle";
+	else if( .@mode == 2 )
+		initnpctimer "BattleGround#queue_attacktime";
+	return true;
+}
+
+// Módulo AttackTime
+-	script	BattleGround#queue_attacktime	-1,{
+OnStart:
+	callfunc "bg_reset";
+	.@check = callfunc("bg_nominate_arena",false,false);
+	if( .@check )
+		initnpctimer;
+	end;
+
+OnTimer60000:
+	$BG_ATTACK_TIME++;
+	.@time = callfunc("bg_getconfiginfo", "ATTACK_TIME");
+	if( $BG_ATTACK_TIME >= .@time )
+	{
+		.@old_arena = $BG_ARENA;
+		.@check = callfunc("bg_nominate_arena",true,true);
+		.@base_level = callfunc("bg_getarenainfo",$BG_ARENA,"base_level");
+		query_sql "UPDATE `bg_queue`, `char` SET `bg_queue`.`bg_id`='" + $BG_ARENA + "' WHERE `bg_queue`.`bg_id`='" + .@old_arena + "' AND `bg_queue`.`char_id`=`char`.`char_id` AND `char`.`base_level`>='" + .@base_level + "'";
+		query_sql "DELETE FROM `bg_queue` WHERE `bg_id`='" + .@old_arena + "'";
+		$BG_ATTACK_TIME = 0;
+		bg_console "A batalha foi atelrada para " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + " pelo modulo de tempo.";
+		announce "[Batalhas Campais]: A batalha foi alterada para " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + ", corram agora para se alistar nas fileiras de um dos Exércitos.", bc_all, "0xFFCE00";
+	}
+	callfunc "bg_circle_arena";
+	sleep 15000;
+	donpcevent "BattleGround#queue_main::OnCheckArena";
+	end;
+}
+
+//	bg_nominate_arena(<force_replace_round>,<ignore_replace_old_arena>)
+function	script	bg_nominate_arena	{
+	if( getarg(0) || !$BG_ROUND || ($BG_ROUND && !atoi(callfunc("bg_getgroupinfo",$BG_ROUND,"status"))) || ($BG_ROUND && !callfunc("bg_countarena",$BG_ROUND)) )
+		$BG_ROUND = callfunc("bg_nextround", $BG_ROUND);
+		
+	if( $BG_ARENA || getarg(0) )
+	{
+		.@a = callfunc("bg_getarenainfo",$BG_ARENA,"group_id");
+		if( .@a != $BG_ROUND )
+		{
+			if( !getarg(1) ) $BG_LAST_ARENA = (atoi(callfunc("bg_getgroupinfo",.@a,"status"))?$BG_ARENA:0);
+			$BG_ARENA = 0;
+		}
+	}
+		
+	if( !$BG_ROUND )
+	{
+		bg_console "As Batalhas foram finalizadas por nao nomear uma nova rodada.";
+		return false;
+	}
+	
+	if( !$BG_ARENA )
+	{
+		query_sql "SELECT `bg_id` FROM `bg_arena` WHERE `group_id`='" + $BG_ROUND + "'", .@bg_id;
+		if( !getarraysize(.@bg_id) )
+		{
+			bg_console "As Batalhas foram finalizadas por nao nomear uma nova arena.";
+			return false;
+		}
+		$BG_ARENA = .@bg_id[rand(0,(getarraysize(.@bg_id)-1))];
+	}
+	
+	bg_console "A proxima Batalha ira acontecer em " + callfunc("bg_getarenainfo", $BG_ARENA, "arena_name") + ".";
+	return true;
+}
+
+// bg_nextround(<last_round>)
+function	script	bg_nextround	{
+	.@nextround = 0;
+	if( getargcount() <= 1 )
+	{
+		query_sql "SELECT `group_id` FROM `bg_groups` WHERE `group_id`>'" + getarg(0) + "' AND `status`='1'", .@groups;
+		for( .@i=0; .@i < getarraysize(.@groups) && !.@nextround; .@i++ )
+		{
+			if( callfunc("bg_countarena",.@groups[.@i]) )
+				.@nextround = .@groups[.@i];
+		}
+		
+		if( !.@nextround )
+			return callfunc("bg_nextround", getarg(0), true);
+	}
+	else
+	{
+		query_sql "SELECT `group_id` FROM `bg_groups` WHERE `group_id`<'" + getarg(0) + "' AND `status`='1'", .@groups;
+		for( .@i=0; .@i < getarraysize(.@groups) && !.@nextround; .@i++ )
+		{
+			if( callfunc("bg_countarena",.@groups[.@i]) )
+				.@nextround = .@groups[.@i];
+		}
+	}
+	
+	return .@nextround;
+}

@@ -1,0 +1,516 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   1ª Arena de Flavius                                              .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 4.7	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Batalha no qual os jogadores devem destruir o cristal do         .
+  .    Exército adversário.                                             .
+  *---------------------------------------------------------------------*/
+-	script	BG_Flavius_01	-1,{
+
+OnReadyCheck:
+	sleep 10000;
+	donpcevent "start#bat_b01::OnReadyCheck";
+	end;
+	
+OnGuillaumeDie:
+OnCroixDie:
+	end;
+	
+OnNewJoin:
+	set .@bg_team, getcharid(4);
+	set .@bg_x, bg_team_getxy(.@bg_team, 0);
+	set .@bg_y, bg_team_getxy(.@bg_team, 1);
+	set .@char_id, getcharid(4);
+	get_bg_team .@bg_team;
+	copyarray .@bg_members[0], $@bg_members, getarraysize($@bg_members);
+	for( set .@i, 0; .@i < getarraysize(.@bg_members); set .@i, .@i + 1 )
+	{
+		set .@name$, callfunc("bg_getcharname", .@bg_members[.@i]);
+		if( .@name$ != "" && .@name$ != strcharinfo(0) )
+			message .@name$, "O Jogador [" + strcharinfo(0) + "] ingressou no exército de " + (.@bg_team==$@BG_3_id1?"Guillaume":"Croix")+".";
+	}
+	
+	set .@position, (!getarraysize(.@bg_members)?5:getarraysize(.@bg_members));
+	set .@army, (getcharid(4)==$@BG_3_id1?0:1);
+	update_bg_position(.@position,.@army,strcharinfo(0));
+	
+	message strcharinfo(0), "Você será teleportado em 10 segundos.";
+	sleep2 10000;
+	warp "bat_b01", .@bg_x, .@bg_y;
+	end;
+
+OnGuillaumeQuit:
+	bg_leave;
+	set .@char_id, getcharid(0);
+	callsub sCheckWO, .@char_id, 0;
+	callfunc "bg_queue_func", 4, 3, .@char_id, 0, 1; // BG Queue Ranking: Computer negative vote.
+	end;
+	
+OnCroixQuit:
+	bg_leave;
+	set .@char_id, getcharid(0);
+	callsub sCheckWO, .@char_id, 1;
+	callfunc "bg_queue_func", 4, 3, .@char_id, 0, 1; // BG Queue Ranking: Computer negative vote.
+	end;
+	
+OnCheckWO:
+	set .@char_id, getcharid(0);
+	set .@army, (getcharid(4)==$@BG_3_id1?0:1);
+	bg_leave;
+	callsub sCheckWO, .@char_id, .@army;
+	callfunc "bg_queue_func", 4, 3, .@char_id, 0, 1; // BG Queue Ranking: Computer negative vote.
+	end;
+	
+sCheckWO:
+	// Remove o Jogador do Exército na Lista de Jogando.
+	callfunc "bg_queue_func", 10, getarg(0);
+	
+	// Exército de Guillaume.
+	set .@guillaume, callfunc("bg_queue_func", 5, 3, 0);
+	// Exército de Croix.
+	set .@croix, callfunc("bg_queue_func", 5, 3, 1);
+	
+	if( $@FlaviusBG1 < 2 && (.@guillaume == 0 || .@croix == 0) )
+	{
+		killmonsterall "bat_b01";
+		set $@FlaviusBG1_Victory,(.@guillaume==0?2:1);
+		enablenpc "Tenente de Guillaume#b01_a";
+		enablenpc "Tenente de Croix#b01_b";
+		donpcevent "time#bat_b01::OnStop";
+		bg_warp $@BG_3_id1,"bat_b01",10,290;
+		bg_warp $@BG_3_id2,"bat_b01",390,10;
+		set $@FlaviusBG1, 2;
+		sleep 2000;
+		if( .@guillaume == 0 )
+			mapannounce "bat_b01", "Tenente de Croix Swandery: Os covardes de Guillaume fugiram. Nós vencemos esta! Wow!",bc_map,"0xFFCE00";
+		else
+			mapannounce "bat_b01", "Tenente de Guillaume Axl Rose: Os covardes de Croix fugiram. Nós vencemos esta! Wow!",bc_map,"0xFFCE00";
+	}
+	else {
+		sleep 5000;
+		callfunc "bg_queue_func", 12, 3, getarg(1);
+	}
+	return;
+}
+
+-	script	#bat_b01_timer	-1,{
+	end;
+
+OnTimer60000:
+	stopnpctimer;
+	
+	if( !getmapusers("bat_b01") )
+	{
+		set $@FlaviusBG1, 0;
+		callfunc "bg_queue_func", 8, 3;
+	}
+	else
+		initnpctimer;
+		
+	end;
+}
+
+
+// Engine da Batalha Campal de Flavius
+//============================================================
+bat_b01,15,15,3	script	start#bat_b01	CLEAR_NPC,{
+
+OnReadyCheck:
+	if( $@FlaviusBG1 )
+		end;
+		
+	set $@FlaviusBG1, 1;
+	set $@FlaviusBG1_Victory, 0;
+	set $@Croix_ScoreBG1, 0;
+	set $@Guill_ScoreBG1, 0;
+	bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
+
+	donpcevent "OBJ#bat_b01_a::OnKill";
+	donpcevent "OBJ#bat_b01_a::OnEnable";
+	donpcevent "OBJ#bat_b01_b::OnKill";
+	donpcevent "OBJ#bat_b01_b::OnEnable";
+	donpcevent "guardião#bat_b01_a::OnKill";
+	donpcevent "guardião#bat_b01_b::OnKill";
+	donpcevent "guardião#bat_b01_a::OnEnable";
+	donpcevent "guardião#bat_b01_b::OnEnable";
+	donpcevent "cell#bat_b01_a::OnRead";
+	donpcevent "cell#bat_b01_b::OnRead";
+	donpcevent "time#bat_b01::OnEnable";
+	disablenpc "Tenente de Guillaume#b01_a";
+	disablenpc "Tenente de Croix#b01_b";
+	bg_warp $@BG_3_id1,"bat_b01",87,75;
+	bg_warp $@BG_3_id2,"bat_b01",311,224;
+	donpcevent "countdown#bat_b01::OnEnable";
+	initnpctimer "#bat_b01_timer";
+	sleep 5000;
+	set .@guill_colonel, callfunc("bg_queue_func", 11, 3, 0);
+	set .@croix_colonel, callfunc("bg_queue_func", 11, 3, 1);
+	sleep 5000;
+	mapannounce "bat_b01", "Tenente de Guillaume Axl Rose: O Exército de Guillaume está sobre o comando do Comandante " + callfunc("bg_getcharname", .@guill_colonel) + ".",bc_map,"0xFFCE00";
+	sleep 3000;
+	mapannounce "bat_b01", "Tenente de Croix Swandery: O Exército de Croix está sobre o comando do Comandante " + callfunc("bg_getcharname", .@croix_colonel) + ".",bc_map,"0xFFCE00";
+	end;
+
+OnReset:
+	donpcevent "OBJ#bat_b01_a::OnKill";
+	donpcevent "OBJ#bat_b01_a::OnEnable";
+	donpcevent "OBJ#bat_b01_b::OnKill";
+	donpcevent "OBJ#bat_b01_b::OnEnable";
+	donpcevent "guardião#bat_b01_a::OnKill";
+	donpcevent "guardião#bat_b01_b::OnKill";
+	donpcevent "guardião#bat_b01_a::OnEnable";
+	donpcevent "guardião#bat_b01_b::OnEnable";
+	donpcevent "cell#bat_b01_a::OnRead";
+	donpcevent "cell#bat_b01_b::OnRead";
+	donpcevent "time#bat_b01::OnEnable";
+	disablenpc "Tenente de Guillaume#b01_a";
+	disablenpc "Tenente de Croix#b01_b";
+	bg_warp $@BG_3_id1,"bat_b01",87,75;
+	bg_warp $@BG_3_id2,"bat_b01",311,224;
+	end;
+}
+
+bat_b01,1,1,3	script	OBJ#bat_b01_a	CLEAR_NPC,{
+OnEnable:
+	bg_monster $@BG_3_id1,"bat_b01",61,150,"Cristal Vermelho",1915,"OBJ#bat_b01_a::OnMyMobDead";
+	end;
+
+OnKill:
+	killmonster "bat_b01","OBJ#bat_b01_a::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if (mobcount("bat_b01","OBJ#bat_b01_a::OnMyMobDead") < 1) {
+		mapannounce "bat_b01", "O Cristal de Guillaume foi destruído.",bc_map,"0xFFCE00";
+		set $@Croix_ScoreBG1, $@Croix_ScoreBG1 + 1;
+		if ($@Croix_ScoreBG1 >= atoi(callfunc("bg_getarenainfo",3,"score_round")) ) {
+			set $@FlaviusBG1_Victory,2;
+			enablenpc "Tenente de Guillaume#b01_a";
+			enablenpc "Tenente de Croix#b01_b";
+			donpcevent "time#bat_b01::OnStop";
+			set $@FlaviusBG1, 2;
+		}
+		else {
+			donpcevent "time#bat_b01::OnEnable";
+			donpcevent "start#bat_b01::OnReset";
+		}
+		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
+		bg_warp $@BG_3_id1,"bat_b01",10,290;
+		bg_warp $@BG_3_id2,"bat_b01",390,10;
+	}
+	end;
+}
+
+bat_b01,1,2,3	script	OBJ#bat_b01_b	CLEAR_NPC,{
+OnEnable:
+	bg_monster $@BG_3_id2,"bat_b01",328,150,"Cristal Azul",1914,"OBJ#bat_b01_b::OnMyMobDead";
+	end;
+
+OnKill:
+	killmonster "bat_b01","OBJ#bat_b01_b::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if (mobcount("bat_b01","OBJ#bat_b01_b::OnMyMobDead") < 1) {
+		mapannounce "bat_b01", "O Cristal de Croix foi destruído.",bc_map,"0xFFCE00";
+		set $@Guill_ScoreBG1, $@Guill_ScoreBG1+1;
+		if ($@Guill_ScoreBG1 >= atoi(callfunc("bg_getarenainfo",3,"score_round")) ) {
+			set $@FlaviusBG1_Victory,1;
+			enablenpc "Tenente de Guillaume#b01_a";
+			enablenpc "Tenente de Croix#b01_b";
+			donpcevent "time#bat_b01::OnStop";
+			set $@FlaviusBG1, 2;
+		}
+		else {
+			donpcevent "time#bat_b01::OnEnable";
+			donpcevent "start#bat_b01::OnReset";
+		}
+		bg_updatescore "bat_b01",$@Guill_ScoreBG1,$@Croix_ScoreBG1;
+		bg_warp $@BG_3_id1,"bat_b01",10,290;
+		bg_warp $@BG_3_id2,"bat_b01",390,10;
+	}
+	end;
+}
+
+bat_b01,1,3,3	script	guardião#bat_b01_a	CLEAR_NPC,{
+OnEnable:
+	bg_monster $@BG_3_id1,"bat_b01",108,159,"Guardião de Guillaume",1949,"guardião#bat_b01_a::OnMyMobDead";
+	bg_monster $@BG_3_id1,"bat_b01",108,141,"Guardião de Guillaume",1949,"guardião#bat_b01_a::OnMyMobDead";
+	end;
+
+OnKill:
+	killmonster "bat_b01","guardião#bat_b01_a::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if (mobcount("bat_b01","guardião#bat_b01_a::OnMyMobDead") < 1) {
+		donpcevent "cell#bat_b01_a::OnGreen";
+		mapannounce "bat_b01", "O Guardião que protegia o Cristal de Guillaume foi destruído.",bc_map,"0xFFCE00";
+	}
+	end;
+}
+
+bat_b01,1,3,3	script	guardião#bat_b01_b	CLEAR_NPC,{
+OnEnable:
+	bg_monster $@BG_3_id2,"bat_b01",307,160,"Guardião de Croix",1949,"guardião#bat_b01_b::OnMyMobDead";
+	bg_monster $@BG_3_id2,"bat_b01",307,138,"Guardião de Croix",1949,"guardião#bat_b01_b::OnMyMobDead";
+	end;
+
+OnKill:
+	killmonster "bat_b01","guardião#bat_b01_b::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if (mobcount("bat_b01","guardião#bat_b01_b::OnMyMobDead") < 1) {
+		donpcevent "cell#bat_b01_b::OnGreen";
+		mapannounce "bat_b01", "O Guardião que protegia o Cristal de Croix foi destruído.",bc_map,"0xFFCE00";
+	}
+	end;
+}
+
+bat_b01,1,4,3	script	cell#bat_b01_a	CLEAR_NPC,{
+OnRead:
+	setcell "bat_b01",62,149,60,151,cell_basilica,1;
+	setcell "bat_b01",62,149,60,151,cell_walkable,0;
+	end;
+
+OnGreen:
+	setcell "bat_b01",62,149,60,151,cell_basilica,0;
+	setcell "bat_b01",62,149,60,151,cell_walkable,1;
+	end;
+}
+
+bat_b01,1,5,3	script	cell#bat_b01_b	CLEAR_NPC,{
+OnRead:
+	setcell "bat_b01",327,151,329,149,cell_basilica,1;
+	setcell "bat_b01",327,151,329,149,cell_walkable,0;
+	end;
+
+OnGreen:
+	setcell "bat_b01",327,151,329,149,cell_basilica,0;
+	setcell "bat_b01",327,151,329,149,cell_walkable,1;
+	end;
+}
+
+bat_b01,1,6,1	script	time#bat_b01	CLEAR_NPC,{
+OnEnable:
+	donpcevent "Curandeira#b01_a::OnEnable";
+	donpcevent "Curandeira#b01_b::OnEnable";
+	end;
+
+OnStop:
+	donpcevent "Curandeira#b01_a::OnStop";
+	donpcevent "Curandeira#b01_b::OnStop";
+	end;
+}
+
+bat_b01,10,294,3	script	Curandeira#b01_a	4_F_SISTER,{
+	specialeffect2 EF_HEAL;
+	mes "[Curandeira]";
+	mes "Agora, feche os olhos, e respire fundo.";
+	mes "Vou curar sua dor.";
+	close;
+
+OnTimer25000:
+	specialeffect EF_SANCTUARY;
+	enablenpc "bat_b01_rp1_a_warp";
+	end;
+
+OnTimer26000:
+	disablenpc "bat_b01_rp1_a_warp";
+	end;
+
+OnTimer26500:
+	stopnpctimer;
+	donpcevent "Curandeira#b01_a::OnEnable";
+	end;
+
+OnEnable:
+	initnpctimer;
+	enablenpc "Curandeira#b01_a";
+	end;
+
+OnStop:
+	disablenpc "bat_b01_rp1_a_warp";
+	disablenpc "Curandeira#b01_a";
+	stopnpctimer;
+	end;
+}
+
+bat_b01,10,290,0	script	bat_b01_rp1_a_warp	WARPNPC,10,10,{
+OnInit:
+	disablenpc "bat_b01_rp1_a_warp";
+	end;
+
+OnTouch:
+	percentheal 100,100;
+	warp "bat_b01",87,73;
+	end;
+}
+
+bat_b01,389,14,3	script	Curandeira#b01_b	4_F_SISTER,{
+	specialeffect2 EF_HEAL;
+	mes "[Curandeira]";
+	mes "Agora, feche os olhos, e respire fundo.";
+	mes "Vou curar sua dor.";
+	close;
+
+OnTimer25000:
+	specialeffect EF_SANCTUARY;
+	enablenpc "bat_b01_rp1_b_warp";
+	end;
+
+OnTimer26000:
+	disablenpc "bat_b01_rp1_b_warp";
+	end;
+
+OnTimer26500:
+	stopnpctimer;
+	donpcevent "Curandeira#b01_b::OnEnable";
+	end;
+
+OnEnable:
+	initnpctimer;
+	enablenpc "Curandeira#b01_b";
+	end;
+
+OnStop:
+	disablenpc "bat_b01_rp1_b_warp";
+	disablenpc "Curandeira#b01_b";
+	stopnpctimer;
+	end;
+}
+
+bat_b01,389,10,0	script	bat_b01_rp1_b_warp	WARPNPC,9,9,{
+OnInit:
+	disablenpc "bat_b01_rp1_a_warp";
+	end;
+
+OnTouch:
+	percentheal 100,100;
+	warp "bat_b01",312,225;
+	end;
+}
+
+bat_b01,1,5,3	script	countdown#bat_b01	CLEAR_NPC,{
+OnInit:
+	stopnpctimer;
+	end;
+
+OnEnable:
+	set $@bg_flavius01_timer, 0;
+	initnpctimer;
+	end;
+
+OnStop:
+	stopnpctimer;
+	end;
+	
+OnTimer60000:
+	set $@bg_flavius01_timer, $@bg_flavius01_timer + 1;
+	if( $@bg_flavius01_timer == atoi(callfunc("bg_getarenainfo", 3, "event_timer")) )
+	{
+		if( $@Guill_ScoreBG1 < $@Croix_ScoreBG1 )
+		{
+			mapannounce "bat_b01", "Marollo VII: O Exército de Croix é o vitorioso!",bc_map,"0x99CC00";
+			set $@FlaviusBG1_Victory, 2;
+		}
+		else if( $@Guill_ScoreBG1 > $@Croix_ScoreBG1 )
+		{
+			mapannounce "bat_b01", "Marollo VII: O Exército de Guillaume é o vitorioso!",bc_map,"0x99CC00";
+			set $@FlaviusBG1_Victory, 1;
+		}
+		else
+		{
+			mapannounce "bat_b01", "Marollo VII: Ambos Exércitos não cumpriram o objetivo, isto é sinal de um empate!",bc_map,"0x99CC00";
+			set $@FlaviusBG1_Victory, 3;
+		}
+		
+		donpcevent "time#bat_b01::OnStop";
+		bg_warp $@BG_3_id1,"bat_b01",10,290;
+		bg_warp $@BG_3_id2,"bat_b01",390,10;
+		enablenpc "Tenente de Guillaume#b01_a";
+		enablenpc "Tenente de Croix#b01_b";
+		stopnpctimer;
+	}
+	else
+		setnpctimer 0;
+	end;
+}
+
+bat_b01,81,83,3	script	Campo Guillaume#flag21	1_FLAG_LION,{ end; }
+bat_b01,94,83,3	script	Campo Guillaume#flag22	1_FLAG_LION,{ end; }
+bat_b01,81,66,3	script	Campo Guillaume#flag23	1_FLAG_LION,{ end; }
+bat_b01,94,66,3	script	Campo Guillaume#flag24	1_FLAG_LION,{ end; }
+bat_b01,139,142,3	script	Campo Guillaume#flag25	1_FLAG_LION,{ end; }
+bat_b01,139,158,3	script	Campo Guillaume#flag26	1_FLAG_LION,{ end; }
+bat_b01,110,161,3	script	Campo Guillaume#flag27	1_FLAG_LION,{ end; }
+bat_b01,110,137,3	script	Campo Guillaume#flag28	1_FLAG_LION,{ end; }
+bat_b01,63,135,3	script	Campo Guillaume#flag29	1_FLAG_LION,{ end; }
+bat_b01,63,165,3	script	Campo Guillaume#flag30	1_FLAG_LION,{ end; }
+bat_b01,10,296,3	script	Campo Guillaume#flag31	1_FLAG_LION,{ end; }
+
+bat_b01,306,233,3	script	Campo Croix#flag21	1_FLAG_EAGLE,{ end; }
+bat_b01,317,233,3	script	Campo Croix#flag22	1_FLAG_EAGLE,{ end; }
+bat_b01,306,216,3	script	Campo Croix#flag23	1_FLAG_EAGLE,{ end; }
+bat_b01,317,216,3	script	Campo Croix#flag24	1_FLAG_EAGLE,{ end; }
+bat_b01,257,158,3	script	Campo Croix#flag25	1_FLAG_EAGLE,{ end; }
+bat_b01,257,141,3	script	Campo Croix#flag26	1_FLAG_EAGLE,{ end; }
+bat_b01,297,164,3	script	Campo Croix#flag27	1_FLAG_EAGLE,{ end; }
+bat_b01,297,136,3	script	Campo Croix#flag28	1_FLAG_EAGLE,{ end; }
+bat_b01,336,161,3	script	Campo Croix#flag29	1_FLAG_EAGLE,{ end; }
+bat_b01,336,139,3	script	Campo Croix#flag30	1_FLAG_EAGLE,{ end; }
+bat_b01,389,16,3	script	Campo Croix#flag31	1_FLAG_EAGLE,{ end; }
+
+-	script	#flavius01_vintenar	-1,{
+	callfunc("bg_rewardnpc", 3, $@BG_3_id1, $@BG_3_id2, $@FlaviusBG1_Victory, (strnpcinfo(2)=="b01_a"?0:1));
+	end;
+
+OnInit:
+	if( strnpcinfo(2) != "flavius01_vintenar" )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Tenentes
+bat_b01,10,294,3	duplicate(#flavius01_vintenar)	Tenente de Guillaume#b01_a	4_M_KY_HEAD
+bat_b01,389,14,3	duplicate(#flavius01_vintenar)	Tenente de Croix#b01_b	4_M_CRU_HEAD
+
+bat_b01,1,10,3	script	Liberar todos#b01	4_DOG01,{
+	input .@input,0,2000;
+	if (.@input == 0) {
+		mes "Cancelado.";
+		close;
+	}
+	else if (.@input == 1854) {
+		mes "Posso ajudá-lo?";
+		next;
+		switch(select("Liberar todos..:Cancelar.")) {
+		case 1:
+			mes "Tchau.";
+			close2;
+			mapwarp "bat_b01","prontera", 156, 176;
+			end;
+		case 2:
+			mes "Cancelado.";
+			close;
+		}
+	}
+}

@@ -1,0 +1,152 @@
+//= Auriga Script ==============================================================
+// Ragnarok Online Nest of Faceworm Script	by refis
+//==============================================================================
+
+//============================================================
+// NPC
+//------------------------------------------------------------
+prontera,183,213,3	script	Faceworm#pa0829	613,{/* 60507 */
+		.@party_id = getcharid(1);
+		.@p_name$ = getpartyname(.@party_id);
+		.@md_name$ = "Faceworm";
+		
+		.rebirth_blevel = 150;
+			if (BaseLevel < .rebirth_blevel) {
+			.@blvl = .rebirth_blevel - BaseLevel;
+			mes "[Planta]";
+			mes "*Shuehs Shehs* Muitthho fraacsso!.";
+			close;	
+			end;
+		}
+			if (!instance_check_party(.@party_id,2)) {	// Custom
+			mes "[Planta]";
+			mes "Huhushheh sossszinho jhaamhais irá paasssrre por aqui!";							
+			next;
+			mes "["+strcharinfo(0)+"]";
+			mes "Esse bixo é estranho e pode ser perigoso, melhor eu achar alguém pra ir comigo...";
+			close;
+			end;
+			}
+				
+			if (getcharid(0) == getpartyleader(.@party_id,2)){
+				mes "[Planta]";
+				mes	"*Krihk Krihk Krihk*";
+				mes "Ols quesd vocêsh queriiis aqui? *Krihk*";
+				switch(select("Nada não...:Gerar Instância da Larva Demoníaca.:Entrar na instância")) {
+				next;
+				case 2:
+				if (instance_create(.@md_name$) < 0) {
+				mes "Nome do Grupo: "+ getpartyname(.@party_id);
+				mes "Líder do Grupo: "+strcharinfo(0);
+				mes "Não foi possível criar a instância ^0000ff"+.@md_name$+" ^000000- !";
+				close;
+				}
+				mes "^0000ff"+.@md_name$+"^000000";
+				mes "Fale comigo novamente para entrar em sua instância.";
+				close;
+				case 3:
+				callsub F_Enter,0,1;
+				case 1:
+				mes	"[Planta]";
+				mes "*Krihk* *Arrhhshssh*";
+				close2;
+				
+				end;
+			}
+			}
+				mes "[Planta]";
+					mes "Vssshhcê queeeerrixx ir?!";
+					switch(select("Vamos nessa!:Vou me preparar melhor.")) {
+					next;
+					case 1:
+					callsub F_Enter,0,1;
+					close;
+					case 2:
+					mes	"[Planta]";
+					mes "*Krihk* *Arrhhshssh*";
+					close2;
+				
+					end;
+					}
+
+F_Enter:
+	switch(instance_enter("Faceworm")) {
+	set .@map$, instance_mapname("1@face");
+	case 3:
+		mes "Um erro desconhecido ocorreu.";
+		close;
+	case 2:
+		mes "Seu líder do grupo precisa criar a instância para";
+		mes "que você possa entrar.";
+		close;
+	case 1:
+		mes "Você poderá entrar depois de criar um grupo.";
+		close;
+	case 0:
+		mes	"[Planta]";
+		mes "*Kreehhkk*";
+		next;
+		mes "[Planta]";
+		mes "Vocêaashh achhhhss fortghhe o suficiente paaahshhara enfrentaarra A Larva *Kreehhkk* Demoníaca?";
+		next;
+		mes "["+strcharinfo(0)+"]";
+		mes "Sim! Me leve até ela antes que eu pise em você, coisa ridícula!";
+		next;
+		mes "[Planta]";
+		mes "*Wuashh* Nãossh she alterelal joffem! Eulli levarei athrré ela!";
+		next;
+		warp .@map$,112,382;
+		if (getarg(0) == 0) close;
+		else end;
+	}
+}
+
+1@face,115,379,4	script	Planta Inteligente	613,{
+	
+	mes "[Planta]";
+	mes "Você quer sair daqui?";
+	switch(select("Sim:Não")){
+	case 1:
+	warp "prontera",150,160;
+	end;
+	case 2:
+	mes "[Planta]";
+	mes "Ok";
+	close;
+	end;
+	}
+}
+
+
+
+
+1@face,112,346,4	script	Caçador	4_M_ROKI,{
+set .@map$, instance_mapname("1@face");
+.@name_id$	=	"[Caçador]";
+.@char_id$	=	strcharinfo(0);
+
+ if(countitem(7326) < 150) {
+ mes .@name_id$;
+ mes "Eu preciso de"; 
+ mes " 150 "+getitemname(7326)+"";
+ mes "Volte quando estiver com a quantidade certa do que pedi.";
+ next;
+ close;
+ }
+ else {
+ mes .@name_id$;
+ mes "Muito bem, é melhor você se afastar";
+ next;
+ mes "*Xchic xchic xchic....Quak quak*";
+ next;
+ mes "...";
+ mes ".....";
+ next;
+ mes .@name_id$;
+ mes "A rainha acordou! Prepare-se!";
+		delitem	7326,150;
+ 		monster.@map$,110,327,"Larva Rainha Demoníaca",2529,1;
+		close;
+ end;
+ }
+ }

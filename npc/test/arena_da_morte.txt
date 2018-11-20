@@ -1,0 +1,307 @@
+//===== Arena da Morte ========================================
+prontera,160,186,4	script	Arena da Morte	10191,{
+
+//===== Nome do npc. ==========================================
+set @nome$,"[ ^FF0000 Arena da Morte ^000000 ]";
+
+//===== Arena PvP =============================================
+set $pvp$[0],"bat_c01";
+set $n_pvp$[0],"pvp_y_1-2";
+
+//===== Arena GvG =============================================
+set $gvg$[0],"guild_vs1";
+set $n_gvg$[0],"guild_vs2-2";
+
+//===== Arena Baby =============================================
+set $n_baby$[0],"guild_vs2";
+
+//===== Bloquear o Uso dos Items no PvP [ 2 = Não e 1 = Sim ] =
+set $pvpmosca,1;
+set $pvpantonio,1;
+set $pvpygg,2;
+set $pvpseed,2;
+
+//===== Bloquear o Uso dos Items na GvG [ 2 = Não e 1 = Sim ] =
+set $gvgmosca,1;
+set $gvgantonio,1;
+set $gvgygg,2;
+set $gvgseed,2;
+
+//===== Items bloqueados... ===================================
+// Asa de Mosca = [ID: 601]
+// Carta Antonio = [ID: 4243]
+// Fruto de Yggdrasil = [ID: 607]
+// Semente de Yggdrasil = [ID: 608]
+//=============================================================
+
+	mes @nome$;
+	mes "Olá "+strcharinfo(0)+".";
+	mes "Escolha qual destino deseja ir";
+	next;
+	switch(select("- Playes vs Player [Rank] ^0000FF["+getmapusers($pvp$[$pvp])+"]^000000","- Guild vs Guild [Rank] ^0000FF["+getmapusers($gvg$[$gvg])+"]^000000","- Playes vs Player [No-Rank] ^0000FF["+getmapusers($n_pvp$[$n_pvp])+"]^000000","- Guild vs Guild [No-Rank] ^0000FF["+getmapusers($n_gvg$[$n_gvg])+"]^000000","- Playes vs Player [^FF0000No-3rd^000000 e No-Rank] ^0000FF["+getmapusers($n_baby$[$n_baby])+"]^000000","- Sair"))
+	{
+
+
+// PVP vs3 - Com Rank PVP
+case 1:
+	
+	if($pvp_livre == 0) goto FECHA_RANK;
+	if(BaseLevel < 40) goto DESCULPE;
+	if (($pvpmosca == 1 & countitem(601)>0)){ mes @nome$; mes "A entrada da Asa de Mosca não é permitida!"; close; }
+	if (($pvpantonio == 1 & countitem(4243)>0)){ mes @nome$; mes "A entrada da Carta Antonio não é permitida!"; close; }
+	if (($pvpygg == 1 & countitem(607)>0)){ mes @nome$; mes "A entrada do Fruto de Yggdrasil não é permitida!"; close; }
+	if (($pvpseed == 1 & countitem(608)>0)){ mes @nome$; mes "A entrada da Semente de Yggdrasil não é permitida!"; close; }
+
+	warp $pvp$,0,0;	end;
+
+// PVP vs1 - Com Rank GVG
+case 2:
+
+	if($pvp_livre == 0) goto FECHA_RANK;
+	if(BaseLevel < 40) goto DESCULPE;
+	if(getcharid(2) == 0) {	mes @nome$; mes "Eu não posso ajudá-lo, você não possui uma guild."; close;}
+	if (($gvgmosca == 1 & countitem(601)>0)){ mes @nome$; mes "A entrada da Asa de Mosca não é permitida!"; close; }
+	if (($gvgantonio == 1 & countitem(4243)>0)){ mes @nome$; mes "A entrada da Carta Antonio não é permitida!"; close; }
+	if (($gvgygg == 1 & countitem(607)>0)){ mes @nome$; mes "A entrada do Fruto de Yggdrasil não é permitida!"; close; }
+	if (($gvgseed == 1 & countitem(608)>0)){ mes @nome$; mes "A entrada da Semente de Yggdrasil não é permitida!"; close; }
+
+	warp $gvg$,0,0;	end;
+
+
+// PVP VS2-1 - Sem Rank PVP
+case 3:
+warp $n_pvp$,0,0;
+end;
+
+
+// PVP VS2-2 - Sem Rank GVG
+case 4:
+warp $n_gvg$,0,0;
+end;
+
+
+// PVP VS2 - PVP BABY
+case 5:
+if(Class >= 4000 && Class <= 4022 || Class >= 23 && Class <= 25 || Class >= 4045 && Class <=4049){ warp $n_baby$,0,0;
+close;
+}else{
+mes @nome$; mes "Desculpe esta arena é somente para Transclasses";
+close;
+end;
+}
+
+// SAIR
+case 6:
+	mes @nome$;
+	mes "Volte sempre que quiser.";
+	close;
+}
+
+FECHA_RANK:
+	mes @nome$;
+	mes "Desculpe, mas nossas arenas com Rank estão fechadas. Volte as 10 da manhã, que estarão abertas.";
+	close;
+
+DESCULPE:
+	mes @nome$;
+	mes "Sua entrada nesta arena não é permitida, pois esta muito fraco. Vá treinar um pouco e volte aqui que deixarei você entrar.";
+close;
+
+}
+
+
+// -- Inicio do Script
+
+-	script	Arena#PCKill	-1,{
+
+OnPCKillEvent:
+
+			getmapxy @map$,@x,@y,0;
+			if ( @map$ == $pvp$[$pvp] ) goto PvP;
+			if ( @map$ == $gvg$[$gvg] ) goto GvG;
+end;
+
+PvP:
+		set @CID,getcharid(0);set @name$,"";set @points,0;
+		query_sql "SELECT `kills` FROM `pvp` WHERE `char_id`="+@CID+"",@points;
+		query_sql "SELECT `name` FROM `pvp` WHERE `char_id`="+@CID+"",@name$;
+
+		if ( @name$ == "" ) { query_sql "INSERT INTO `pvp` (`char_id`,`name`,`kills`) VALUES ("+@CID+",'"+strcharinfo(0)+"',1)",@esc$; dispbottom "Sua Pontuação: 1"; end; }
+		query_sql "UPDATE `pvp` SET `kills` = `kills` +1 WHERE `char_id`="+@CID+"",@esc$;
+		set @points,@points+1;
+		dispbottom "Sua Pontuação: "+@points;
+end;
+
+GvG:
+		set @GID, getcharid(2); set @name$,""; set @points,0;
+		query_sql "SELECT `kills` FROM `gvg` WHERE `guild_id`="+@GID+"",@gpoints;
+		query_sql "SELECT `name` FROM `gvg` WHERE `guild_id`="+@GID+"",@name$;
+
+		if ( @name$ == "" ) { query_sql "INSERT INTO `gvg` (`guild_id`,`name`,`kills`) VALUES ("+@GID+",'"+strcharinfo(2)+"',1)",@esc$; dispbottom "Pontuação da Guild: 1"; end; }
+		query_sql "UPDATE `gvg` SET `kills` = `kills` + 1 WHERE `guild_id`="+@GID+"",@esc$;
+		set @gpoints,@gpoints+1;
+		dispbottom "Pontuação da Guild: "+@gpoints;
+end;
+}
+
+
+// -- Fim do Script
+
+-	script	Arena#PCDie	-1,{
+
+OnPCDieEvent:
+
+			getmapxy @map$,@x,@y,0;
+			if ( @map$ == $pvp$[$pvp] ) goto PvP;
+			if ( @map$ == $gvg$[$gvg] ) goto GvG;
+end;
+
+PvP:
+		set @CID,getcharid(0);set @name$,"";set @points,0;
+		query_sql "SELECT `deaths` FROM `pvp` WHERE `char_id`="+@CID+"",@points;
+		query_sql "SELECT `name` FROM `pvp` WHERE `char_id`="+@CID+"",@name$;
+		if ( @name$ == "" ) { query_sql "INSERT INTO `pvp` (`char_id`,`name`,`deaths`) VALUES ("+@CID+",'"+strcharinfo(0)+"',1)",@esc$; dispbottom "Sua Pontuação: 1"; end; }
+		query_sql "UPDATE `pvp` SET `deaths` = `deaths` + 1 WHERE `char_id`="+@CID+"",@esc$;
+end;
+
+GvG:
+		set @GID,getcharid(2);set @name$,"";set @gpoints,0;
+		query_sql "SELECT `deaths` FROM `gvg` WHERE `guild_id`="+@GID+"",@gpoints;
+		query_sql "SELECT `name` FROM `gvg` WHERE `guild_id`="+@GID+"",@name$;
+		if ( @name$ == "" ) { query_sql "INSERT INTO`gvg` (`guild_id`,`name`,`deaths`) VALUES ("+@GID+",'"+strcharinfo(2)+"',1)",@esc$; dispbottom "Pontuação da Guild: 1"; end; }
+		query_sql "UPDATE `gvg` SET `deaths` = `deaths` + 1 WHERE `guild_id`="+@GID+"",@esc$;
+end;
+
+}
+
+//==== Ranking ================================================
+prontera,162,186,4	script	Ranking Galaxy	857,{
+
+//==== Nome do NPC ============================================
+set @nome$,"[Ranking Galaxy]";
+//=============================================================
+	
+	mes @nome$;
+	mes "Olá "+strcharinfo(0)+".";
+	mes "O que procura?";
+	next;
+	menu "Ver o Rank PVP-GVG [Player-Guilda]",RANK_VER;
+
+
+RANK_VER:
+
+	mes @nome$;
+	mes "Qual Ranking você gostária de ver?";
+	next;
+	switch(select("- Ranking de PvP [TOP 10]","- Ranking de GvG [TOP 10]"))
+	{
+
+	case 1:
+
+		mes @nome$;
+		mes "Este é nosso Ranking de PvP [TOP 10]";
+		next;
+		query_sql "SELECT name, kills, deaths FROM pvp ORDER BY kills DESC LIMIT 10",@name$,@kills,@deaths;
+		dispbottom "Ranking PvP [TOP 10]";
+		dispbottom " ";
+		dispbottom "Posição - Nome - Matou - Morreu";
+		dispbottom " ";
+		for(set @i,0;@i<=9;set @i,@i+1) {
+			dispbottom "["+(@i+1)+"] - "+@name$[@i]+" - "+@kills[@i]+" - "+@deaths[@i]+"";
+		}
+		close;
+
+	case 2:
+
+		mes @nome$;
+		mes "Este é nosso Ranking de GvG [TOP 10]";
+		next;
+		query_sql "SELECT name, kills, deaths FROM gvg ORDER BY kills DESC LIMIT 10",@guild_name$,@guild_kills,@guild_deaths;
+		dispbottom "Ranking GvG [TOP 10]";
+		dispbottom " ";
+		dispbottom "Posição - Nome da Guild - Vitórias - Derrotas";
+		dispbottom " ";
+		for(set @i,0;@i<=9;set @i,@i+1) {
+		dispbottom "["+(@i+1)+"] - "+@guild_name$[@i]+" - "+@guild_kills[@i]+" - "+@guild_deaths[@i]+"";
+		}
+		close;
+	}
+}
+
+//============== Saída ==================
+//PvP
+//guild_vs3,12,50,0	warp	gvs01	1,1,prontera,155,191
+//guild_vs3,50,87,0	warp	gvs02	1,1,prontera,155,191
+//guild_vs3,87,49,0	warp	gvs03	1,1,prontera,155,191
+//guild_vs3,50,12,0	warp	gvs04	1,1,prontera,155,191
+
+//Guild
+//guild_vs1,50,8,0	warp	gvs05	1,1,prontera,155,191
+//guild_vs1,91,49,0	warp	gvs06	1,1,prontera,155,191
+//guild_vs1,49,91,0	warp	gvs07	1,1,prontera,155,191
+//guild_vs1,8,49,0	warp	gvs08	1,1,prontera,155,191
+
+//============== MAP FLAG ===============
+// Player
+bat_c01	mapflag	ranked
+bat_c01	mapflag	nosave
+bat_c01	mapflag	noteleport
+bat_c01	mapflag	nowarpto
+bat_c01	mapflag	nowarp
+bat_c01	mapflag	nomemo
+bat_c01	mapflag	gvg	off
+bat_c01	mapflag	pvp
+bat_c01	mapflag	nopenalty
+bat_c01	mapflag	nobranch
+bat_c01	mapflag	pvp_noguild
+bat_c01	mapflag	noexp
+
+// Guild
+guild_vs1	mapflag	nosave
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	gvg	off
+guild_vs1	mapflag	pvp
+guild_vs1	mapflag	nopenalty
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	noexp
+
+// No rank Player
+guild_vs2-1	mapflag	nosave
+guild_vs2-1	mapflag	noteleport
+guild_vs2-1	mapflag	nowarpto
+guild_vs2-1	mapflag	nowarp
+guild_vs2-1	mapflag	nomemo
+guild_vs2-1	mapflag	gvg	off
+guild_vs2-1	mapflag	pvp
+guild_vs2-1	mapflag	nopenalty
+guild_vs2-1	mapflag	nobranch
+guild_vs2-1	mapflag	pvp_noguild
+guild_vs2-1	mapflag	noexp
+
+// No rank Guild
+guild_vs2-2	mapflag	nosave
+guild_vs2-2	mapflag	noteleport
+guild_vs2-2	mapflag	nowarpto
+guild_vs2-2	mapflag	nowarp
+guild_vs2-2	mapflag	nomemo
+guild_vs2-2	mapflag	gvg	off
+guild_vs2-2	mapflag	pvp
+guild_vs2-2	mapflag	nopenalty
+guild_vs2-2	mapflag	nobranch
+guild_vs2-2	mapflag	noexp
+
+// Baby
+guild_vs2	mapflag	nosave
+guild_vs2	mapflag	noteleport
+guild_vs2	mapflag	nowarpto
+guild_vs2	mapflag	nowarp
+guild_vs2	mapflag	nomemo
+guild_vs2	mapflag	gvg	off
+guild_vs2	mapflag	pvp
+guild_vs2	mapflag	nopenalty
+guild_vs2	mapflag	nobranch
+guild_vs2	mapflag	pvp_noguild
+guild_vs2	mapflag	noexp

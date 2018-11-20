@@ -1,0 +1,389 @@
+/*.---------------------------------------------------------------------.
+  .		 ____                          __                          		.
+  .		/\  _`\                       /\ \__  __                   		.
+  .		\ \ \/\_\  _ __    __     __  \ \ ,_\/\_\  __  __     __   		.
+  .		 \ \ \/_/_/\`'__\/'__`\ /'__`\ \ \ \/\/\ \/\ \/\ \  /'__`\ 		.
+  .		  \ \ \s\ \ \ \//\  __//\ \d\.\_\ \ \_\ \ \ \ \_/ |/\  __/ 		.
+  .		   \ \____/\ \_\\ \____\ \__/.\_\\ \__\\ \_\ \___/ \ \____\		.
+  .		    \/___/  \/_/ \/____/\/__/\/_/ \/__/ \/_/\/__/   \/____/		.
+  .																		.
+  .				2014~2015 © Creative Services and Developent			.
+  .						  www.creativesd.com.br							.
+  .					    www.sbkmod.ragnagreen.com                       .
+  .---------------------------------------------------------------------.
+  . Script:													            .
+  .	   1ª Arena de Krieger von Midgard                                  .
+  .---------------------------------------------------------------------.
+  . Autor: Romulo SM (sbk_)                                 Versão: 4.7	.
+  .                                                                     .
+  . Compátivel:	rAthena / Hercules e derivações.                    	.
+  .---------------------------------------------------------------------.
+  . Descrição:															.
+  .	   Arena no qual os Exércitos devem se confrontar.                  .
+  *---------------------------------------------------------------------*/
+-	script	BG_KVM_01	-1,{
+	end;
+	
+OnReadyCheck:
+	if( $@KvM01BG )
+		end;
+	
+	set $@bg_kvm01_timer, 0; // Reset Timer
+	set $@KvM01BG, 1; // Starting
+	set $@KvM01GuillCount, callfunc("bg_queue_func",5,5,0);
+	set $@KvM01CroixCount, callfunc("bg_queue_func",5,5,1);
+	set $@KvM01BG_Victory, 0;
+	bg_updatescore "bat_c01", $@KvM01GuillCount, $@KvM01CroixCount;
+	sleep 10000;
+	disablenpc "Tenente de Guillaume#KVM01A";
+	disablenpc "Tenente de Croix#KVM01B";
+	initnpctimer "KvM01_BG";
+	// Warp Teams
+	bg_warp $@BG_5_id1,"bat_c01",53,128;
+	bg_warp $@BG_5_id2,"bat_c01",146,55;
+	initnpctimer "#kvm01_timer";
+	set .@guill_colonel, callfunc("bg_queue_func", 11, 5, 0);
+	set .@croix_colonel, callfunc("bg_queue_func", 11, 5, 1);
+	sleep 5000;
+	mapannounce "bat_c01", "Tenente de Guillaume Axl Rose: O Exército de Guillaume está sobre o comando do Comandante " + callfunc("bg_getcharname", .@guill_colonel) + ".",bc_map,"0xFFCE00";
+	sleep 3000;
+	mapannounce "bat_c01", "Tenente de Croix Swandery: O Exército de Croix está sobre o comando do Comandante " + callfunc("bg_getcharname", .@croix_colonel) + ".",bc_map,"0xFFCE00";
+	end;
+
+OnGuillaumeQuit:
+	set .@char_id, getcharid(0);
+	callfunc "bg_queue_func", 4, 5, .@char_id, 0, 1; // BG Queue Ranking: Computer negative vote.
+	bg_leave;
+OnGuillaumeDie:
+	set .@char_id, (!.@char_id?getcharid(0):.@char_id);
+	
+	// Remove o Jogador do Exército na Lista de Jogando.
+	callfunc "bg_queue_func", 10, .@char_id;
+	
+	if( $@KvM01BG == 2 )
+	{
+		set $@KvM01GuillCount, $@KvM01GuillCount - 1;
+		bg_updatescore "bat_c01",$@KvM01GuillCount,$@KvM01CroixCount;
+		if( $@KvM01GuillCount <= 0 ) donpcevent "KvM01_BG::OnCroixWin";
+		else {
+			mapannounce "bat_c01", "O número de membros de Guillaume é "+$@KvM01GuillCount+".",bc_map,"0x00ff00";
+			mapannounce "bat_c01", "O número de membros de Croix é "+$@KvM01CroixCount+".",bc_map,"0x00ff00";
+			sleep 5000;
+			callfunc "bg_queue_func", 12, 5, 0;
+		}
+	}
+	end;
+
+OnCroixQuit:
+	set .@char_id, getcharid(0);
+	callfunc "bg_queue_func", 4, 5, .@char_id, 0, 1; // BG Queue Ranking: Computer negative vote.
+	bg_leave;
+OnCroixDie:
+	set .@char_id, (!.@char_id?getcharid(0):.@char_id);
+	
+	// Remove o Jogador do Exército na Lista de Jogando.
+	callfunc "bg_queue_func", 10, .@char_id;
+	
+	if( $@KvM01BG == 2 )
+	{
+		set $@KvM01CroixCount, $@KvM01CroixCount - 1;
+		bg_updatescore "bat_c01",$@KvM01GuillCount,$@KvM01CroixCount;
+		if( $@KvM01CroixCount <= 0 ) donpcevent "KvM01_BG::OnGuillaumeWin";
+		else {
+			mapannounce "bat_c01", "O número de membros de Guillaume é "+$@KvM01GuillCount+".",bc_map,"0x00ff00";
+			mapannounce "bat_c01", "O número de membros de Croix é "+$@KvM01CroixCount+".",bc_map,"0x00ff00";
+			sleep 5000;
+			callfunc "bg_queue_func", 12, 5, 1;
+		}
+	}
+	end;
+	
+OnCheckWO:
+	set .@char_id, getcharid(0);
+	set .@army, (getcharid(4)==$@BG_5_id1?0:1);
+	bg_leave;
+	
+	// Remove o Jogador do Exército na Lista de Jogando.
+	callfunc "bg_queue_func", 10, .@char_id;
+	
+	// Exército de Guillaume.
+	set .@guillaume, callfunc("bg_queue_func", 5, 5, 0);
+	// Exército de Croix.
+	set .@croix, callfunc("bg_queue_func", 5, 5, 1);
+	
+	set $@KvM01GuillCount, .@guillaume;
+	set $@KvM01CroixCount, .@croix;
+	bg_updatescore "bat_c01", $@KvM01GuillCount, $@KvM01CroixCount;
+	if( $@KvM01GuillCount <= 0 ) donpcevent "KvM01_BG::OnCroixWin";
+	else if( $@KvM01CroixCount <= 0 ) donpcevent "KvM01_BG::OnGuillaumeWin";
+	else {
+		sleep 5000;
+		callfunc "bg_queue_func", 12, 5, .@army;
+	}
+	end;
+	
+OnNewJoin:
+	set .@bg_team, getcharid(4);
+	get_bg_team .@bg_team;
+	copyarray .@bg_members[0], $@bg_members, getarraysize($@bg_members);
+	for( set .@i, 0; .@i < getarraysize(.@bg_members); set .@i, .@i + 1 )
+	{
+		set .@name$, callfunc("bg_getcharname", .@bg_members[.@i]);
+		if( .@name$ != "" && .@name$ != strcharinfo(0) )
+			message .@name$, "O Jogador [" + strcharinfo(0) + "] ingressou no exército de " + (.@bg_team==$@BG_4_id1?"Guillaume":"Croix")+".";
+	}
+	message strcharinfo(0), "Você será teleportado em 10 segundos.";
+	
+	if( .@bg_team == $@BG_5_id1 )
+	{
+		set $@KvM01GuillCount, $@KvM01GuillCount + 1;
+		set .@bg_x, ($@KvM01BG==2?61:53);
+		set .@bg_y, ($@KvM01BG==2?120:128);
+	}
+	else {
+		set $@KvM01CroixCount, $@KvM01CroixCount + 1;
+		set .@bg_x, ($@KvM01BG==2?138:146);
+		set .@bg_y, ($@KvM01BG==2?63:55);
+		
+	}
+	
+	set .@position, (!getarraysize(.@bg_members)?5:getarraysize(.@bg_members));
+	set .@army, (getcharid(4)==$@BG_5_id1?0:1);
+	update_bg_position(.@position,.@army,strcharinfo(0));
+	
+	bg_updatescore "bat_c01", $@KvM01GuillCount, $@KvM01CroixCount;
+	sleep2 10000;
+	warp "bat_c01", .@bg_x, .@bg_y;
+	end;
+}
+
+-	script	#kvm01_timer	-1,{
+
+OnTimer60000:
+	stopnpctimer;
+	if( $@KvM01BG && !getmapusers("bat_c01") )
+	{
+		set $@KvM01BG, 0;
+		callfunc "bg_queue_func", 8, 5;
+	}
+	else
+		initnpctimer;
+	end;
+}
+
+// Starting Line
+//============================================================
+-	script	KVM01::CellEffect	-1,{
+	end;
+
+OnKvM01One: 
+	misceffect EF_CHANGECOLD;
+	end;
+
+OnKvM01Two: 
+	misceffect EF_CHANGEPOISON;
+	end;
+}
+
+bat_c01,54,124,3	duplicate(CellEffect)	#RedcellA1-1	HIDDEN_WARP_NPC
+bat_c01,55,124,3	duplicate(CellEffect)	#RedcellA2-1	HIDDEN_WARP_NPC
+bat_c01,56,124,3	duplicate(CellEffect)	#RedcellA3-1	HIDDEN_WARP_NPC
+bat_c01,57,124,3	duplicate(CellEffect)	#RedcellA4-1	HIDDEN_WARP_NPC
+bat_c01,57,125,3	duplicate(CellEffect)	#RedcellA5-1	HIDDEN_WARP_NPC
+bat_c01,57,126,3	duplicate(CellEffect)	#RedcellA6-1	HIDDEN_WARP_NPC
+bat_c01,57,127,3	duplicate(CellEffect)	#RedcellA7-1	HIDDEN_WARP_NPC
+
+bat_c01,145,59,3	duplicate(CellEffect)	#RedcellB1-1	HIDDEN_WARP_NPC
+bat_c01,144,59,3	duplicate(CellEffect)	#RedcellB2-1	HIDDEN_WARP_NPC
+bat_c01,143,59,3	duplicate(CellEffect)	#RedcellB3-1	HIDDEN_WARP_NPC
+bat_c01,142,59,3	duplicate(CellEffect)	#RedcellB4-1	HIDDEN_WARP_NPC
+bat_c01,142,56,3	duplicate(CellEffect)	#RedcellB5-1	HIDDEN_WARP_NPC
+bat_c01,142,57,3	duplicate(CellEffect)	#RedcellB6-1	HIDDEN_WARP_NPC
+bat_c01,142,58,3	duplicate(CellEffect)	#RedcellB7-1	HIDDEN_WARP_NPC
+
+// Battleground Engine
+//============================================================
+-	script	KvM01_BG	-1,{
+	end;
+
+OnInit:
+	setwall "bat_c01",54,122,6,7,0,"batc01wall_a";
+	setwall "bat_c01",55,122,5,7,0,"batc01wall_b";
+	setwall "bat_c01",140,56,6,7,0,"batc01wall_c";
+	setwall "bat_c01",140,57,5,7,0,"batc01wall_d";
+	end;
+
+OnTimer1000:
+	mapannounce "bat_c01", "Em 1 minuto, KVM irá começar.",bc_map,"0x00ff00";
+	end;
+
+OnTimer3000:
+	mapannounce "bat_c01", "O tempo máximo de uma batalha KVM é de " + callfunc("bg_getarenainfo", 5, "event_timer") + " minutos.",bc_map,"0x00ff00";
+	end;
+
+OnTimer6000:
+	mapannounce "bat_c01", "Se preparem para a batalha KVM.",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Vocês podem usar buffs em seus times.",bc_map,"0x00ff00";
+	end;
+
+OnTimer30000:
+	mapannounce "bat_c01", "30 segundos restantes para iniciar a batalha KVM.",bc_map,"0x00ff00";
+	end;
+
+OnTimer45000:
+	mapannounce "bat_c01", "15 segundos restantes para iniciar a batalha KVM.",bc_map,"0x00ff00";
+	donpcevent "::OnKvM01One";
+	end;
+
+OnTimer50000:
+	mapannounce "bat_c01", "10 segundos restantes para iniciar a batalha KVM.",bc_map,"0x00ff00";
+	donpcevent "::OnKvM01Two";
+	end;
+
+OnTimer55000:
+	mapannounce "bat_c01", "5 segundos restantes para iniciar a batalha KVM.",bc_map,"0x00ff00";
+	donpcevent "::OnKvM01One";
+	end;
+
+OnTimer59000:
+	mapannounce "bat_c01", "KVM está começando agora.",bc_map,"0x00ff00";
+	donpcevent "::OnKvM01Two";
+	end;
+
+OnTimer61000:
+	// Team Members
+	set $@KvM01BG, 2; // Playing
+	bg_warp $@BG_5_id1,"bat_c01",61,120;
+	bg_warp $@BG_5_id2,"bat_c01",138,63;
+	stopnpctimer;
+	initnpctimer "#kvm01_timercount";
+	end;
+
+OnGuillaumeWin:
+	set $@KvM01BG, 3;
+	set $@KvM01BG_Victory, 1;
+	mapannounce "bat_c01", "Guillaume venceu!",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Parabéns aos membros de Guillaume.",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Todos serão enviados ao ponto inicial.",bc_map,"0x00ff00";
+	donpcevent "KvM01_BG::OnStop";
+	end;
+
+OnCroixWin:
+	set $@KvM01BG, 3;
+	set $@KvM01BG_Victory, 2;
+	mapannounce "bat_c01", "Croix venceu!",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Parabéns aos membros de Croix.",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Todos serão enviados ao ponto inicial.",bc_map,"0x00ff00";
+	donpcevent "KvM01_BG::OnStop";
+	end;
+
+OnStop:
+	enablenpc "Tenente de Guillaume#KVM01A";
+	enablenpc "Tenente de Croix#KVM01B";
+	// Warp Teams
+	bg_warp $@BG_5_id1,"bat_c01",53,128;
+	bg_warp $@BG_5_id2,"bat_c01",146,55;
+	donpcevent "KvM01_BG_Out::OnBegin";
+	end;
+
+OnReset:
+	set $@KvM01BG_Victory, 0;
+	disablenpc "Tenente de Guillaume#KVM01A";
+	disablenpc "Tenente de Croix#KVM01B";
+	mapwarp "bat_c01","prontera",156,176;
+	//maprespawnguildid "bat_c01",0,3; // Just in case someone else
+	//donpcevent "KvM01_BG::OnReadyCheck"; // Maybe a game is ready to start
+	end;
+}
+
+-	script	#kvm01_timercount	-1,{
+
+OnTimer60000:
+	set $@bg_kvm01_timer, $@bg_kvm01_timer + 1;
+	if( ($@bg_kvm01_timer+1) < atoi(callfunc("bg_getarenainfo", 5, "event_timer")) )
+		setnpctimer 0;
+	else {
+		mapannounce "bat_c01", "1 minuto restante para o final da batalha KVM.",bc_map,"0x00ff00";
+	}
+	
+	end;
+
+OnTimer120000:
+	mapannounce "bat_c01", "30 segundos restantes para o final da batalha KVM.",bc_map,"0x00ff00";
+	end;
+	
+OnTimer150000:
+	mapannounce "bat_c01", "15 segundos restantes para o final da batalha KVM.",bc_map,"0x00ff00";
+	end;
+	
+OnTimer165000:
+	mapannounce "bat_c01", "10 segundos restantes para o final da batalha KVM.",bc_map,"0x00ff00";
+	end;
+	
+OnTimer175000:
+	mapannounce "bat_c01", "5 segundos restantes para o final da batalha KVM.",bc_map,"0x00ff00";
+	end;
+	
+OnTimer180000:
+	mapannounce "bat_c01", "A Batalha KVM terminou.",bc_map,"0x00ff00";
+	if( $@KvM01CroixCount > $@KvM01GuillCount )
+		donpcevent "KvM01_BG::OnCroixWin";
+	else if( $@KvM01GuillCount > $@KvM01CroixCount )
+		donpcevent "KvM01_BG::OnGuillaumeWin";
+	else
+	{ // Draw Game
+		set $@KvM01BG, 3;
+		set $@KvM01BG_Victory, 3;
+		mapannounce "bat_c01", "O número de membros de Guillaume é "+$@KvM01GuillCount+".",bc_map,"0x00ff00";
+		mapannounce "bat_c01", "O número de membros de Croix é "+$@KvM01CroixCount+".",bc_map,"0x00ff00";
+		mapannounce "bat_c01", "A batalha terminou em empate.",bc_map,"0x00ff00";
+		donpcevent "KvM01_BG::OnStop";
+	}
+	end;
+}
+
+-	script	KvM01_BG_Out	-1,{
+	end;
+
+OnBegin:
+	initnpctimer;
+	end;
+
+OnTimer1000:
+	mapannounce "bat_c01", "Por favor fale com o Oficial para receber as recompensas da KVM.",bc_map,"0x00ff00";
+	end;
+
+OnTimer3000:
+	mapannounce "bat_c01", "O Oficial irá esperar você para dar as recompensas por 30 segundos.",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Em 30 segundos, o Oficial deixará o local.",bc_map,"0x00ff00";
+	end;
+
+OnTimer5000:
+	mapannounce "bat_c01", "Se você não falar com o Oficial, você não irá receber as recompensas.",bc_map,"0x00ff00";
+	mapannounce "bat_c01", "Por favor tenha cuidado.",bc_map,"0x00ff00";
+	end;
+
+OnTimer:55000:
+	mapannounce "bat_c01", "Você será enviado de volta.",bc_map,"0x00ff00";
+	end;
+
+OnTimer60000:
+	stopnpctimer;
+	donpcevent "KvM01_BG::OnReset";
+	end;
+}
+
+// Battleground rewards
+//============================================================
+-	script	#kvm01_vintenar	-1,{
+	callfunc("bg_rewardnpc", 5, $@BG_5_id1, $@BG_5_id2, $@KvM01BG_Victory, (strnpcinfo(2)=="KVM01A"?0:1));
+	end;
+
+OnInit:
+	if( strnpcinfo(2) != "kvm01_vintenar" )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+bat_c01,51,130,5	duplicate(#kvm01_vintenar)	Tenente de Guillaume#KVM01A	4_M_KY_HEAD
+bat_c01,148,53,1	duplicate(#kvm01_vintenar)	Tenente de Croix#KVM01B	4_M_CRU_HEAD

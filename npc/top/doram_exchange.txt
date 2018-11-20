@@ -1,0 +1,410 @@
+-	itemshop	Talisman_Shop	-1,25142:0,28422:30,28423:30,28424:30
+
+lasagna,131,245,4	script	Yota	10163,{
+	if (class != 4218) {
+	mes "[Yota]";
+	mes "Você não me ma parece um Doram.";
+	close; }
+	mes "[Yota]";
+	mes "Posso trocar itens por ^5533ffDoram Token^000000.";
+	mes "Quer algum?";
+	next;
+	if(select("Claro!:Não!") == 2) {
+		mes "[Yota]";
+		mes "Volte quando quiser algo.";
+		close;
+		emotion ET_BEST;
+		end;
+	}
+	mes "[Yota]";
+	mes "Compre o que quiser!.";
+	close2;
+	callshop "Talisman_Shop",1;
+	end;
+}
+
+lasagna,131,250,4	script	Jogi	10164,{
+
+if (class != 4218) {
+mes "[Jogi]";
+mes "Você não me ma parece um Doram.";
+close; }
+mes "[Jogi]";
+mes "Eu troco equipamentos doram de nível";
+mes "100 - 140 ou 175 por Doram Tokens";
+mes "1 - 2 - 3 Tokens respectivamente";
+mes "Deseja trocar uma arma ou uma armadura?";
+switch(select("Arma:Armadura:Quit"))
+	{
+		case 1:
+			next;
+			mes "[Jogi]";
+			mes "Que nível de arma?";
+			next;
+			switch(select("100:140:175"))
+			{
+				case 1:
+					next;
+					mes "[Jogi]";
+					mes "Qual arma do nível 100 você deseja trocar?";
+					next;
+					switch(select("Sinmyo Foxtail Staff:Fine Foxtail Model"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1691) +" por 1 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1691) >= 1) {
+									delitem 1691,1;
+									getitem 25142,1;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1691) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1695) +" por 1 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1695) >= 1) {
+									delitem 1695,1;
+									getitem 25142,1;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1695) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+										close;
+									}
+					}
+				case 2:
+					next;
+					mes "[Jogi]";
+					mes "Qual arma do nível 140 você deseja trocar?";
+					next;
+					switch(select("Magical Foxtail Staff:Fine Foxtail Model"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1692) +" por 2 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1692) >= 1) {
+									delitem 1692,1;
+									getitem 25142,2;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1692) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1696) +" por 2 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1696) >= 1) {
+									delitem 1696,1;
+									getitem 25142,2;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1696) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+										close;
+									}
+					}
+
+				case 3:
+					next;
+					mes "[Jogi]";
+					mes "Qual arma do nível 175 você deseja trocar?";
+					next;
+					switch(select("Magic Yellow Foxtail Staff:Elaborated Yellow Foxtail Staff"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1693) +" por 3 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1693) >= 1) {
+									delitem 1693,1;
+									getitem 25142,3;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1693) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(1697) +" por 3 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(1697) >= 1) {
+									delitem 1697,1;
+									getitem 25142,3;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos uma "+ getitemname(1697) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+										close;
+									}
+					}
+				}
+		case 2:
+			next;
+			mes "[Jogi]";
+			mes "Que nível de armadura?";
+			next;
+			switch(select("100:140:175"))
+			{
+				case 1:
+					next;
+					mes "[Jogi]";
+					mes "Qual armadura do nível 100 você deseja trocar?";
+					next;
+					switch(select("Exclusivo Traje de Doram:Exclusivo Manteau de Doram:Exclusivos Sapatos de Doram"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(15126) +" por 1 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(15126) >= 1) {
+									delitem 15126,1;
+									getitem 25142,1;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(15126) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(20788) +" por 1 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(20788) >= 1) {
+									delitem 20788,1;
+									getitem 25142,1;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(20788) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+						case 3:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(22083) +" por 1 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(22083) >= 1) {
+									delitem 22083,1;
+									getitem 25142,1;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(22083) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+					}
+				case 2:
+					next;
+					mes "[Jogi]";
+					mes "Qual armadura do nível 140 você deseja trocar?";
+					next;
+					switch(select("Traje Doram da Luxúria:Manteau de Doram da Luxúria:Sapatos de Doram da Luxúria"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(15129) +" por 2 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(15129) >= 1) {
+									delitem 15129,1;
+									getitem 25142,2;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(15129) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(20789) +" por 2 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(20789) >= 1) {
+									delitem 20789,1;
+									getitem 25142,2;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(20789) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}	
+						case 3:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(22084) +" por 2 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(22084) >= 1) {
+									delitem 22084,1;
+									getitem 25142,2;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(22084) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+					}
+				case 3:
+					next;
+					mes "[Jogi]";
+					mes "Qual armadura do nível 175 você deseja trocar?";
+					next;
+					switch(select("Traje Elegante de Doram:Manteau Elegante de Doram:Sapatos Elegantes de Doram"))
+					{
+						case 1:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(15156) +" por 3 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(15156) >= 1) {
+									delitem 15156,1;
+									getitem 25142,3;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(15156) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}		
+						case 2:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(20790) +" por 3 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(20790) >= 1) {
+									delitem 20790,1;
+									getitem 25142,3;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(20790) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+						case 3:
+							next;
+							mes "[Jogi]";
+							mes "Quer mesmo trocar uma "+ getitemname(22085) +" por 3 Doram Tokem?";
+							switch(select("Sim:Não")) {
+								case 1:
+									if (countitem(22085) >= 1) {
+									delitem 22085,1;
+									getitem 25142,3;
+									close;
+									}
+									else {
+									next;
+									mes "[Jogi]";
+									mes "Então tenha pelo menos um "+ getitemname(22085) +" pra que eu possa trocar.";
+									close;
+									}
+								case 2:
+									close;
+								}
+					}
+				}	
+		case 3:
+			close;
+	}
+}

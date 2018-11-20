@@ -1,0 +1,182 @@
+-	script	::MobTest	-1,{
+
+OnMenuMobTest:
+
+	.@instance$ = "Teste de Dano";
+		mes "[Teste de Dano]";
+		mes "Gostaria de ir para o mapa de testes?";
+		mes " ";
+		mes "Não se preocupe, você estará sozinho lá, mas por não mais que 15 minutos.";
+		next;
+		switch(select("Sim.:Não.")) {
+		case 1:
+			set .@party_id,getcharid(1);
+			if (!instance_check_party(.@party_id)) {
+			mes "[Teste de Dano]";
+			mes "Você não tem companheiros? Crie um grupo e volte novamente se estiver sozinho.";
+			close;
+			}
+			switch (instance_enter(.@instance$)) {
+			case 3:
+			case 2:
+			case 1:
+			case 0:
+				if (instance_create(.@instance$) >= 0)
+				'td_d_map$ = instance_mapname("1@damagetes");
+		}
+		case 2: 
+		mes "[Teste de Dano]";
+		mes "Tudo bem,";
+		mes "Estarei esperando caso precise de mim.";
+		close;
+	}
+}
+
+1@damagetes,90,105,4	script	Teste de Dano	4_LGTSCIENCE,{
+mes "[Invocador de monstros]";
+mes "Qual raça de monstro deseja invocar?";
+setarray .@raceC$, "Jogador","Amorfo","Anjo","Bruto","Demônio","Dragão","Humanoide","Inseto","Morto-Vivo","Peixe","Planta";
+.@m = select( implode(.@raceC$,":") ) - 1;
+
+	switch(.@m) {
+		case 0:
+			'race = 10;
+			'1nome$ = "Jogador";
+			callsub Elements;
+			end;
+		case 1:
+			'race = 0;
+			'1nome$ = "Amorfo";
+			callsub Elements;
+			end;
+		case 2:
+			'race = 8;
+			'1nome$ = "Anjo";
+			callsub Elements;
+			end;
+		case 3:
+			'race = 2;
+			'1nome$ = "Bruto";
+			callsub Elements;
+			end;
+		case 4:
+			'race = 6;
+			'1nome$ = "Demônio";
+			callsub Elements;
+			end;
+		case 5:
+			'race = 9;
+			'1nome$ = "Dragão";
+			callsub Elements;
+			end;
+		case 6:
+			'race = 7;
+			'1nome$ = "Humanoide";
+			callsub Elements;
+			end;
+		case 7:
+			'race = 4;
+			'1nome$ = "Inseto";
+			callsub Elements;
+			end;
+		case 8:
+			'race = 1;
+			'1nome$ = "Morto-Vivo";
+			callsub Elements;
+			end;
+		case 9:
+			'race = 5;
+			'1nome$ = "Peixe";
+			callsub Elements;
+			end;
+		case 10:
+			'race = 3;
+			'1nome$ = "Planta";
+			callsub Elements;
+			end;
+				}
+Elements:
+next;
+mes "Qual o elemento deste monstro?";
+setarray .@elementsC$, "Água","Fantasma","Fogo","Maldito","Neutro","Sagrado","Sombrio","Terra","Veneno","Vento";
+.@m = select( implode(.@elementsC$,":") ) - 1;
+	switch(.@m) {
+		case 0:
+			'element = 1;
+			'2nome$ = ""+'1nome$+" / Água";
+			callsub Sizes;
+			end;
+		case 1:
+			'element = 8;
+			'2nome$ = ""+'1nome$+" / Fantasma";
+			callsub Sizes;
+			end;
+		case 2:
+			'element = 3;
+			'2nome$ = ""+'1nome$+" / Fogo";
+			callsub Sizes;
+			end;
+		case 3:
+			'element = 9;
+			'2nome$ = ""+'1nome$+" / Maldito";
+			callsub Sizes;
+			end;
+		case 4:
+			'element = 0;
+			'2nome$ = ""+'1nome$+" / Neutro";
+			callsub Sizes;
+			end;
+		case 5:
+			'element = 6;
+			'2nome$ = ""+'1nome$+" / Sagrado";
+			callsub Sizes;
+			end;
+		case 6:
+			'element = 7;
+			'2nome$ = ""+'1nome$+" / Sombrio";
+			callsub Sizes;
+			end;
+		case 7:
+			'element = 2;
+			'2nome$ = ""+'1nome$+" / Terra";
+			callsub Sizes;
+			end;
+		case 8:
+			'element = 5;
+			'2nome$ = ""+'1nome$+" / Veneno";
+			callsub Sizes;
+			end;
+		case 9:
+			'element = 4;
+			'2nome$ = ""+'1nome$+" / Vento";
+			callsub Sizes;
+			end;
+				}
+Sizes:
+next;
+mes "Qual o tamanho deste monstro?";
+atcommand "@killmonster2";
+setarray .@sizesC$, "Pequeno","Médio","Grande";
+.@m = select( implode(.@sizesC$,":") ) - 1;
+	switch(.@m) {
+		case 0:
+			'size = 1;
+			callsub Invoke;
+			end;
+		case 1:
+			'size = 0;
+			callsub Invoke;
+			end;
+		case 2:
+			'size = 2;
+			callsub Invoke;
+			end;
+				}
+
+Invoke:
+monster 'td_d_map$,97,98,'2nome$,2411,1,"",'size;
+'teste_id = $@mobid[0];
+setunitdata 'teste_id,UMOB_RACE,'race;
+setunitdata 'teste_id,UMOB_ELETYPE,'element;
+end;
+}
